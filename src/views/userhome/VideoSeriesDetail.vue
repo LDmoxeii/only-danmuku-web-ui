@@ -60,23 +60,23 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import VideoSeriesEdit from './VideoSeriesEdit.vue'
 import { VueDraggable } from 'vue-draggable-plus'
-import { ref, reactive, getCurrentInstance, nextTick, computed } from 'vue'
+import { ref, getCurrentInstance, computed } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-const { proxy } = getCurrentInstance()
+const { proxy } = getCurrentInstance() as any
 const router = useRouter()
 const route = useRoute()
-import { useLoginStore } from '@/stores/loginStore.js'
+import { useLoginStore } from '@/stores/loginStore'
 const loginStore = useLoginStore()
 
 //是否是自己
 const myself = computed(() => {
   return loginStore.userInfo.userId == route.params.userId
 })
-const seriesInfo = ref({})
-const videoList = ref([])
+const seriesInfo = ref<any>({})
+const videoList = ref<any[]>([])
 
 const getSeriesDetail = async () => {
   let result = await proxy.Request({
@@ -99,7 +99,7 @@ const getSeriesDetail = async () => {
 getSeriesDetail()
 
 const changeSort = async () => {
-  let videoIds = videoList.value.map((item) => {
+  let videoIds = videoList.value.map((item: any) => {
     return item.videoId
   })
   videoIds.splice(0, 1)
@@ -116,11 +116,11 @@ const changeSort = async () => {
   proxy.Message.success('排序成功')
 }
 
-const jump = (item) => {
+const jump = (item: any) => {
   router.push(`/video/${item.videoId}`)
 }
 
-const delVideo = (item) => {
+const delVideo = (item: any) => {
   proxy.Confirm({
     message: `确定要删除【${item.videoName}】吗？`,
     okfun: async () => {
@@ -159,7 +159,7 @@ const delSeries = () => {
   })
 }
 //编辑系列
-const videoSeriesEditRef = ref()
+const videoSeriesEditRef = ref<any>()
 const editSeries = () => {
   videoSeriesEditRef.value.show(seriesInfo.value, 1)
 }
