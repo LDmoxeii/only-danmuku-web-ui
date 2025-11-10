@@ -28,19 +28,17 @@
   </div>
 </template>
 
-<script setup>
-import { ref, reactive, getCurrentInstance, nextTick } from "vue";
-import { useRouter } from "vue-router";
-const { proxy } = getCurrentInstance();
-const router = useRouter();
+<script setup lang="ts">
+import { ref, getCurrentInstance } from 'vue'
+const { proxy } = getCurrentInstance() as any
 
-const showDrawer = ref(false);
+const showDrawer = ref<boolean>(false);
 
 const themeCount = 10;
-const currentTheme = ref(0);
+const currentTheme = ref<number>(0);
 
-const emit = defineEmits(["changeTheme"]);
-const selectTheme = async (item) => {
+const emit = defineEmits(['changeTheme']);
+const selectTheme = async (item: number) => {
   currentTheme.value = item;
   let result = await proxy.Request({
     url: proxy.Api.saveTheme,
@@ -55,7 +53,7 @@ const selectTheme = async (item) => {
   emit("changeTheme", item);
 };
 
-const show = (theme) => {
+const show = (theme: number) => {
   showDrawer.value = true;
   currentTheme.value = theme;
 };

@@ -32,21 +32,21 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import VideoItem from './VideoItem.vue'
-import { ref, reactive, getCurrentInstance, nextTick, computed } from 'vue'
-const { proxy } = getCurrentInstance()
+import { ref, getCurrentInstance } from 'vue'
+const { proxy } = getCurrentInstance() as any
 import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
 const router = useRouter()
 
-import { useLoginStore } from '@/stores/loginStore.js'
+import { useLoginStore } from '@/stores/loginStore'
 const loginStore = useLoginStore()
 
 //是否是自己
-const myself = ref(loginStore.userInfo.userId == route.params.userId)
+const myself = ref<boolean>(loginStore.userInfo.userId == route.params.userId)
 
-const dataSource = ref({
+const dataSource = ref<any>({
   list: [],
   pageNum: 1,
   pageSize: 15,
@@ -54,7 +54,7 @@ const dataSource = ref({
   totalCount: 0,
 });
 const loadVideoList = async () => {
-  let params = {
+  let params: any = {
     pageNum: dataSource.value.pageNum,
   }
   params.userId = route.params.userId
@@ -69,7 +69,7 @@ const loadVideoList = async () => {
 }
 loadVideoList()
 
-const cancelCollection = (data) => {
+const cancelCollection = (data: any) => {
   proxy.Confirm({
     message: '确定要取消收藏吗？',
     okfun: async () => {
@@ -88,7 +88,7 @@ const cancelCollection = (data) => {
   })
 }
 
-const jump = (item) => {
+const jump = (item: any) => {
   if (!item.videoName) {
     return
   }
