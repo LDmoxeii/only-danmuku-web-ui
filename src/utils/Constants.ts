@@ -1,4 +1,4 @@
-const ACTION_TYPE = {
+export const ACTION_TYPE = {
     UNKNOW: {
         value: 0,
         desc: "未知行为"
@@ -23,8 +23,7 @@ const ACTION_TYPE = {
         value: 5,
         desc: "视频投币"
     }
-}
+} as const
 
-export {
-    ACTION_TYPE
-}
+export type ActionTypeKey = keyof typeof ACTION_TYPE
+export type ActionTypeItem = typeof ACTION_TYPE[ActionTypeKey]
