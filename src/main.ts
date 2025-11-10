@@ -27,7 +27,7 @@ import Message from '@/utils/Message'
 import Utils from '@/utils/Utils'
 import Verify from '@/utils/Verify'
 import Confirm from '@/utils/Confirm'
-import { Api } from '@/utils/Api.js'
+import { Api } from '@/utils/Api'
 
 const app = createApp(App)
 app.use(ElementPlus)
