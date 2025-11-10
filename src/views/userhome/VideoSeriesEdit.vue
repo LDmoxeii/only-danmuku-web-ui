@@ -55,29 +55,29 @@
   </Dialog>
 </template>
 
-<script setup>
-import { ref, reactive, getCurrentInstance, nextTick, onMounted } from 'vue'
-const { proxy } = getCurrentInstance()
+<script setup lang="ts">
+import { ref, getCurrentInstance, nextTick } from 'vue'
+const { proxy } = getCurrentInstance() as any
 import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
 const router = useRouter()
 
-const dialogConfig = ref({
+const dialogConfig = ref<any>({
   show: false,
   title: '视频列表',
 })
 
-const opType = ref(0)
-const step = ref(1)
-const formData = ref({
+const opType = ref<number>(0)
+const step = ref<number>(1)
+const formData = ref<any>({
   videoIds: [],
 })
-const formDataRef = ref()
+const formDataRef = ref<any>()
 const rules = {
   seriesName: [{ required: true, message: '请输入名称' }],
 }
 
-const show = (data = {}, _opType = 0) => {
+const show = (data: any = {}, _opType: number = 0) => {
   loadVideoList()
 
   opType.value = _opType
@@ -106,7 +106,7 @@ const cancel = () => {
 }
 
 const nextStep = () => {
-  formDataRef.value.validate(async (valid) => {
+  formDataRef.value.validate(async (valid: boolean) => {
     if (!valid) {
       return
     }
@@ -114,7 +114,7 @@ const nextStep = () => {
   })
 }
 const preStep = () => {
-  formDataRef.value.validate(async (valid) => {
+  formDataRef.value.validate(async (valid: boolean) => {
     if (!valid) {
       return
     }
@@ -123,7 +123,7 @@ const preStep = () => {
 }
 
 const submit = () => {
-  formDataRef.value.validate(async (valid) => {
+  formDataRef.value.validate(async (valid: boolean) => {
     if (!valid) {
       return
     }
@@ -149,7 +149,7 @@ const submit = () => {
   })
 }
 
-const videoList = ref([])
+const videoList = ref<any[]>([])
 const loadVideoList = async () => {
   let result = await proxy.Request({
     url: proxy.Api.uHomeSeriesLoadAllVideo,

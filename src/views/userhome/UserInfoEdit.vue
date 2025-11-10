@@ -41,17 +41,17 @@
   </Dialog>
 </template>
 
-<script setup>
-import { uploadImage } from '@/utils/Api.js'
-import { ref, reactive, getCurrentInstance, nextTick, provide } from 'vue'
-const { proxy } = getCurrentInstance()
+<script setup lang="ts">
+import { uploadImage } from '@/utils/Api'
+import { ref, getCurrentInstance, nextTick, provide } from 'vue'
+const { proxy } = getCurrentInstance() as any
 import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
 const router = useRouter()
-import { useLoginStore } from '@/stores/loginStore.js'
+import { useLoginStore } from '@/stores/loginStore'
 const loginStore = useLoginStore()
 
-const dialogConfig = ref({
+const dialogConfig = ref<any>({
   show: false,
   title: '修改用户信息',
   buttons: [
@@ -64,19 +64,19 @@ const dialogConfig = ref({
     },
   ],
 })
-provide('cutImageCallback', ({ coverImage }) => {
+provide('cutImageCallback', ({ coverImage }: { coverImage: File }) => {
   formData.value.avatar = coverImage
 })
 
-const formData = ref({})
-const formDataRef = ref()
+const formData = ref<any>({})
+const formDataRef = ref<any>()
 const rules = {
   avatar: [{ required: true, message: '请上传头像' }],
   nickName: [{ required: true, message: '请输入昵称' }],
   sex: [{ required: true, message: '请选择性别' }],
 }
 
-const show = (data) => {
+const show = (data: any) => {
   dialogConfig.value.show = true
   nextTick(() => {
     formDataRef.value.resetFields()
@@ -89,11 +89,11 @@ defineExpose({
 
 const emit = defineEmits(['reload'])
 const submitForm = () => {
-  formDataRef.value.validate(async (valid) => {
+  formDataRef.value.validate(async (valid: boolean) => {
     if (!valid) {
       return
     }
-    let params = {}
+    let params: any = {}
     Object.assign(params, formData.value)
 
     if (params.avatar instanceof File) {
