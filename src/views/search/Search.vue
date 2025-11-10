@@ -25,15 +25,8 @@
   </div>
 </template>
 
-<script setup>
-import {
-  ref,
-  reactive,
-  getCurrentInstance,
-  nextTick,
-  onMounted,
-  watch,
-} from 'vue'
+<script setup lang="ts">
+import { ref, getCurrentInstance, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 const { proxy } = getCurrentInstance()
 const router = useRouter()
@@ -42,7 +35,7 @@ const route = useRoute()
 import { useNavAction } from '@/stores/navActionStore'
 const navActionStore = useNavAction()
 
-import { useSearchHistoryStore } from '@/stores/searchHisotryStore.js'
+import { useSearchHistoryStore } from '@/stores/searchHisotryStore'
 const searchHistoryStore = useSearchHistoryStore()
 
 const orderBtns = ref([
@@ -73,7 +66,7 @@ const orderBtns = ref([
   },
 ])
 
-const keyword = ref(route.query.keyword)
+const keyword = ref<any>(route.query.keyword)
 const search = () => {
   if (!keyword.value) {
     return
@@ -86,14 +79,14 @@ const search = () => {
     },
   })
 }
-const order = ref(route.query.order)
-const changeOrder = (item) => {
+const order = ref<any>(route.query.order)
+const changeOrder = (item: any) => {
   order.value = item.order
   search()
 }
 
-const loadingData = ref(false)
-const dataSource = ref({
+const loadingData = ref<boolean>(false)
+const dataSource = ref<any>({
   list: [],
   pageNum: 1,
   pageSize: 15,

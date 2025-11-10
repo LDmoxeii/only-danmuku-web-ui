@@ -16,15 +16,15 @@
   </div>
 </template>
 
-<script setup>
-import { ref, reactive, getCurrentInstance, nextTick } from 'vue'
+<script setup lang="ts">
+import { ref, getCurrentInstance } from 'vue'
 const { proxy } = getCurrentInstance()
 import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
 const router = useRouter()
 
-const loadingData = ref(false)
-const dataSource = ref({
+const loadingData = ref<boolean>(false)
+const dataSource = ref<any>({
   list: [],
   pageNum: 1,
   pageSize: 15,

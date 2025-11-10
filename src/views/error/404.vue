@@ -6,13 +6,12 @@
   </div>
 </template>
 
-<script setup>
-import { ref, reactive, getCurrentInstance, nextTick } from "vue";
+<script setup lang="ts">
+import { ref } from "vue";
 import { useRouter } from "vue-router";
-const { proxy } = getCurrentInstance();
 const router = useRouter();
 
-const leftSeconds = ref(5);
+const leftSeconds = ref<number>(5);
 
 const init = () => {
   setInterval(() => {
