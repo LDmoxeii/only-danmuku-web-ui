@@ -32,8 +32,8 @@
   </div>
 </template>
 
-<script setup>
-import { ref, reactive, getCurrentInstance, nextTick, onMounted } from 'vue'
+<script setup lang="ts">
+import { ref, getCurrentInstance, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
 const { proxy } = getCurrentInstance()
 const router = useRouter()
@@ -41,8 +41,8 @@ const router = useRouter()
 import { useNavAction } from '@/stores/navActionStore'
 const navActionStore = useNavAction()
 
-const loadingData = ref(false)
-const dataSource = ref({
+const loadingData = ref<boolean>(false)
+const dataSource = ref<any>({
   list: [],
   pageNum: 1,
   pageSize: 15,
@@ -50,7 +50,7 @@ const dataSource = ref({
   totalCount: 0,
 });
 const loadDataList = async () => {
-  let params = {
+  let params: any = {
     pageNum: dataSource.value.pageNum,
   }
   loadingData.value = true
@@ -95,7 +95,7 @@ const cleanAll = () => {
   })
 }
 
-const delHisotry = (videoId) => {
+const delHisotry = (videoId: string) => {
   proxy.Confirm({
     message: '确定要删除记录吗？',
     okfun: async () => {
@@ -116,7 +116,7 @@ const delHisotry = (videoId) => {
   })
 }
 
-const goDetail = (videoId) => {
+const goDetail = (videoId: string | number) => {
   router.push(`/video/${videoId}`)
 }
 </script>

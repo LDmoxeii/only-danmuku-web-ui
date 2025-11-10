@@ -23,19 +23,10 @@
   <NoData v-if="dataSource.list && dataSource.list.length == 0"> </NoData>
 </template>
 
-<script setup>
-import { mitter } from "@/eventbus/eventBus.js";
-import {
-  ref,
-  reactive,
-  getCurrentInstance,
-  nextTick,
-  onMounted,
-  onUnmounted,
-} from "vue";
-import { useRouter } from "vue-router";
-const { proxy } = getCurrentInstance();
-const router = useRouter();
+<script setup lang="ts">
+import { mitter } from '@/eventbus/eventBus'
+import { getCurrentInstance, onMounted, onUnmounted } from 'vue'
+const { proxy } = getCurrentInstance() as any
 
 const props = defineProps({
   layoutType: {
@@ -58,30 +49,31 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["loadData"]);
-const scrollHandler = (curScrollTop) => {
+const emit = defineEmits(['loadData'])
+const scrollHandler = (curScrollTop: number) => {
   if (window.innerHeight + curScrollTop < document.body.offsetHeight) {
-    return;
+    return
   }
-  if (props.loading || props.dataSource.pageNum >= props.dataSource.pageTotal) {
-    return;
+  const ds: any = (props as any).dataSource
+  if (props.loading || ds.pageNum >= ds.pageTotal) {
+    return
   }
-  let cur = Number(props.dataSource.pageNum);
+  let cur = Number(ds.pageNum)
   if (!Number.isFinite(cur) || cur < 1) {
-    cur = 0;
+    cur = 0
   }
-  props.dataSource.pageNum = cur + 1;
-  emit("loadData");
+  ds.pageNum = cur + 1
+  emit('loadData')
 };
 
 onMounted(() => {
-  mitter.on("windowScroll", (curScrollTop) => {
-    scrollHandler(curScrollTop);
-  });
+  mitter.on('windowScroll', (curScrollTop: number) => {
+    scrollHandler(curScrollTop)
+  })
 });
 
 onUnmounted(() => {
-  mitter.off("windowScroll");
+  mitter.off('windowScroll')
 });
 </script>
 
