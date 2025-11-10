@@ -10,28 +10,15 @@
   </div>
 </template>
 
-<script setup>
-import { ref, reactive, getCurrentInstance, nextTick } from "vue";
-const { proxy } = getCurrentInstance();
-import { useRoute, useRouter } from "vue-router";
-const route = useRoute();
-const router = useRouter();
+<script setup lang="ts">
 
-const props = defineProps({
-  tags: {
-    type: Array,
-  },
-  modelValue: {
-    type: Number,
-    default: 0,
-  },
-});
+defineProps<{ tags?: Array<{ name: string }>; modelValue?: number }>()
 
-const emit = defineEmits(["update:modelValue", "clickHandler"]);
-const selectTab = (index) => {
-  emit("update:modelValue", index);
-  emit("clickHandler");
-};
+const emit = defineEmits<["update:modelValue", "clickHandler"]>()
+const selectTab = (index: number) => {
+  emit('update:modelValue', index)
+  emit('clickHandler')
+}
 </script>
 
 <style lang="scss" scoped>

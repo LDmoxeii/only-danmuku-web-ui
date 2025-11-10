@@ -3,25 +3,16 @@
   </div>
 </template>
 
-<script setup>
-import { ref, reactive, getCurrentInstance, nextTick } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-const { proxy } = getCurrentInstance()
-const router = useRouter()
-const route = useRoute()
+<script setup lang="ts">
 
-const TYPE = {
+const TYPE: Record<number, { text: string; color: string }> = {
   0: {
     text: '置顶',
     color: '#FF6699',
   },
 }
 
-const props = defineProps({
-  type: {
-    type: Number,
-  },
-})
+defineProps<{ type?: number }>()
 </script>
 
 <style lang="scss" scoped>
