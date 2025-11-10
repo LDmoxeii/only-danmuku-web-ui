@@ -29,19 +29,19 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import MessageSys from './MessageSys.vue'
 import MessageItem from './MessageItem.vue'
-import { ref, reactive, getCurrentInstance, nextTick, onMounted } from 'vue'
+import { ref, getCurrentInstance, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
 const { proxy } = getCurrentInstance()
 const router = useRouter()
 const route = useRoute()
 
-import { useLoginStore } from '@/stores/loginStore.js'
+import { useLoginStore } from '@/stores/loginStore'
 const loginStore = useLoginStore()
 
-const messageNav = ref([
+const messageNav = ref<any[]>([
   {
     name: '系统通知',
     messageTypeCode: 'sys',
@@ -72,8 +72,8 @@ const messageNav = ref([
   },
 ])
 
-const curMessageNav = ref({})
-const selectMessageType = (item) => {
+const curMessageNav = ref<any>({})
+const selectMessageType = (item: any) => {
   readAll(item)
 
   //设置总的消息数
@@ -84,7 +84,7 @@ const selectMessageType = (item) => {
   loadDataList()
 }
 
-const dataSource = ref({
+const dataSource = ref<any>({
   list: [],
   pageNum: 1,
   pageSize: 15,
@@ -92,7 +92,7 @@ const dataSource = ref({
   totalCount: 0,
 });
 const loadDataList = async () => {
-  let params = {
+  let params: any = {
     pageNum: dataSource.value.pageNum,
     messageType: curMessageNav.value.messageType,
   }
@@ -106,7 +106,7 @@ const loadDataList = async () => {
   dataSource.value = result.data
 }
 
-const delMessage = (messageId) => {
+const delMessage = (messageId: string) => {
   proxy.Confirm({
     message: '确定要删除消息吗？',
     okfun: async () => {
@@ -143,7 +143,7 @@ const getNoReadCountGroup = async () => {
 
 getNoReadCountGroup()
 
-const readAll = async (item) => {
+const readAll = async (item: any) => {
   if (item.noReadCount == 0) {
     return
   }
