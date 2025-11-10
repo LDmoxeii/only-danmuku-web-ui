@@ -47,29 +47,22 @@
   </div>
 </template>
 
-<script setup>
-import {
-  ref,
-  reactive,
-  getCurrentInstance,
-  nextTick,
-  watch,
-  inject,
-} from "vue";
+<script setup lang="ts">
+import { ref, getCurrentInstance, watch, inject } from 'vue'
 import { useRouter, useRoute } from "vue-router";
-const { proxy } = getCurrentInstance();
+const { proxy } = getCurrentInstance() as any;
 const router = useRouter();
 const route = useRoute();
 
-const dataSource = ref({
+const dataSource = ref<any>({
   list: [],
   pageNum: 1,
   pageSize: 15,
   pageTotal: 1,
   totalCount: 0,
 });
-const loadDataList = async (pCategoryCode, categoryCode) => {
-  let params = {
+const loadDataList = async () => {
+  let params: any = {
     pageNum: dataSource.value.pageNum,
     pageSize: dataSource.value.pageSize,
   };
@@ -86,16 +79,16 @@ const loadDataList = async (pCategoryCode, categoryCode) => {
   dataSource.value = result.data;
 };
 
-const cancelFocusUser = inject("cancelFocusUser");
-const cancelFocus = (otherUserId) => {
-  cancelFocusUser(otherUserId, () => {
+const cancelFocusUser = inject<any>('cancelFocusUser');
+const cancelFocus = (otherUserId: string) => {
+  cancelFocusUser && cancelFocusUser(otherUserId, () => {
     loadDataList();
   });
 };
 
-const focusUser = inject("focusUser");
-const focus = (otherUserId) => {
-  focusUser(otherUserId, () => {
+const focusUser = inject<any>('focusUser');
+const focus = (otherUserId: string) => {
+  focusUser && focusUser(otherUserId, () => {
     loadDataList();
   });
 };
@@ -103,7 +96,6 @@ const focus = (otherUserId) => {
 watch(
   () => route.name,
   (newVal, oldVal) => {
-    console.log(newVal);
     if (newVal == "uhomeFocus" || newVal == "uhomeFans") {
       loadDataList();
     }
