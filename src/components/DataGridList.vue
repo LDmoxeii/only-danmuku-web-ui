@@ -23,7 +23,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const props = defineProps({
   gridCount: {
     type: Number,
@@ -38,11 +38,12 @@ const props = defineProps({
   },
 });
 
-const emit = defineEmits(["loadData"]);
-const handlepageNumChange = (pageNum) => {
-  props.dataSource.pageNum = pageNum;
-  emit("loadData");
-};
+const emit = defineEmits(['loadData'])
+const handlepageNumChange = (pageNum: number) => {
+  const ds: any = (props as any).dataSource
+  if (ds) ds.pageNum = pageNum
+  emit('loadData')
+}
 </script>
 
 <style lang="scss" scoped>

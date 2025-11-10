@@ -28,11 +28,9 @@
   </div>
 </template>
 
-<script setup>
-import { ref, reactive, getCurrentInstance, nextTick, onMounted } from 'vue'
-import { useRouter } from 'vue-router'
-const { proxy } = getCurrentInstance()
-const router = useRouter()
+<script setup lang="ts">
+import { getCurrentInstance } from 'vue'
+const { proxy } = getCurrentInstance() as any
 
 const props = defineProps({
   //数据
@@ -51,6 +49,8 @@ const props = defineProps({
     default: 0,
   },
 })
+
+const showDetail = () => {}
 </script>
 
 <style lang="scss" scoped>
