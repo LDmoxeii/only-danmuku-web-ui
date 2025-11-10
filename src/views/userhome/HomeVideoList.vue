@@ -5,7 +5,7 @@
   <div class="part-item" v-else>
     <div class="part-title">
       <div class="title-panel">
-        <router-link class="title" :to="`/user/${route.params.userId}}/video`"
+        <router-link class="title" :to="`/user/${route.params.userId}/video`"
           >TA的视频
         </router-link>
         <div class="count-info">{{ dataSource.totalCount }}</div>
@@ -20,16 +20,16 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import "@/assets/scss/uhome.scss";
 import VideoItem from "./VideoItem.vue";
-import { ref, reactive, getCurrentInstance, nextTick } from "vue";
-const { proxy } = getCurrentInstance();
+import { ref, getCurrentInstance } from "vue";
+const { proxy } = getCurrentInstance() as any;
 import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
 const router = useRouter();
 
-const dataSource = ref({
+const dataSource = ref<any>({
   list: [],
   pageNum: 1,
   pageSize: 15,

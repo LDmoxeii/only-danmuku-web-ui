@@ -22,7 +22,7 @@
       </div>
       <router-link
         class="op-btn"
-        :to="`/user/${route.params.userId}}/series/${item.seriesId}`"
+        :to="`/user/${route.params.userId}/series/${item.seriesId}`"
         >更多&gt;</router-link
       >
     </div>
@@ -36,16 +36,16 @@
   ></VideoSeriesEdit>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import "@/assets/scss/uhome.scss";
 import VideoSeriesEdit from "./VideoSeriesEdit.vue";
 import VideoItem from "./VideoItem.vue";
-import { ref, reactive, getCurrentInstance, nextTick, computed } from "vue";
-const { proxy } = getCurrentInstance();
+import { ref, getCurrentInstance, computed } from "vue";
+const { proxy } = getCurrentInstance() as any;
 import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
 const router = useRouter();
-import { useLoginStore } from "@/stores/loginStore.js";
+import { useLoginStore } from "@/stores/loginStore";
 const loginStore = useLoginStore();
 
 //是否是自己
@@ -54,7 +54,7 @@ const myself = computed(() => {
 });
 
 //视频系列
-const seriesList = ref([]);
+const seriesList = ref<any[]>([]);
 const loadSeriesList = async () => {
   let result = await proxy.Request({
     url: proxy.Api.uHomeSeriesLoadVideoSeriesWithVideo,
@@ -69,7 +69,7 @@ const loadSeriesList = async () => {
 };
 loadSeriesList();
 
-const videoSeriesEditRef = ref();
+const videoSeriesEditRef = ref<any>();
 const showVieoSeries = () => {
   videoSeriesEditRef.value.show();
 };
