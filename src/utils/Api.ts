@@ -1,4 +1,4 @@
-import Request from "./Request";
+import Request from './Request'
 //单服务版本
 const Api = {
     checkCode: "/account/checkCode",
@@ -102,7 +102,7 @@ const Api = {
 }
 
 //上传封面
-const uploadImage = async (file, createThumbnail = false) => {
+const uploadImage = async (file: File, createThumbnail = false) => {
     let result = await Request({
         url: Api.uploadImage,
         params: {
@@ -116,7 +116,7 @@ const uploadImage = async (file, createThumbnail = false) => {
     return result.data;
 }
 
-const doUserAction = async (config, callback) => {
+const doUserAction = async (config: any, callback: () => void) => {
     let result = await Request({
         url: Api.userAction,
         params: config,

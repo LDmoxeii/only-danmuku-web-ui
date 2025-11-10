@@ -1,4 +1,4 @@
-import moment from "moment";
+import moment from 'moment'
 moment.locale('zh-cn', {
     months: '一月_二月_三月_四月_五月_六月_七月_八月_九月_十月_十一月_十二月'.split('_'),
     monthsShort: '1月_2月_3月_4月_5月_6月_7月_8月_9月_10月_11月_12月'.split('_'),
@@ -17,16 +17,15 @@ moment.locale('zh-cn', {
     }
 });
 
-const isEmpty = (str) => {
-    if (str == null || str == "" || str == undefined) {
-        return true;
-    }
-    return false;
+const isEmpty = (str?: string | null) => {
+  if (str === undefined || str === null) return true
+  const replaced = String(str).replace(/[\s\xA0]+/g, '')
+  return replaced === '' || replaced === 'null'
 }
 
 
-const formatDate = (timestamp) => {
-    const timestampTime = moment(timestamp);
+const formatDate = (timestamp?: number | string | Date) => {
+    const timestampTime = moment(timestamp as any);
     const days = Number.parseInt(moment().format("YYYYMMDD")) - Number.parseInt(timestampTime.format("YYYYMMDD"));
     if (days == 0) {
         return timestampTime.format("HH:mm")
@@ -38,7 +37,7 @@ const formatDate = (timestamp) => {
         return timestampTime.format("YYYY-MM-DD")
     }
 }
-const size2Str = (limit) => {
+const size2Str = (limit: number) => {
     var size = "";
     if (limit < 0.1 * 1024) {                            //小于0.1KB，则转化成B
         size = limit.toFixed(2) + "B"
@@ -57,7 +56,7 @@ const size2Str = (limit) => {
     }
     return size;
 }
-const convertSecondsToHMS = (seconds) => {
+const convertSecondsToHMS = (seconds: number) => {
     var hours = Math.floor(seconds / 3600);
     var minutes = Math.floor((seconds % 3600) / 60);
     var remainingSeconds = seconds % 60;
@@ -65,17 +64,17 @@ const convertSecondsToHMS = (seconds) => {
     return (hours == 0 ? "" : hours.toString().padStart(2, '0') + ":") + minutes.toString().padStart(2, '0') + ":" + remainingSeconds.toString().padStart(2, '0');
 }
 
-const getFileName = (fileName) => {
+const getFileName = (fileName?: string) => {
     if (!fileName) {
         return fileName;
     }
     return fileName.lastIndexOf(".") == -1 ? fileName : fileName.substring(0, fileName.lastIndexOf("."));
 }
 
-const getLocalImage = (image) => {
+const getLocalImage = (image: string) => {
     return new URL(`../assets/${image}`, import.meta.url).href;
 }
-const resetHtmlContent = (data) => {
+const resetHtmlContent = (data?: string) => {
     if (!data) {
         return data;
     }
