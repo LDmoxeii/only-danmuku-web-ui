@@ -1,5 +1,6 @@
-//https://www.emojiall.com/zh-hant/platform-emojione
-const emojiList =
+// https://www.emojiall.com/zh-hant/platform-emojione
+export interface EmojiCategory { name: string; emojiList: string[] }
+const emojiList: EmojiCategory[] =
     [
         {
             name: "笑脸",
