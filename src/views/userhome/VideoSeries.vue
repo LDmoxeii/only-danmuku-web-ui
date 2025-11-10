@@ -37,16 +37,16 @@
   ></VideoSeriesEdit>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { VueDraggable } from "vue-draggable-plus";
 import VideoSeriesEdit from "./VideoSeriesEdit.vue";
-import { ref, reactive, getCurrentInstance, nextTick, computed } from "vue";
-const { proxy } = getCurrentInstance();
+import { ref, getCurrentInstance, computed } from "vue";
+const { proxy } = getCurrentInstance() as any;
 import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
 const router = useRouter();
 
-import { useLoginStore } from "@/stores/loginStore.js";
+import { useLoginStore } from "@/stores/loginStore";
 const loginStore = useLoginStore();
 
 //是否是自己
@@ -54,7 +54,7 @@ const myself = computed(() => {
   return loginStore.userInfo.userId == route.params.userId;
 });
 
-const videoSeriesList = ref([]);
+const videoSeriesList = ref<any[]>([]);
 const loadVideoSeries = async () => {
   let result = await proxy.Request({
     url: proxy.Api.uHomeSeriesLoadVideoSeries,
@@ -73,13 +73,13 @@ const loadVideoSeries = async () => {
   }
 };
 loadVideoSeries();
-const videoSeriesEditRef = ref();
+const videoSeriesEditRef = ref<any>();
 const showVieoSeries = () => {
   videoSeriesEditRef.value.show();
 };
 
 const changeSort = async () => {
-  let seriesIds = videoSeriesList.value.map((item) => {
+  let seriesIds = videoSeriesList.value.map((item: any) => {
     return item.seriesId;
   });
   seriesIds.splice(0, 1);
@@ -95,7 +95,7 @@ const changeSort = async () => {
   proxy.Message.success("排序成功");
 };
 
-const jump = (item) => {
+const jump = (item: any) => {
   router.push(`/user/${route.params.userId}/series/${item.seriesId}`);
 };
 </script>

@@ -35,16 +35,16 @@
   </div>
 </template>
 
-<script setup>
-import HomeVideoList from "./HomeVideoList.vue";
-import HomeSeries from "./HomeSeries.vue";
-import { ref, reactive, getCurrentInstance, nextTick, inject } from "vue";
-const { proxy } = getCurrentInstance();
-import { useRoute, useRouter } from "vue-router";
-const route = useRoute();
-const router = useRouter();
+<script setup lang="ts">
+import HomeVideoList from './HomeVideoList.vue'
+import HomeSeries from './HomeSeries.vue'
+import { getCurrentInstance, inject } from 'vue'
+const { proxy } = getCurrentInstance() as any
+import { useRoute, useRouter } from 'vue-router'
+const route = useRoute()
+const router = useRouter()
 
-const userInfo = inject("userInfo");
+const userInfo = inject<any>('userInfo')
 </script>
 
 <style lang="scss" scoped>

@@ -19,18 +19,18 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import VideoItem from './VideoItem.vue'
-import { ref, reactive, getCurrentInstance, nextTick, watch } from 'vue'
-const { proxy } = getCurrentInstance()
+import { ref, getCurrentInstance, watch } from 'vue'
+const { proxy } = getCurrentInstance() as any
 import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
 const router = useRouter()
 
-const activeTab = ref(0)
+const activeTab = ref<number>(0)
 
-const videoName = ref()
-const dataSource = ref({
+const videoName = ref<string | undefined>()
+const dataSource = ref<any>({
   list: [],
   pageNum: 1,
   pageSize: 15,
@@ -38,7 +38,7 @@ const dataSource = ref({
   totalCount: 0,
 });
 const loadVideoList = async () => {
-  let params = {
+  let params: any = {
     pageNum: dataSource.value.pageNum,
     videoName: videoName.value,
     orderType: activeTab.value,
