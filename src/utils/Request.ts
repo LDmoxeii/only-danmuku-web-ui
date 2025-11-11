@@ -1,4 +1,4 @@
-import axios, { AxiosInstance } from 'axios'
+import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
 import { ElLoading } from 'element-plus'
 import Message from '../utils/Message'
 import VueCookies from 'vue-cookies'
@@ -15,6 +15,48 @@ instance.interceptors.request.use(
   (config: any) => {
     if (config.showLoading) {
       loading = ElLoading.service({ lock: true, text: '加载中......', background: 'rgba(0, 0, 0, 0.7)' })
+    }
+    // token 注入（从 Cookies）
+    const rawCookieToken = (VueCookies as any).get('Authorization') as string | undefined
+    const decodedToken = rawCookieToken ? decodeURIComponent(rawCookieToken) : ''
+    const authHeader = decodedToken ? (decodedToken.startsWith('Bearer ') ? decodedToken : `Bearer ${decodedToken}`) : ''
+    config.headers = config.headers || {}
+    if (authHeader) config.headers['Authorization'] = authHeader
+    config.headers['X-Requested-With'] = 'XMLHttpRequest'
+
+    // 默认 method 使用 post，除非显式指定
+    config.method = (config.method || 'post').toLowerCase()
+
+    // 上传进度回调兼容字段
+    if (config.uploadProgressCallback && !config.onUploadProgress) {
+      config.onUploadProgress = config.uploadProgressCallback
+    }
+
+    // 统一处理 POST 请求体，优先支持 JSON
+    const isPost = config.method === 'post'
+    const isJson = config.dataType === 'json'
+    const isFile = config.dataType === 'file'
+
+    if (isPost) {
+      if (isJson) {
+        config.headers['Content-Type'] = 'application/json'
+        if (!config.data && config.params) {
+          config.data = config.params
+          delete config.params
+        }
+      } else {
+        // FormData 收敛：支持文件与普通字段
+        const formData = new FormData()
+        const payload = config.data ?? config.params ?? {}
+        Object.keys(payload || {}).forEach((key) => {
+          const val = payload[key]
+          formData.append(key, val == null ? '' : val)
+        })
+        config.data = formData
+        delete config.params
+        // 让浏览器自动设置 multipart 边界
+        if (config.headers && config.headers['Content-Type']) delete config.headers['Content-Type']
+      }
     }
     return config
   },
@@ -49,37 +91,20 @@ instance.interceptors.response.use(
   }
 )
 
-interface RequestConfig {
-  url: string
-  params?: Record<string, any>
-  dataType?: 'json' | 'form'
+// 业务扩展配置
+export interface RequestConfig<D = any> extends AxiosRequestConfig<D> {
   showLoading?: boolean
-  responseType?: 'json' | 'blob' | 'arraybuffer'
+  errorCallback?: (msg: any) => void
   showError?: boolean
+  dataType?: 'json' | 'file'
   uploadProgressCallback?: (e: ProgressEvent) => void
-  errorCallback?: (resp: any) => void
 }
 
-const request = (config: RequestConfig) => {
-  const { url, params = {}, dataType, showLoading = false, responseType = responseTypeJson as any, showError = true } = config
-  let contentType = contentTypeForm
-  const formData = new FormData()
-  Object.keys(params).forEach((key) => formData.append(key, params[key] == undefined ? '' : params[key]))
-  if (dataType != null && dataType === 'json') contentType = contentTypeJson
-  const rawCookieToken = (VueCookies as any).get('Authorization') as string | undefined
-  const decodedToken = rawCookieToken ? decodeURIComponent(rawCookieToken) : ''
-  const authHeader = decodedToken ? (decodedToken.startsWith('Bearer ') ? decodedToken : `Bearer ${decodedToken}`) : ''
-  const headers: Record<string, string> = { 'Content-Type': contentType, 'X-Requested-With': 'XMLHttpRequest' }
-  if (authHeader) headers['Authorization'] = authHeader
-
-  return instance.post(url, formData, {
-    onUploadProgress: (event) => config.uploadProgressCallback && config.uploadProgressCallback(event),
-    responseType: responseType as any,
-    headers,
-    showLoading,
-    errorCallback: config.errorCallback,
-    showError
-  } as any)
+// 泛型请求方法：返回已被拦截器解包后的 data
+const request = <T = any>(config: RequestConfig): Promise<T> => {
+  // 通过第二泛型参数将返回类型从 AxiosResponse<T> 改为 T
+  return instance.request<any, T>(config)
 }
 
 export default request
+export { instance as axiosInstance }

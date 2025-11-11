@@ -13,7 +13,7 @@
               (index - 1) * partCount + partCount
             )" :to="`/v/${item.categoryCode}`">
               <span class="icon" v-if="item.icon">
-                <img :src="`${(await import('@/api/file')).sourcePath}${item.icon}`" />
+                <img :src="`${sourcePath}${item.icon}`" />
               </span>
               <span class="category-name">{{ item.categoryName }}</span>
             </router-link>
@@ -137,6 +137,8 @@ import {
   computed,
   watch,
 } from "vue";
+
+import { sourcePath } from '@/api/file'
 
 const props = defineProps({
   theme: {

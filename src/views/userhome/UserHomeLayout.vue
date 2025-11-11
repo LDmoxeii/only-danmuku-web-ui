@@ -191,30 +191,21 @@ const myself = computed(() => {
 
 const userInfo = ref<any>({});
 provide("userInfo", userInfo);
+import { getUserInfo as apiGetUserInfo } from '@/api/uhome'
 const loadUserInfo = async () => {
-  let result = await proxy.Request({
-    url: proxy.Api.uHomeGetUsesrInfo,
-    params: {
-      userId: currentUserId,
-    },
-  });
-  if (!result) {
-    return;
-  }
-  userInfo.value = result.data;
-  let noticeInfo = result.data.noticeInfo;
-  if (noticeInfo) {
-    noticeInfo = noticeInfo.replace(/\r\n/g, "<br>");
-    noticeInfo = noticeInfo.replace(/\n/g, "<br>");
-    userInfo.value.noticeInfo = noticeInfo;
-  }
+  const data = await apiGetUserInfo(currentUserId)
+  if (!data) return
+  const noticeInfo = data.noticeInfo
+    ? data.noticeInfo.replace(/\r\n/g, '<br>').replace(/\n/g, '<br>')
+    : data.noticeInfo
+  userInfo.value = { ...data, noticeInfo }
 
   if (
     Object.keys(loginStore.userInfo).length > 0 &&
     loginStore.userInfo.userId == currentUserId &&
-    loginStore.userInfo.avatar !== result.data.avatar
+    loginStore.userInfo.avatar !== data.avatar
   ) {
-    loginStore.userInfo.avatar = result.data.avatar;
+    loginStore.userInfo.avatar = data.avatar
   }
 };
 loadUserInfo();

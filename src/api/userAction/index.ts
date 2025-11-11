@@ -3,8 +3,7 @@ import request from '@/utils/Request'
 const base = '/userAction'
 
 export async function doAction(params: { videoId: string | number; actionType: number; actionCount?: number; commentId?: string | number }): Promise<null | any> {
-  const res = await request({ url: `${base}/doAction`, params })
-  return res ?? null
+  return await request<any>({url: `${base}/doAction`, method: 'post', params})
 }
 
 export const ACTION_TYPE = {
@@ -14,3 +13,4 @@ export const ACTION_TYPE = {
   COMMENT_LIKE: { value: 4 },
   COMMENT_HATE: { value: 5 },
 } as const
+

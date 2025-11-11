@@ -60,6 +60,7 @@ const categoryStore = useCategoryStore()
 
 import Category from './Category.vue'
 import LayoutHeader from './LayoutHeader.vue'
+import { sourcePath } from '@/api/file'
 import {
   ref,
   reactive,
@@ -138,7 +139,7 @@ const backgroundImage = computed(() => {
     ? categoryStore.cureentPCategory.background
     : null
   if (background) {
-    return proxy.Api.sourcePath + background
+    return sourcePath + background
   } else {
     return null
   }
@@ -155,17 +156,13 @@ const getSearchKeywordTop = async () => {
 getSearchKeywordTop()
 
 //获取消息数
+import { getNoReadCountGroup as apiGetNoReadCountGroup } from '@/api/message'
 const getNoReadCount = async () => {
-  if (Object.keys(loginStore.userInfo).length == 0) {
-    return
-  }
-  let result = await proxy.Request({
-    url: proxy.Api.getNoReadCount,
-  })
-  if (!result) {
-    return
-  }
-  loginStore.saveMessageNoReadCount(result.data)
+  if (Object.keys(loginStore.userInfo).length == 0) return
+  const list = await apiGetNoReadCountGroup()
+  if (!list) return
+  const total = list.reduce((sum, item) => sum + (item.messageCount || 0), 0)
+  loginStore.saveMessageNoReadCount(total)
 }
 watch(
   () => loginStore.userInfo,
