@@ -35,6 +35,8 @@ import artplayerPluginDanmuku from 'artplayer-plugin-danmuku'
 //https://artplayer.org/
 
 import { useLoginStore } from '@/stores/loginStore'
+import { reportVideoPlayOnline as apiReportVideoPlayOnline } from '@/api/video'
+import { loadDanmu as apiLoadDanmu, postDanmu as apiPostDanmu } from '@/api/danmu'
 const loginStore = useLoginStore()
 
 const props = defineProps({
@@ -188,10 +190,7 @@ const postDanmu = (danmu) => {
   danmu.fileId = fileId.value
   danmu.videoId = route.params.videoId
   danmu.time = Math.round(danmu.time)
-  return proxy.Request({
-    url: proxy.Api.postDanmu,
-    params: danmu,
-  })
+  return apiPostDanmu(danmuku as any)
 }
 
 //弹幕数量
@@ -200,16 +199,11 @@ const loadDanmuList = async () => {
   if (!fileId.value) {
     return []
   }
-  let result = await proxy.Request({
-    url: proxy.Api.loadDanmu,
-    params: { fileId: fileId.value, videoId: route.params.videoId },
-  })
-  if (!result) {
-    return []
-  }
-  mitter.emit('loadDanmu', result.data)
-  danmuCount.value = result.data.length
-  return result.data
+  const result = await apiLoadDanmu({ fileId: fileId.value, videoId: route.params.videoId as any })
+  if (!result) return []
+  mitter.emit('loadDanmu', result)
+  danmuCount.value = result.length
+  return result
 }
 
 const playerHeight = ref(500)
@@ -257,18 +251,9 @@ const reportVideoPlayOnline = async () => {
   if (!fileId.value) {
     return
   }
-  let result = await proxy.Request({
-    url: proxy.Api.reportVideoPlayOnline,
-    params: {
-      fileId: fileId.value,
-      deviceId: loginStore.deviceId,
-    },
-    showError: false,
-  })
-  if (!result) {
-    return
-  }
-  onLineCount.value = result.data
+  const result = await apiReportVideoPlayOnline(fileId.value, loginStore.deviceId)
+  if (!result) return
+  onLineCount.value = result
 }
 
 const cleanTimer = () => {

@@ -95,7 +95,8 @@
 <script setup lang="ts">
 import emojiList from "@/utils/Emoji";
 import { mitter } from "@/eventbus/eventBus";
-import { uploadImage } from "@/utils/Api";
+import { uploadImage } from "@/api/file";
+import { postComment as apiPostComment } from '@/api/comment'
 import { getCurrentInstance, inject, onBeforeUnmount, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useLoginStore } from "@/stores/loginStore";
@@ -158,11 +159,7 @@ const submitComment = async (event: MouseEvent) => {
     const imgPath = await uploadImage(params.imgPath, true);
     params.imgPath = imgPath;
   }
-  let result = await proxy.Request({
-    url: proxy.Api.postComment,
-    showLoading: true,
-    params,
-  });
+  let result = await apiPostComment(params as any)
   if (!result) {
     return;
   }
