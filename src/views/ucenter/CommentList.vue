@@ -64,17 +64,17 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import VideoSearchSelect from "./VideoSerchSelect.vue";
 import Table from "@/components/Table.vue";
-import { ref, reactive, getCurrentInstance, nextTick } from "vue";
+import { ref, getCurrentInstance } from 'vue'
 import { useRouter, useRoute } from "vue-router";
-const { proxy } = getCurrentInstance();
+const { proxy } = getCurrentInstance() as any
 const router = useRouter();
 const route = useRoute();
 
-const currentVideoId = ref(route.query.videoId);
-const loadData4VideoSelect = (videoId) => {
+const currentVideoId = ref<any>(route.query.videoId)
+const loadData4VideoSelect = (videoId: any) => {
   currentVideoId.value = videoId;
   loadDataList();
 };
@@ -91,24 +91,24 @@ const columns = [
   },
 ];
 
-const tableInfoRef = ref();
-const tableOptions = ref({
+const tableInfoRef = ref<any>();
+const tableOptions = ref<any>({
   extHeight: 10,
 });
 
-const tableData = ref({
+const tableData = ref<any>({
   pageNum: 1,
   pageSize: 15,
 });
-const loadDataList = async (videoId) => {
-  let params = {
+const loadDataList = async () => {
+  let params: any = {
     pageNum: tableData.value.pageNum,
     pageSize: tableData.value.pageSize,
     videoId: currentVideoId.value,
   };
   let result = await proxy.Request({
     url: proxy.Api.ucLoadComment,
-    params: params,
+    params,
   });
   if (!result) {
     return;
@@ -116,7 +116,7 @@ const loadDataList = async (videoId) => {
   Object.assign(tableData.value, result.data);
 };
 
-const delComment = (commentId) => {
+const delComment = (commentId: string) => {
   proxy.Confirm({
     message: "确定要删除吗？",
     okfun: async () => {
