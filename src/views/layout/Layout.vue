@@ -46,7 +46,7 @@
   <Account></Account>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { mitter } from '@/eventbus/eventBus'
 import Account from '@/views/account/Account.vue'
 import { useNavAction } from '@/stores/navActionStore'
@@ -72,10 +72,10 @@ import {
   computed,
 } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-const { proxy } = getCurrentInstance()
+const { proxy } = getCurrentInstance() as any
 const router = useRouter()
 const route = useRoute()
-const menuList = ref([
+const menuList = ref<{ name: string; path: string }[]>([
   {
     name: '首页',
     path: '/',
@@ -86,8 +86,8 @@ const menuList = ref([
   },
 ])
 
-const mouseOver = ref(false)
-const lineCategoryMouseHandler = (type) => {
+const mouseOver = ref<boolean>(false)
+const lineCategoryMouseHandler = (type: number) => {
   if (type == 1) {
     mouseOver.value = true
   } else {
@@ -95,10 +95,10 @@ const lineCategoryMouseHandler = (type) => {
   }
 }
 
-const showFixedHeader = ref(0)
-const showFixedCategory = ref(false)
+const showFixedHeader = ref<boolean>(false)
+const showFixedCategory = ref<boolean>(false)
 
-const showFixedTopHandler = (curScrollTop) => {
+const showFixedTopHandler = (curScrollTop: number) => {
   if (curScrollTop <= 20) {
     showFixedHeader.value = false
   } else {
@@ -122,7 +122,7 @@ onUnmounted(() => {
 })
 
 const windowScrollHandler = () => {
-  var curScrollTop = window.scrollY
+  const curScrollTop = window.scrollY
   showFixedTopHandler(curScrollTop)
   mitter.emit('windowScroll', curScrollTop)
 }
@@ -145,7 +145,7 @@ const backgroundImage = computed(() => {
 })
 
 //热搜
-const hotSearchList = ref([])
+const hotSearchList = ref<any[]>([])
 const getSearchKeywordTop = async () => {
   let result = await proxy.Request({
     url: proxy.Api.getSearchKeywordTop,
