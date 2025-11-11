@@ -164,13 +164,9 @@ const searchHistoryStore = useSearchHistoryStore();
 
 const userCountInfo = ref<any>({});
 const getCountInfo = async () => {
-  let result = await proxy.Request({
-    url: proxy.Api.getUserCountInfo,
-  });
-  if (!result) {
-    return;
-  }
-  userCountInfo.value = result.data;
+  const data = await (await import('@/api/account')).getUserCountInfo()
+  if (!data) return
+  userCountInfo.value = data
 };
 
 //分类列表
