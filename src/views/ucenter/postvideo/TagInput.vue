@@ -26,35 +26,32 @@
   </div>
 </template>
 
-<script setup>
-import { ref, reactive, getCurrentInstance, nextTick } from "vue";
-const { proxy } = getCurrentInstance();
-import { useRoute, useRouter } from "vue-router";
-const route = useRoute();
-const router = useRouter();
+<script setup lang="ts">
+import { ref, getCurrentInstance, withDefaults } from "vue";
+const { proxy } = getCurrentInstance() as any;
 
-const props = defineProps({
-  modelValue: {
-    type: Array,
-    default: [],
-  },
+const props = withDefaults(defineProps<{ modelValue: string[] }>(), {
+  modelValue: () => [] as string[],
 });
 
-const handleClose = (tag) => {
-  props.modelValue.splice(props.modelValue.indexOf(tag), 1);
+const handleClose = (tag: string) => {
+  (props.modelValue as unknown as string[]).splice(
+    (props.modelValue as unknown as string[]).indexOf(tag),
+    1
+  );
 };
 
-const inputValue = ref();
+const inputValue = ref<string>("");
 const inputChange = () => {
   if (!inputValue.value) {
     return;
   }
-  if (props.modelValue.length >= 10) {
+  if ((props.modelValue as unknown as string[]).length >= 10) {
     proxy.Message.warning("最多只能输入10个标签");
     inputValue.value = "";
     return;
   }
-  props.modelValue.push(inputValue.value);
+  (props.modelValue as unknown as string[]).push(inputValue.value);
   inputValue.value = "";
 };
 </script>

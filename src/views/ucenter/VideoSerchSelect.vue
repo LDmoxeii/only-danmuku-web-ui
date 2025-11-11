@@ -7,28 +7,31 @@
   </div>
 </template>
 
-<script setup>
-import { ref, reactive, getCurrentInstance, nextTick } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-const { proxy } = getCurrentInstance()
-const router = useRouter()
+<script setup lang="ts">
+import { ref, getCurrentInstance } from 'vue'
+import { useRoute } from 'vue-router'
+const { proxy } = getCurrentInstance() as any
 const route = useRoute()
 
-const searchForm = ref({ videoId: route.query.videoId })
-const allVideoList = ref([])
+type VideoItem = { videoId: number | string; videoName: string }
+
+const searchForm = ref<{ videoId: number | string | undefined }>({
+  videoId: route.query.videoId as any,
+})
+const allVideoList = ref<VideoItem[]>([])
 const loadAllVideo = async () => {
-  let result = await proxy.Request({
+  const result = await proxy.Request({
     url: proxy.Api.ucLoadAllVideo,
   })
-  if (!result) {
-    return
-  }
-  allVideoList.value = result.data
+  if (!result) return
+  allVideoList.value = result.data as VideoItem[]
 }
 loadAllVideo()
 
-const emit = defineEmits(['loadData'])
-const loadData = (e) => {
+const emit = defineEmits<{
+  (e: 'loadData', id: number | string | undefined): void
+}>()
+const loadData = (e: number | string | undefined) => {
   emit('loadData', e)
 }
 </script>
