@@ -40,6 +40,7 @@ const router = useRouter()
 
 import { useNavAction } from '@/stores/navActionStore'
 const navActionStore = useNavAction()
+import { loadHistory as apiLoadHistory, cleanHistory as apiCleanHistory, delHistory as apiDelHistory } from '@/api/history'
 
 const loadingData = ref<boolean>(false)
 const dataSource = ref<any>({
@@ -50,24 +51,14 @@ const dataSource = ref<any>({
   totalCount: 0,
 });
 const loadDataList = async () => {
-  let params: any = {
-    pageNum: dataSource.value.pageNum,
-  }
+  const params: any = { pageNum: dataSource.value.pageNum, pageSize: dataSource.value.pageSize }
   loadingData.value = true
-  let result = await proxy.Request({
-    url: proxy.Api.playHisotry,
-    params,
-  })
+  const result = await apiLoadHistory(params)
   loadingData.value = false
-  if (!result) {
-    return
-  }
-
+  if (!result) return
   const dataList = dataSource.value.list
-  dataSource.value = Object.assign({}, result.data)
-  if (result.data.pageNum > 1) {
-    dataSource.value.list = dataList.concat(result.data.list)
-  }
+  dataSource.value = Object.assign({}, result)
+  if (result.pageNum > 1) dataSource.value.list = dataList.concat(result.list)
 }
 loadDataList()
 
@@ -83,35 +74,22 @@ const cleanAll = () => {
   proxy.Confirm({
     message: '确定要清空历史记录吗？',
     okfun: async () => {
-      let result = await proxy.Request({
-        url: proxy.Api.cleanHistory,
-      })
-      if (!result) {
-        return
-      }
+      const result = await apiCleanHistory()
+      if (!result) return
       proxy.Message.success('删除成功')
       dataSource.value = { list: [] }
     },
   })
 }
 
-const delHisotry = (videoId: string) => {
+const delHisotry = (videoId: string | number) => {
   proxy.Confirm({
     message: '确定要删除记录吗？',
     okfun: async () => {
-      let result = await proxy.Request({
-        url: proxy.Api.delHistory,
-        params: {
-          videoId,
-        },
-      })
-      if (!result) {
-        return
-      }
+      const result = await apiDelHistory(videoId)
+      if (!result) return
       proxy.Message.success('删除成功')
-      dataSource.value.list = dataSource.value.list.filter((item) => {
-        return item.videoId != videoId
-      })
+      dataSource.value.list = dataSource.value.list.filter((item: any) => item.videoId != videoId)
     },
   })
 }
