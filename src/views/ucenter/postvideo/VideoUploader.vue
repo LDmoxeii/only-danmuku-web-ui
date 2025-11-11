@@ -57,33 +57,22 @@
   </div>
 </template>
 
-<script setup>
-import { useSysSettingStore } from '@/stores/sysSettingStore.js'
+<script setup lang="ts">
+import { useSysSettingStore } from '@/stores/sysSettingStore'
 const sysSettingStore = useSysSettingStore()
 
 import VideoUploadStart from './VideoUploadStart.vue'
 import { vDraggable } from 'vue-draggable-plus'
-import {
-  computed,
-  getCurrentInstance,
-  nextTick,
-  onMounted,
-  onUnmounted,
-  ref,
-} from 'vue'
-import { useRouter, useRoute } from 'vue-router'
+import { getCurrentInstance, nextTick, onUnmounted, ref } from 'vue'
+import { useRoute } from 'vue-router'
 
-const { proxy } = getCurrentInstance()
-const router = useRouter()
+const { proxy } = getCurrentInstance() as any
 const route = useRoute()
 
-import { mitter } from '@/eventbus/eventBus.js'
+import { mitter } from '@/eventbus/eventBus'
 
-const props = defineProps({
-  videoList: {
-    type: Array,
-    default: [],
-  },
+const props = withDefaults(defineProps<{ videoList: any[] }>(), {
+  videoList: () => [] as any[],
 })
 
 const STATUS = {
@@ -126,26 +115,26 @@ const STATUS = {
 }
 
 //分片大小
-const CHUNK_SIZE = proxy.chunkSize
+const CHUNK_SIZE: number = proxy.chunkSize
 //同时最大上传数量
-const MAX_UPLOADING = proxy.maxUploading
+const MAX_UPLOADING: number = proxy.maxUploading
 
-const fileList = ref([])
+const fileList = ref<any[]>([])
 
-const getFileByUid = (uid) => {
+const getFileByUid = (uid: any) => {
   const currentFile = fileList.value.find((item) => {
     return item.uid == uid
   })
   return currentFile
 }
 
-const startUpload = ref(false)
+const startUpload = ref<boolean>(false)
 mitter.on('startUpload', () => {
   fileList.value = []
   startUpload.value = true
 })
 
-const addFile = (file) => {
+const addFile = (file: any) => {
   file = file.file
 
   if (fileList.value.length >= sysSettingStore.sysSetting.videoPCount) {
@@ -201,14 +190,14 @@ const addFile = (file) => {
   uploadFile(fileItem.uid)
 }
 
-const uploadFile = async (uid, chunkIndex) => {
+const uploadFile = async (uid: any, chunkIndex?: number) => {
   const currentFile = getFileByUid(uid)
 
   currentFile.status = STATUS.uploading.value
 
   chunkIndex = chunkIndex ? chunkIndex : 0
   //分片上传
-  const file = currentFile.file
+  const file: File = currentFile.file
   const fileSize = currentFile.totalSize
   //小数部分取整
   const chunks = Math.ceil(fileSize / CHUNK_SIZE)
@@ -255,7 +244,7 @@ const uploadFile = async (uid, chunkIndex) => {
         currentFile.status = STATUS.fail.value
         currentFile.errorMsg = errorMsg
       },
-      uploadProgressCallback: (event) => {
+      uploadProgressCallback: (event: any) => {
         let loaded = event.loaded
         if (loaded > fileSize) {
           loaded = fileSize
@@ -287,18 +276,18 @@ const uploadFile = async (uid, chunkIndex) => {
 }
 
 //暂停
-const pauseUpload = (uid) => {
+const pauseUpload = (uid: any) => {
   const currentFile = getFileByUid(uid)
   currentFile.pause = true
 }
 //继续上传
-const restartUpload = (uid) => {
+const restartUpload = (uid: any) => {
   const currentFile = getFileByUid(uid)
   currentFile.pause = false
   uploadFile(uid, currentFile.chunkIndex)
 }
 //删除文件
-const delFile = async (index) => {
+const delFile = async (index: number) => {
   const currentFile = fileList.value[index]
   currentFile.del = true
   fileList.value.splice(index, 1)
@@ -319,18 +308,20 @@ const delFile = async (index) => {
 }
 
 //编辑标题
-const editFileName = (index) => {
+const editFileName = (index: number) => {
   const currentFile = fileList.value[index]
   currentFile.edit = true
   nextTick(() => {
-    const input = document.querySelector('#file-input' + currentFile.uid)
+    const input = document.querySelector(
+      '#file-input' + currentFile.uid
+    ) as HTMLInputElement | null
     setTimeout(() => {
-      input.focus()
+      input && input.focus()
     }, 100)
   })
 }
 
-const endEdit = (index) => {
+const endEdit = (index: number) => {
   const currentFile = fileList.value[index]
   currentFile.edit = false
 }
@@ -370,7 +361,7 @@ const getUploadFileList = () => {
     proxy.Message.warning('文件还未上传完成无法提交')
     return null
   }
-  const uploadFileList = fileList.value.map((item) => {
+  const uploadFileList = fileList.value.map((item: any) => {
     return {
       uploadId: item.uploadId,
       fileId: item.fileId,
@@ -380,10 +371,10 @@ const getUploadFileList = () => {
   return uploadFileList
 }
 
-const initUploader = (_startUpload, videoList) => {
+const initUploader = (_startUpload: boolean, videoList: any[]) => {
   startUpload.value = _startUpload
   fileList.value.splice(0, fileList.value.length)
-  videoList.forEach((item) => {
+  videoList.forEach((item: any) => {
     // transferResult 枚举已调整：1=转码中, 2=成功, 3=失败（旧版前端使用 1=成功）
     if (item.transferResult == 2) {
       item.status = STATUS.success.value

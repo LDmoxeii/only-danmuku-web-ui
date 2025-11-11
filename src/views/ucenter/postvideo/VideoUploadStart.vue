@@ -45,24 +45,25 @@
   </div>
 </template>
 
-<script setup>
-import { useSysSettingStore } from '@/stores/sysSettingStore.js'
+<script setup lang="ts">
+import { useSysSettingStore } from '@/stores/sysSettingStore'
 const sysSettingStore = useSysSettingStore()
 
-import { ref, reactive, getCurrentInstance, nextTick } from 'vue'
-const { proxy } = getCurrentInstance()
-import { useRoute, useRouter } from 'vue-router'
+import { getCurrentInstance } from 'vue'
+const { proxy } = getCurrentInstance() as any
+import { useRoute } from 'vue-router'
 const route = useRoute()
-const router = useRouter()
 
-import { mitter } from '@/eventbus/eventBus.js'
+import { mitter } from '@/eventbus/eventBus'
 
-const emit = defineEmits(['addFile'])
-const addFile = (file) => {
+const emit = defineEmits<{
+  (e: 'addFile', file: any): void
+}>()
+const addFile = (file: any) => {
   emit('addFile', file)
 }
 let fileIndex = 0
-const startUpload = (file) => {
+const startUpload = (file: any) => {
   if (fileIndex == 0) {
     mitter.emit('startUpload', proxy.Utils.getFileName(file.name))
   }
