@@ -233,13 +233,7 @@ const focusUser = async (
     loginStore.setLogin(true);
     return;
   }
-  let result = await proxy.Request({
-    url: proxy.Api.uHomeFocus,
-    showLoading: true,
-    params: {
-      focusUserId: focusUserId,
-    },
-  });
+  let result = await (await import('@/api/uhome')).focus(focusUserId)
   if (!result) {
     return;
   }
@@ -258,13 +252,7 @@ const cancelFocusUser = async (
   changeCountType: number = 0,
   fn?: () => void
 ) => {
-  let result = await proxy.Request({
-    url: proxy.Api.uHomeCancelFocus,
-    showLoading: true,
-    params: {
-      focusUserId,
-    },
-  });
+  let result = await (await import('@/api/uhome')).cancelFocus(focusUserId)
   if (!result) {
     return;
   }
