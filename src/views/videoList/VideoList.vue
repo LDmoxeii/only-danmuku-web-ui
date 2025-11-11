@@ -27,6 +27,7 @@ const { proxy } = getCurrentInstance() as any
 import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
 const router = useRouter()
+import { loadVideo as apiLoadVideo } from '@/api/video'
 
 const categoryMap: any = categoryStore.categoryMap
 const categoryIdInfo = ref<any>({})
@@ -58,24 +59,15 @@ const dataSource = ref<any>({
   totalCount: 0,
 });
 const loadDataList = async () => {
-  let params: any = {
-    pageNum: dataSource.value.pageNum,
-  }
+  const params: any = { pageNum: dataSource.value.pageNum }
   Object.assign(params, categoryIdInfo.value)
   loadingData.value = true
-  let result = await proxy.Request({
-    url: proxy.Api.loadVideo,
-    params,
-  })
+  const result = await apiLoadVideo(params)
   loadingData.value = false
-  if (!result) {
-    return
-  }
+  if (!result) return
   const dataList = dataSource.value.list
-  dataSource.value = Object.assign({}, result.data)
-  if (result.data.pageNum > 1) {
-    dataSource.value.list = dataList.concat(result.data.list)
-  }
+  dataSource.value = Object.assign({}, result)
+  if (result.pageNum > 1) dataSource.value.list = dataList.concat(result.list)
 }
 
 const initData = () => {
