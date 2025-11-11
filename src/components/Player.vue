@@ -11,7 +11,7 @@
     <div id="play"><img :src="proxy.Utils.getLocalImage('play.png')" /></div>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { mitter } from '@/eventbus/eventBus'
 import {
   ref,
@@ -27,7 +27,7 @@ import {
 } from 'vue'
 import Hls from 'hls.js'
 import { useRouter, useRoute } from 'vue-router'
-const { proxy } = getCurrentInstance()
+const { proxy } = getCurrentInstance() as any
 const router = useRouter()
 const route = useRoute()
 import Artplayer from 'artplayer'
