@@ -8,7 +8,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { useCategoryStore } from '@/stores/categoryStore'
 const categoryStore = useCategoryStore()
 
@@ -23,17 +23,17 @@ import {
   onMounted,
   onUnmounted,
 } from 'vue'
-const { proxy } = getCurrentInstance()
+const { proxy } = getCurrentInstance() as any
 import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
 const router = useRouter()
 
-const categoryMap = categoryStore.categoryMap
-const categoryIdInfo = ref({})
+const categoryMap: any = categoryStore.categoryMap
+const categoryIdInfo = ref<any>({})
 
-const convertCode2Id = (pCategoryCode, categoryCode) => {
-  let parentCategoryId = ''
-  let categoryId = ''
+const convertCode2Id = (pCategoryCode?: string, categoryCode?: string) => {
+  let parentCategoryId: string = ''
+  let categoryId: string = ''
   if (pCategoryCode) {
     parentCategoryId = categoryMap[pCategoryCode]
       ? categoryMap[pCategoryCode].categoryId
@@ -49,8 +49,8 @@ const convertCode2Id = (pCategoryCode, categoryCode) => {
     categoryId,
   }
 }
-const loadingData = ref(false)
-const dataSource = ref({
+const loadingData = ref<boolean>(false)
+const dataSource = ref<any>({
   list: [],
   pageNum: 1,
   pageSize: 15,
@@ -58,7 +58,7 @@ const dataSource = ref({
   totalCount: 0,
 });
 const loadDataList = async () => {
-  let params = {
+  let params: any = {
     pageNum: dataSource.value.pageNum,
   }
   Object.assign(params, categoryIdInfo.value)
@@ -79,11 +79,11 @@ const loadDataList = async () => {
 }
 
 const initData = () => {
-  convertCode2Id(route.params.pCategoryCode, route.params.categoryCode)
+  convertCode2Id(route.params.pCategoryCode as string, route.params.categoryCode as string)
   loadDataList()
 }
 
-const categoryInit = ref(false)
+const categoryInit = ref<boolean>(false)
 watch(
   () => route.params,
   (newVal, oldVal) => {
