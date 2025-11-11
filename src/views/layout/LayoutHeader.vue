@@ -124,8 +124,8 @@
   </div>
 </template>
 
-<script setup>
-import { mitter } from "@/eventbus/eventBus.js";
+<script setup lang="ts">
+import { mitter } from "@/eventbus/eventBus";
 import {
   ref,
   reactive,
@@ -149,20 +149,20 @@ const props = defineProps({
   },
 });
 
-const { proxy } = getCurrentInstance();
+const { proxy } = getCurrentInstance() as any;
 import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
 const router = useRouter();
-import { useLoginStore } from "@/stores/loginStore.js";
+import { useLoginStore } from "@/stores/loginStore";
 const loginStore = useLoginStore();
 
-import { useCategoryStore } from "@/stores/categoryStore.js";
+import { useCategoryStore } from "@/stores/categoryStore";
 const categoryStore = useCategoryStore();
 
-import { useSearchHistoryStore } from "@/stores/searchHisotryStore.js";
+import { useSearchHistoryStore } from "@/stores/searchHisotryStore";
 const searchHistoryStore = useSearchHistoryStore();
 
-const userCountInfo = ref({});
+const userCountInfo = ref<any>({});
 const getCountInfo = async () => {
   let result = await proxy.Request({
     url: proxy.Api.getUserCountInfo,
@@ -187,11 +187,11 @@ const loginHandler = () => {
   }
 };
 
-const placeholder = ref("罗培中");
-const keyword = ref();
+const placeholder = ref<string>("罗培中");
+const keyword = ref<string | undefined>();
 
 //历史搜索
-const searchKeyword = (keyword) => {
+const searchKeyword = (keyword: string) => {
   router.push({
     path: "/search",
     query: {
@@ -200,7 +200,7 @@ const searchKeyword = (keyword) => {
   });
 };
 
-const search = () => {
+const search = (): void => {
   if (!keyword.value) {
     keyword.value = placeholder.value;
   }
@@ -212,12 +212,12 @@ const search = () => {
   });
 };
 
-const showHistory = ref(false);
-const onSearchFocus = () => {
+const showHistory = ref<boolean>(false);
+const onSearchFocus = (): void => {
   showHistory.value = true;
 };
 
-const searchInputRef = ref();
+const searchInputRef = ref<any>();
 onMounted(() => {
   document.addEventListener("click", () => {
     showHistory.value = false;
@@ -235,7 +235,7 @@ onUnmounted(() => {
   mitter.off("windowScroll");
 });
 
-const navJump = (url) => {
+const navJump = (url: string) => {
   if (Object.keys(loginStore.userInfo).length == 0) {
     loginStore.setLogin(true);
     return;
