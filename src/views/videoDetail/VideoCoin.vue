@@ -21,31 +21,31 @@
   </Dialog>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { doUserAction } from '@/utils/Api'
 import { ACTION_TYPE } from '@/utils/Constants'
 
 import { ref, reactive, getCurrentInstance, nextTick, inject } from 'vue'
 import { useRoute } from 'vue-router'
-const { proxy } = getCurrentInstance()
+const { proxy } = getCurrentInstance() as any
 const route = useRoute()
 
-const dialogConfig = ref({
+const dialogConfig = ref<{ show: boolean; title: string; buttons: any[] }>({
   show: false,
   title: '投币',
   buttons: [],
 })
-const coinCount = ref(1)
+const coinCount = ref<number>(1)
 
-const setCoinCount = (count) => {
+const setCoinCount = (count: number) => {
   coinCount.value = count
 }
 
-const videoInfo = inject('videoInfo')
+const videoInfo = inject<any>('videoInfo')
 const submitCoin = () => {
   doUserAction(
     {
-      videoId: route.params.videoId,
+      videoId: route.params.videoId as any,
       actionType: ACTION_TYPE.VIDEO_COIN.value,
       actionCount: coinCount.value,
     },
