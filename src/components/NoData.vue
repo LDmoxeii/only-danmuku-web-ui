@@ -5,12 +5,9 @@
   </div>
 </template>
 
-<script setup>
-const props = defineProps({
-  msg: {
-    type: String,
-    default: '暂无数据',
-  },
+<script setup lang="ts">
+const props = withDefaults(defineProps<{ msg?: string }>(), {
+  msg: '暂无数据',
 })
 </script>
 
