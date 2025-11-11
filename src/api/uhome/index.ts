@@ -1,23 +1,10 @@
 import request from '@/utils/Request'
 import type { PageData } from '../_types'
+import type { UserInfo, FocusFansItem, UserHomeVideoItem } from './types'
 
 const base = '/uhome'
 
-export interface UserInfo {
-  userId: string | number
-  nickName: string
-  avatar?: string
-  sex?: number
-  personIntroduction?: string
-  noticeInfo?: string
-  theme?: number
-  currentCoinCount?: number
-  fansCount?: number
-  focusCount?: number
-  likeCount?: number
-  playCount?: number
-  haveFocus?: boolean
-}
+// types moved to ./types
 
 export async function getUserInfo(userId: string | number): Promise<UserInfo | null> {
   const res = await request({ url: `${base}/getUserInfo`, params: { userId } })
@@ -44,13 +31,7 @@ export async function cancelFocus(focusUserId: string | number): Promise<any> {
   return res ?? null
 }
 
-export type FocusFansItem = {
-  otherUserId: string | number
-  otherNickName: string
-  otherAvatar?: string
-  otherPersonIntroduction?: string
-  focusType?: number
-}
+// types moved to ./types
 
 export async function loadFocusList(params: { pageNum: number; pageSize?: number }): Promise<PageData<FocusFansItem> | null> {
   const res = await request({ url: `${base}/loadFocusList`, params })
@@ -62,16 +43,7 @@ export async function loadFansList(params: { pageNum: number; pageSize?: number 
   return res ?? null
 }
 
-export type UserHomeVideoItem = {
-  videoId: string | number
-  videoName: string
-  videoCover: string
-  playCount?: number
-  danmuCount?: number
-  likeCount?: number
-  collectCount?: number
-  createTime?: string
-}
+// types moved to ./types
 
 export async function loadVideoList(params: { pageNum: number; pageSize?: number; userId?: string | number; type?: number; videoName?: string; orderType?: number }): Promise<PageData<UserHomeVideoItem> | null> {
   const res = await request({ url: `${base}/loadVideoList`, params })

@@ -1,5 +1,6 @@
 import request from '@/utils/Request'
 import type { PageData } from '../_types'
+import type { UCenterVideoCountInfo } from './types'
 
 const base = '/ucenter'
 
@@ -16,7 +17,7 @@ export async function getVideoByVideoId(videoPostId: string | number): Promise<a
   const res = await request({ url: `${base}/getVideoByVideoId`, params: { videoPostId } })
   return res ?? null
 }
-export async function getVideoCountInfo(): Promise<{ inProgress: number; auditPassCount: number; auditFailCount: number } | null> {
+export async function getVideoCountInfo(): Promise<UCenterVideoCountInfo | null> {
   const res = await request({ url: `${base}/getVideoCountInfo` })
   return res ?? null
 }

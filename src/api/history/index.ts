@@ -1,14 +1,10 @@
 import request from '@/utils/Request'
 import type { PageData } from '../_types'
+import type { HistoryItem } from './types'
 
 const base = '/history'
 
-export type HistoryItem = {
-  videoId: string | number
-  videoName: string
-  videoCover: string
-  lastUpdateTime?: string
-}
+// types moved to ./types
 
 export async function loadHistory(params: { pageNum: number; pageSize?: number }): Promise<PageData<HistoryItem> | null> {
   const res = await request({ url: `${base}/loadHistory`, params })

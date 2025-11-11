@@ -1,9 +1,10 @@
 import request from '@/utils/Request'
 import type { PageData } from '../_types'
+import type { MessageGroupItem } from './types'
 
 const base = '/message'
 
-export async function getNoReadCountGroup(): Promise<Array<{ messageType: number; messageCount: number }> | null> {
+export async function getNoReadCountGroup(): Promise<MessageGroupItem[] | null> {
   const res = await request({ url: `${base}/getNoReadCountGroup` })
   return res ?? null
 }
