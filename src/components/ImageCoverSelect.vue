@@ -9,22 +9,12 @@
   </div>
   <ImageCoverCut ref="imageCoverCutRef" :cutWidth="props.cutWidth" :scale="props.scale"></ImageCoverCut>
 </template>
-<script setup>
+<script setup lang="ts">
 import ImageCoverCut from './ImageCoverCut.vue'
-import {
-  ref,
-  reactive,
-  getCurrentInstance,
-  nextTick,
-  inject,
-  computed,
-} from 'vue'
+import { ref, getCurrentInstance } from 'vue'
 import { asyncComputed } from '@vueuse/core'
 
-const { proxy } = getCurrentInstance()
-import { useRoute, useRouter } from 'vue-router'
-const route = useRoute()
-const router = useRouter()
+const { proxy } = getCurrentInstance() as any
 
 const props = defineProps({
   coverImage: {
@@ -52,22 +42,22 @@ const coverFile = asyncComputed(async () => {
   if (typeof props.coverImage == 'string') {
     return proxy.Api.sourcePath + props.coverImage
   } else if (props.coverImage instanceof File) {
-    const base64 = await convertFile2Base64(proxy.coverImage)
+    const base64 = await convertFile2Base64(props.coverImage)
     return base64
   }
 })
 
-const convertFile2Base64 = (file) => {
-  return new Promise((resolve, reject) => {
+const convertFile2Base64 = (file: File) => {
+  return new Promise<string | ArrayBuffer | null>((resolve) => {
     let img = new FileReader()
     img.readAsDataURL(file)
-    img.onload = ({ target }) => {
+    img.onload = ({ target }: any) => {
       resolve(target.result)
     }
   })
 }
 
-const imageCoverCutRef = ref()
+const imageCoverCutRef = ref<any>()
 const selectImage = async () => {
   imageCoverCutRef.value.show()
 }

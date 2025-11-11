@@ -23,15 +23,12 @@
   </Dialog>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import 'vue-cropper/dist/index.css'
 import { VueCropper } from 'vue-cropper'
 
-import { ref, reactive, getCurrentInstance, nextTick, inject } from 'vue'
-const { proxy } = getCurrentInstance()
-import { useRoute, useRouter } from 'vue-router'
-const route = useRoute()
-const router = useRouter()
+import { ref, getCurrentInstance, nextTick, inject } from 'vue'
+const { proxy } = getCurrentInstance() as any
 
 /**
  * 参数说明
