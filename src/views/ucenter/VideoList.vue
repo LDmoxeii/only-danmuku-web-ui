@@ -62,24 +62,17 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import VideoItem from "./VideoItem.vue";
-import {
-  ref,
-  reactive,
-  getCurrentInstance,
-  nextTick,
-  onMounted,
-  onUnmounted,
-} from "vue";
-const { proxy } = getCurrentInstance();
+import { ref, getCurrentInstance, onMounted, onUnmounted } from 'vue'
+const { proxy } = getCurrentInstance() as any
 import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
 const router = useRouter();
 
-const videoNameFuzzy = ref();
-const status = ref();
-const statusLoad = (_status) => {
+const videoNameFuzzy = ref<string | undefined>();
+const status = ref<number | null | undefined>();
+const statusLoad = (_status: number) => {
   status.value = _status;
   loadVideoList();
 };
@@ -88,7 +81,7 @@ const cleanStatusLoad = () => {
   loadVideoList();
 };
 
-const dataSource = ref({
+const dataSource = ref<any>({
   list: [],
   pageNum: 1,
   pageSize: 15,
@@ -96,7 +89,7 @@ const dataSource = ref({
   totalCount: 0,
 });
 const loadVideoList = async () => {
-  let params = {
+  let params: any = {
     pageNum: dataSource.value.pageNum,
     videoNameFuzzy: videoNameFuzzy.value,
     status: status.value,
@@ -125,7 +118,7 @@ const loadCountInfo = async () => {
 };
 loadCountInfo();
 
-let timmer = ref(null);
+let timmer = ref<any>(null);
 const startTimer = () => {
   timmer.value = setInterval(() => {
     loadVideoList();

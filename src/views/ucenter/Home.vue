@@ -26,15 +26,15 @@
   </el-card>
 </template>
 
-<script setup>
-import { ref, reactive, getCurrentInstance, nextTick, shallowRef } from "vue";
-const { proxy } = getCurrentInstance();
-import { useRoute, useRouter } from "vue-router";
-const route = useRoute();
-const router = useRouter();
-import * as echarts from "echarts";
+<script setup lang="ts">
+import { ref, getCurrentInstance, nextTick, shallowRef } from 'vue'
+const { proxy } = getCurrentInstance() as any
+import { useRoute, useRouter } from 'vue-router'
+const route = useRoute()
+const router = useRouter()
+import * as echarts from 'echarts'
 
-const dataPartList = ref([
+const dataPartList = ref<any[]>([
   {
     name: "粉丝",
     icon: "icon-fans",
@@ -112,8 +112,8 @@ const getActualTimeStatisticsInfo = async () => {
 };
 getActualTimeStatisticsInfo();
 
-const chartRef = ref(null);
-const dataChart = shallowRef();
+const chartRef = ref<HTMLDivElement | null>(null);
+const dataChart = shallowRef<any>();
 const init = () => {
   nextTick(() => {
     dataChart.value = echarts.init(chartRef.value);
@@ -122,7 +122,7 @@ const init = () => {
 };
 init();
 
-const loadWeekDataHandler = (item) => {
+const loadWeekDataHandler = (item: any) => {
   currentDataPart.value = item;
   loadWeekData();
 };

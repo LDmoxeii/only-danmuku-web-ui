@@ -38,15 +38,15 @@
   <Account></Account>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import Account from '@/views/account/Account.vue'
-import { ref, reactive, getCurrentInstance, nextTick, watch } from 'vue'
-const { proxy } = getCurrentInstance()
+import { ref, getCurrentInstance, watch } from 'vue'
+const { proxy } = getCurrentInstance() as any
 import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
 const router = useRouter()
 
-import { useLoginStore } from '@/stores/loginStore.js'
+import { useLoginStore } from '@/stores/loginStore'
 const loginStore = useLoginStore()
 
 const menuList = [
@@ -82,8 +82,8 @@ const menuList = [
     ],
   },
 ]
-const defaultActive = ref()
-const defaultOpeneds = ref([])
+const defaultActive = ref<string | undefined>()
+const defaultOpeneds = ref<string[]>([])
 const init = () => {
   menuList.forEach((item) => {
     defaultOpeneds.value.push(item.path)
@@ -92,11 +92,11 @@ const init = () => {
 init()
 
 watch(
-  () => route,
-  (newVal, oldVal) => {
+  () => route.path,
+  () => {
     defaultActive.value = route.path
   },
-  { immediate: true, deep: true }
+  { immediate: true }
 )
 </script>
 
