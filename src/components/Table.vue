@@ -77,10 +77,13 @@
     </div>
   </div>
 </template>
-<script setup>
+<script setup lang="ts">
 import { ref } from "vue";
 
-const emit = defineEmits(["rowSelected", "rowClick"]);
+const emit = defineEmits<{
+  (e: "rowSelected", row: any): void;
+  (e: "rowClick", row: any): void;
+}>();
 const props = defineProps({
   dataSource: Object,
   showPagination: {
@@ -120,14 +123,14 @@ const init = () => {
 };
 init();
 
-const dataTable = ref();
+const dataTable = ref<any>();
 //清除选中
-const clearSelection = () => {
+const clearSelection = (): void => {
   dataTable.value.clearSelection();
 };
 
 //设置行选中
-const setCurrentRow = (rowKey, rowValue) => {
+const setCurrentRow = (rowKey: string, rowValue: any): void => {
   let row = props.dataSource.list.find((item) => {
     return item[rowKey] === rowValue;
   });
@@ -137,29 +140,29 @@ const setCurrentRow = (rowKey, rowValue) => {
 defineExpose({ setCurrentRow, clearSelection });
 
 //行点击
-const handleRowClick = (row) => {
+const handleRowClick = (row: any) => {
   emit("rowClick", row);
 };
 
 //多选
-const handleSelectionChange = (row) => {
+const handleSelectionChange = (row: any) => {
   emit("rowSelected", row);
 };
 
 //切换每页大小
-const handlePageSizeChange = (size) => {
+const handlePageSizeChange = (size: number) => {
   props.dataSource.pageSize = size;
   props.dataSource.pageNum = 1;
   props.fetch();
 };
 // 切换页码
-const handlepageNumChange = (pageNum) => {
+const handlepageNumChange = (pageNum: number) => {
   props.dataSource.pageNum = pageNum;
   props.fetch();
 };
 
 //复选事件
-const selectedHandler = (row, index) => {
+const selectedHandler = (row: any, index: number) => {
   if (props.selected) {
     return props.selected(row, index);
   }
