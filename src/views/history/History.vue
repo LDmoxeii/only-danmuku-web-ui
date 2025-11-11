@@ -17,7 +17,7 @@
                 </div>
                 <div class="video-info">
                   <div @click="goDetail(data.videoId)">
-                    {{ data.videoName || 已失效视频 }}
+                    {{ data.videoName || '已失效视频' }}
                   </div>
                 </div>
                 <div class="op-btns">
