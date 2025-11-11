@@ -126,8 +126,8 @@
   </div>
 </template>
 
-<script setup>
-import { useCategoryStore } from "@/stores/categoryStore.js";
+<script setup lang="ts">
+import { useCategoryStore } from "@/stores/categoryStore";
 const categoryStore = useCategoryStore();
 
 import {
@@ -140,7 +140,7 @@ import {
   inject,
 } from "vue";
 import { useRoute, useRouter } from "vue-router";
-const { proxy } = getCurrentInstance();
+const { proxy } = getCurrentInstance() as any;
 const router = useRouter();
 const route = useRoute();
 
