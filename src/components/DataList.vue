@@ -14,19 +14,17 @@
   </div>
 </template>
 
-<script setup>
-const props = defineProps({
-  dataSource: {
-    type: Object,
-  },
-  showPagination: {
-    type: Boolean,
-    default: true,
-  },
-})
+<script setup lang="ts">
+const props = withDefaults(
+  defineProps<{
+    dataSource: any
+    showPagination?: boolean
+  }>(),
+  { showPagination: true }
+)
 
-const emit = defineEmits(['loadData'])
-const handlepageNumChange = (pageNum) => {
+const emit = defineEmits<{ (e: 'loadData'): void }>()
+const handlepageNumChange = (pageNum: number) => {
   props.dataSource.pageNum = pageNum
   emit('loadData')
 }
