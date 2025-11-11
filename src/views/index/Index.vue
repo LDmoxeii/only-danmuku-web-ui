@@ -53,6 +53,7 @@ import {
 import { useRouter } from 'vue-router'
 const { proxy } = getCurrentInstance() as any
 const router = useRouter()
+import { loadRecommendVideo as apiLoadRecommendVideo } from '@/api/video'
 
 const commendPanelRef = ref<HTMLElement | null>(null)
 const carouselWidth = ref<number>(0)
@@ -88,13 +89,7 @@ const carouselMaxCount: number = proxy.carouselMaxCount
 const carouselVideoList = ref<any[]>([])
 const commendVideoList = ref<any[]>([])
 const loadRecommendVideo = async () => {
-  let result = await proxy.Request({
-    url: proxy.Api.loadRecommendVideo,
-  })
-  if (!result) {
-    return
-  }
-  const allCommendVideoList = result.data
+  const allCommendVideoList = (await apiLoadRecommendVideo()) || []
   if (allCommendVideoList.length > carouselMaxCount) {
     carouselVideoList.value = allCommendVideoList.slice(0, carouselMaxCount)
     commendVideoList.value = allCommendVideoList.slice(
