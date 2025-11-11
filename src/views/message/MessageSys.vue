@@ -27,11 +27,9 @@
   </div>
 </template>
 
-<script setup>
-import { ref, reactive, getCurrentInstance, nextTick } from 'vue'
-import { useRouter } from 'vue-router'
-const { proxy } = getCurrentInstance()
-const router = useRouter()
+<script setup lang="ts">
+import { getCurrentInstance } from 'vue'
+const { proxy } = getCurrentInstance() as any
 
 const props = defineProps({
   data: {
@@ -40,8 +38,8 @@ const props = defineProps({
   },
 })
 
-const emit = defineEmits(['delMessage'])
-const delMessage = (messageId) => {
+const emit = defineEmits<{ (e: 'delMessage', messageId: string | number): void }>()
+const delMessage = (messageId: string | number) => {
   emit('delMessage', messageId)
 }
 </script>

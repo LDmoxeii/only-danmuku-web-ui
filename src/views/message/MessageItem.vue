@@ -34,11 +34,9 @@
   </div>
 </template>
 
-<script setup>
-import { ref, reactive, getCurrentInstance, nextTick } from "vue";
-import { useRouter } from "vue-router";
-const { proxy } = getCurrentInstance();
-const router = useRouter();
+<script setup lang="ts">
+import { ref, getCurrentInstance } from "vue";
+const { proxy } = getCurrentInstance() as any;
 const props = defineProps({
   data: {
     type: Object,
@@ -53,7 +51,7 @@ const MESSAGE_TYPE = {
   4: "评论",
 };
 
-const convertTitle = () => {
+const convertTitle = (): string => {
   if (props.data.messageType == 4) {
     if (props.data.extendDto.messageContentReply) {
       return `在视频中回复了你的评论`;
@@ -64,9 +62,9 @@ const convertTitle = () => {
   }
 };
 
-const emit = defineEmits(["delMessage"]);
-const delMessage = (messageId) => {
-  emit("delMessage", messageId);
+const emit = defineEmits<{ (e: 'delMessage', messageId: string | number): void }>();
+const delMessage = (messageId: string | number) => {
+  emit('delMessage', messageId);
 };
 </script>
 
