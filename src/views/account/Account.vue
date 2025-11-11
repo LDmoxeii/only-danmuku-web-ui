@@ -134,7 +134,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {
   ref,
   reactive,
@@ -143,17 +143,13 @@ import {
   onMounted,
   onUpdated,
 } from "vue";
-import { useRouter, useRoute } from "vue-router";
-import md5 from "js-md5";
-const { proxy } = getCurrentInstance();
-const router = useRouter();
-const route = useRoute();
+const { proxy } = getCurrentInstance() as any;
 
-import { useLoginStore } from "@/stores/loginStore.js";
+import { useLoginStore } from "@/stores/loginStore";
 const loginStore = useLoginStore();
 
 //验证码
-const checkCodeInfo = ref({});
+const checkCodeInfo = ref<any>({});
 const changeCheckCode = async () => {
   let result = await proxy.Request({
     url: proxy.Api.checkCode,
@@ -165,7 +161,7 @@ const changeCheckCode = async () => {
 };
 
 //登录，注册 弹出配置
-const dialogConfig = ref({
+const dialogConfig = ref<any>({
   show: true,
 });
 
@@ -178,10 +174,10 @@ const checkRePassword = (rule, value, callback) => {
 };
 
 // 0:注册 1:登录
-const opType = ref(1);
-const formData = ref({});
-const formDataRef = ref();
-const rules = {
+const opType = ref<number>(1);
+const formData = ref<any>({});
+const formDataRef = ref<any>();
+const rules: any = {
   email: [
     { required: true, message: "请输入邮箱" },
     { validator: proxy.Verify.email, message: "请输入正确的邮箱" },
