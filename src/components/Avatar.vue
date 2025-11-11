@@ -23,29 +23,18 @@
   </div>
 </template>
 
-<script setup>
-import { ref, reactive, getCurrentInstance, nextTick } from "vue";
-const { proxy } = getCurrentInstance();
-import { useRoute, useRouter } from "vue-router";
-const route = useRoute();
-const router = useRouter();
+<script setup lang="ts">
+import { ref, withDefaults } from "vue";
 const defaultAvatar = ref("user.png");
-const props = defineProps({
-  width: {
-    type: Number,
-    default: 50,
-  },
-  avatar: {
-    type: String,
-  },
-  userId: {
-    type: String,
-  },
-  lazy: {
-    type: Boolean,
-    default: true,
-  },
-});
+const props = withDefaults(
+  defineProps<{
+    width?: number;
+    avatar?: string;
+    userId?: string | number;
+    lazy?: boolean;
+  }>(),
+  { width: 50, lazy: true }
+);
 </script>
 
 <style lang="scss" scoped>
