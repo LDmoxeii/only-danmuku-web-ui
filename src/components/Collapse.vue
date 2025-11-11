@@ -8,15 +8,12 @@
   </div>
 </template>
 
-<script setup>
-import { ref, reactive, getCurrentInstance, nextTick } from "vue";
-import { useRouter } from "vue-router";
-const { proxy } = getCurrentInstance();
-const router = useRouter();
+<script setup lang="ts">
+import { ref } from "vue";
 
-const show = ref(false);
+const show = ref<boolean>(false);
 
-const change = () => {
+const change = (): void => {
   show.value = !show.value;
 };
 </script>
