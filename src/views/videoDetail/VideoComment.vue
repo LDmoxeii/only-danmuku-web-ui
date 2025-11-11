@@ -89,29 +89,23 @@ const changeOrder = (_orderType: number) => {
   loadCommentList();
 };
 
+import { loadComment as apiLoadComment } from '@/api/comment'
 const loadCommentList = async () => {
   if (!showComment.value) {
     return;
   }
   loadingData.value = true;
-  let result = await proxy.Request({
-    url: proxy.Api.loadComment,
-    params: {
-      videoId: route.params.videoId,
-      pageNum: dataSource.value.pageNum,
-      orderType: orderType.value,
-    },
-  });
+  const result = await apiLoadComment({ videoId: route.params.videoId as any, pageNum: dataSource.value.pageNum })
   loadingData.value = false;
   if (!result) {
     return;
   }
-  const userActionMap = {};
-  const userActionList = result.data.userActionList;
+  const userActionMap: any = {};
+  const userActionList = result.userActionList as any[];
   userActionList.forEach((item) => {
     userActionMap[item.commentId] = item;
   });
-  const commentData = result.data.commentData;
+  const commentData = result.commentData;
   commentData.list.forEach((item) => {
     setCommentActive(userActionMap, item);
     if (item.children) {

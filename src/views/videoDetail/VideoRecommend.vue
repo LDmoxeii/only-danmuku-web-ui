@@ -15,21 +15,13 @@ const { proxy } = getCurrentInstance() as any;
 const dataList = ref<any[]>([]);
 
 const videoInfo = inject<any>("videoInfo");
-
+import { getVideoRecommend as apiGetVideoRecommend } from '@/api/video'
 const loadDataList = async () => {
-  let result = await proxy.Request({
-    url: proxy.Api.getVideoRecommend,
-    params: {
-      keyword: videoInfo.value.videoName,
-      videoId: videoInfo.value.videoId,
-    },
-  });
-  if (!result) {
-    return;
-  }
-  dataList.value = result.data;
-};
-loadDataList();
+  const list = await apiGetVideoRecommend(videoInfo.value.videoName, videoInfo.value.videoId)
+  if (!list) return
+  dataList.value = list
+}
+loadDataList()
 </script>
 
 <style lang="scss" scoped>

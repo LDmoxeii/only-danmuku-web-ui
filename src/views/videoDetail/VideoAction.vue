@@ -33,8 +33,8 @@
 
 <script setup lang="ts">
 import VideoCoin from "./VideoCoin.vue";
-import { doUserAction } from "@/utils/Api";
 import { ACTION_TYPE } from "@/utils/Constants";
+import { doAction as apiDoAction } from '@/api/userAction'
 
 import { useLoginStore } from "@/stores/loginStore";
 const loginStore = useLoginStore();
@@ -52,12 +52,7 @@ const userAction = (type: keyof typeof ACTION_TYPE) => {
     loginStore.setLogin(true);
     return;
   }
-  doUserAction(
-    {
-      videoId: route.params.videoId as any,
-      actionType: ACTION_TYPE[type].value,
-    },
-    () => {
+  apiDoAction({ videoId: route.params.videoId as any, actionType: ACTION_TYPE[type].value }).then(() => {
       if (type == "VIDEO_LIKE") {
         if (videoInfo.value.likeCountActive) {
           videoInfo.value.likeCountActive = false;
@@ -75,8 +70,7 @@ const userAction = (type: keyof typeof ACTION_TYPE) => {
           videoInfo.value.collectCount++;
         }
       }
-    }
-  );
+    })
 };
 
 const videoCoinRef = ref<any>();

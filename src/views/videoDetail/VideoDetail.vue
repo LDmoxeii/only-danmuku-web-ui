@@ -108,17 +108,11 @@ import { useLoginStore } from "@/stores/loginStore";
 const loginStore = useLoginStore();
 
 const userInfo = ref<any>({});
+import { getUserInfo as apiGetUserInfo } from '@/api/uhome'
 const getUserInfo = async (userId: string | number) => {
-  let result = await proxy.Request({
-    url: proxy.Api.uHomeGetUsesrInfo,
-    params: {
-      userId,
-    },
-  });
-  if (!result) {
-    return;
-  }
-  userInfo.value = result.data;
+  const data = await apiGetUserInfo(userId)
+  if (!data) return
+  userInfo.value = data
 };
 
 const focusUser = async (changeCount) => {
@@ -146,21 +140,15 @@ const focusUser = async (changeCount) => {
 };
 
 const videoInfo = ref({});
+import { getVideoInfo as apiGetVideoInfo } from '@/api/video'
 const getVideoInfo = async () => {
-  let result = await proxy.Request({
-    url: proxy.Api.getVideoInfo,
-    params: {
-      videoId: route.params.videoId,
-    },
-  });
-  if (!result) {
-    return;
-  }
+  const result = await apiGetVideoInfo(route.params.videoId as string)
+  if (!result) return
   //获取用户信息
-  getUserInfo(result.data.videoInfo.userId);
+  getUserInfo(result.videoInfo.userId);
 
   //处理详情数据
-  const resultData = result.data.videoInfo;
+  const resultData: any = result.videoInfo;
   let introduction = resultData.introduction || "";
   introduction = proxy.Utils.resetHtmlContent(resultData.introduction);
   const tags = resultData.tags ? resultData.tags.split(",") : [];
@@ -168,7 +156,7 @@ const getVideoInfo = async () => {
   resultData.tags = tags;
   videoInfo.value = resultData;
   //获取用户行为
-  const userActionList = result.data.userActionList;
+  const userActionList = result.userActionList;
   userActionList.forEach((item) => {
     if (item.actionType == ACTION_TYPE.VIDEO_LIKE.value) {
       videoInfo.value.likeCountActive = true;

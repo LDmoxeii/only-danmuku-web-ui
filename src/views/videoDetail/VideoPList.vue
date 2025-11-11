@@ -38,19 +38,12 @@ const autoPlay = ref<boolean>(true);
 const currentP = ref<number>(route.query.p ? Number.parseInt(route.query.p as string) : 1);
 const emit = defineEmits<{ (e: 'selectVideoFile', fileId: string | number): void }>();
 const videoList = ref<any[]>([]);
+import { loadVideoPList as apiLoadVideoPList } from '@/api/video'
 const loadVideoPList = async () => {
-  let result = await proxy.Request({
-    url: proxy.Api.loadVideoPList,
-    params: {
-      videoId: route.params.videoId,
-    },
-  });
-  if (!result) {
-    return;
-  }
-  videoList.value = result.data;
-
-  selectVideoFile();
+  const data = await apiLoadVideoPList(route.params.videoId as string)
+  if (!data) return
+  videoList.value = data
+  selectVideoFile()
 };
 loadVideoPList();
 

@@ -22,8 +22,8 @@
 </template>
 
 <script setup lang="ts">
-import { doUserAction } from '@/utils/Api'
 import { ACTION_TYPE } from '@/utils/Constants'
+import { doAction as apiDoAction } from '@/api/userAction'
 
 import { ref, reactive, getCurrentInstance, nextTick, inject } from 'vue'
 import { useRoute } from 'vue-router'
@@ -43,19 +43,12 @@ const setCoinCount = (count: number) => {
 
 const videoInfo = inject<any>('videoInfo')
 const submitCoin = () => {
-  doUserAction(
-    {
-      videoId: route.params.videoId as any,
-      actionType: ACTION_TYPE.VIDEO_COIN.value,
-      actionCount: coinCount.value,
-    },
-    () => {
+  apiDoAction({ videoId: route.params.videoId as any, actionType: ACTION_TYPE.VIDEO_COIN.value, actionCount: coinCount.value }).then(() => {
       videoInfo.value.coinCountActive = true
       videoInfo.value.coinCount = videoInfo.value.coinCount + coinCount.value;
       dialogConfig.value.show = false
       proxy.Message.success('投币成功')
-    }
-  )
+    })
 }
 
 const show = () => {
