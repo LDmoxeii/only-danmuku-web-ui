@@ -35,7 +35,7 @@
 <script setup lang="ts">
 import { ref, getCurrentInstance, onMounted } from 'vue'
 import { useRouter } from 'vue-router'
-const { proxy } = getCurrentInstance()
+const { proxy } = getCurrentInstance() as any
 const router = useRouter()
 
 import { useNavAction } from '@/stores/navActionStore'
