@@ -23,7 +23,7 @@
 
 <script setup>
 import { doUserAction } from '@/utils/Api'
-import { ACTION_TYPE } from '@/utils/Constants.js'
+import { ACTION_TYPE } from '@/utils/Constants'
 
 import { ref, reactive, getCurrentInstance, nextTick, inject } from 'vue'
 import { useRoute } from 'vue-router'

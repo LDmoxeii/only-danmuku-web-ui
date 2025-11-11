@@ -12,7 +12,7 @@
   </div>
 </template>
 <script setup>
-import { mitter } from '@/eventbus/eventBus.js'
+import { mitter } from '@/eventbus/eventBus'
 import {
   ref,
   reactive,
@@ -34,7 +34,7 @@ import Artplayer from 'artplayer'
 import artplayerPluginDanmuku from 'artplayer-plugin-danmuku'
 //https://artplayer.org/
 
-import { useLoginStore } from '@/stores/loginStore.js'
+import { useLoginStore } from '@/stores/loginStore'
 const loginStore = useLoginStore()
 
 const props = defineProps({

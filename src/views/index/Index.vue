@@ -37,7 +37,7 @@
 </template>
 
 <script setup>
-import { mitter } from '@/eventbus/eventBus.js'
+import { mitter } from '@/eventbus/eventBus'
 import VideoList from '@/views/videoList/VideoList.vue'
 import { useNavAction } from '@/stores/navActionStore'
 const navActionStore = useNavAction()

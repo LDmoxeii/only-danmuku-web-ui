@@ -30,7 +30,7 @@
 </template>
 
 <script setup>
-import { mitter } from '@/eventbus/eventBus.js'
+import { mitter } from '@/eventbus/eventBus'
 import {
   ref,
   reactive,

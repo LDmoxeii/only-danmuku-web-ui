@@ -47,15 +47,15 @@
 </template>
 
 <script setup>
-import { mitter } from '@/eventbus/eventBus.js'
+import { mitter } from '@/eventbus/eventBus'
 import Account from '@/views/account/Account.vue'
 import { useNavAction } from '@/stores/navActionStore'
 const navActionStore = useNavAction()
 
-import { useLoginStore } from '@/stores/loginStore.js'
+import { useLoginStore } from '@/stores/loginStore'
 const loginStore = useLoginStore()
 
-import { useCategoryStore } from '@/stores/categoryStore.js'
+import { useCategoryStore } from '@/stores/categoryStore'
 const categoryStore = useCategoryStore()
 
 import Category from './Category.vue'

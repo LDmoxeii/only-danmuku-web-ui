@@ -19,7 +19,7 @@
 </template>
 
 <script setup>
-import { mitter } from '@/eventbus/eventBus.js'
+import { mitter } from '@/eventbus/eventBus'
 import VideoList from '@/views/videoList/VideoList.vue'
 import { useNavAction } from '@/stores/navActionStore'
 const navActionStore = useNavAction()
@@ -40,7 +40,7 @@ import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
 const router = useRouter()
 
-import { useCategoryStore } from '@/stores/categoryStore.js'
+import { useCategoryStore } from '@/stores/categoryStore'
 const categoryStore = useCategoryStore()
 
 const jump = (item = { categoryCode: '' }) => {

@@ -9,10 +9,10 @@
 </template>
 
 <script setup>
-import { useCategoryStore } from '@/stores/categoryStore.js'
+import { useCategoryStore } from '@/stores/categoryStore'
 const categoryStore = useCategoryStore()
 
-import { mitter } from '@/eventbus/eventBus.js'
+import { mitter } from '@/eventbus/eventBus'
 import {
   ref,
   reactive,
