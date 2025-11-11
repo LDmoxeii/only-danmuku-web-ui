@@ -51,8 +51,8 @@
   </div>
 </template>
 
-<script setup>
-import { useCategoryStore } from '@/stores/categoryStore.js'
+<script setup lang="ts">
+import { useCategoryStore } from '@/stores/categoryStore'
 const categoryStore = useCategoryStore()
 import TagInput from './TagInput.vue'
 import VideoUploader from './VideoUploader.vue'
@@ -68,16 +68,16 @@ import {
   inject,
 } from 'vue'
 
-import { uploadImage } from '@/utils/Api.js'
+import { uploadImage } from '@/utils/Api'
 
-const { proxy } = getCurrentInstance()
+const { proxy } = getCurrentInstance() as any
 import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
 const router = useRouter()
 
-import { mitter } from '@/eventbus/eventBus.js'
+import { mitter } from '@/eventbus/eventBus'
 
-const startUpload = ref(false)
+const startUpload = ref<boolean>(false)
 mitter.on('startUpload', (fileName) => {
   startUpload.value = true
   nextTick(() => {
@@ -88,11 +88,11 @@ mitter.on('startUpload', (fileName) => {
   })
 })
 
-const formData = ref({
+const formData = ref<any>({
   tags: [],
 })
-const formDataRef = ref()
-const rules = {
+const formDataRef = ref<any>()
+const rules: any = {
   videoCover: [{ required: true, message: '封面不能为空' }],
   videoName: [{ required: true, message: '标题不能为空' }],
   postType: [{ required: true, message: '类型不能为空' }],
@@ -101,23 +101,23 @@ const rules = {
   tags: [{ required: true, message: '标签不能为空' }],
 }
 
-provide('cutImageCallback', ({ coverImage }) => {
+provide('cutImageCallback', ({ coverImage }: { coverImage: File }) => {
   formData.value.videoCover = coverImage
 })
 
-const videoUploaderRef = ref()
-const videoList = ref([])
+const videoUploaderRef = ref<any>()
+const videoList = ref<any[]>([])
 
 const submitForm = () => {
   const uploadFileList = videoUploaderRef.value.getUploadFileList()
   if (!uploadFileList) {
     return
   }
-  formDataRef.value.validate(async (valid) => {
+  formDataRef.value.validate(async (valid: boolean) => {
     if (!valid) {
       return
     }
-    let params = {
+    let params: any = {
       uploadFileList: JSON.stringify(uploadFileList),
     }
     Object.assign(params, formData.value)
@@ -155,7 +155,7 @@ const submitForm = () => {
 }
 
 //编辑（使用视频稿件Id）
-const videoPostId = ref()
+const videoPostId = ref<any>()
 const init = async () => {
   nextTick(() => {
     videoUploaderRef.value.initUploader(startUpload.value, [])
@@ -197,7 +197,7 @@ const init = async () => {
 }
 watch(
   () => route.query.videoPostId,
-  (newVal, oldVal) => {
+  (newVal: any, oldVal: any) => {
     if (newVal) {
       startUpload.value = true
     } else {
