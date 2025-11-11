@@ -34,6 +34,7 @@ const route = useRoute()
 
 import { useNavAction } from '@/stores/navActionStore'
 const navActionStore = useNavAction()
+import { search as apiSearch } from '@/api/video'
 
 import { useSearchHistoryStore } from '@/stores/searchHisotryStore'
 const searchHistoryStore = useSearchHistoryStore()
@@ -101,18 +102,13 @@ const loadDataList = async () => {
   let params = {
     pageNum: dataSource.value.pageNum,
     keyword: route.query.keyword,
-    orderType: orderTypeBtn.orderType,
+    orderType: orderTypeBtn?.orderType,
   }
   loadingData.value = true
-  let result = await proxy.Request({
-    url: proxy.Api.search,
-    params,
-  })
+  const result = await apiSearch(params as any)
   loadingData.value = false
-  if (!result) {
-    return
-  }
-  dataSource.value = result.data
+  if (!result) return
+  dataSource.value = result
 }
 
 onMounted(() => {

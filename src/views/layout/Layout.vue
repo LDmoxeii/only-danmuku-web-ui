@@ -146,14 +146,11 @@ const backgroundImage = computed(() => {
 
 //热搜
 const hotSearchList = ref<any[]>([])
+import { getSearchKeywordTop as apiGetSearchKeywordTop } from '@/api/video'
 const getSearchKeywordTop = async () => {
-  let result = await proxy.Request({
-    url: proxy.Api.getSearchKeywordTop,
-  })
-  if (!result) {
-    return
-  }
-  hotSearchList.value = result.data
+  const data = await apiGetSearchKeywordTop()
+  if (!data) return
+  hotSearchList.value = data
 }
 getSearchKeywordTop()
 
