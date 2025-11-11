@@ -29,7 +29,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { mitter } from '@/eventbus/eventBus'
 import {
   ref,
@@ -39,17 +39,18 @@ import {
   onMounted,
   onUnmounted,
 } from 'vue'
-const { proxy } = getCurrentInstance()
+const { proxy } = getCurrentInstance() as any
 import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
 const router = useRouter()
-const playerHeight = proxy.playerHeight
+const playerHeight: number = proxy.playerHeight
 
-const danmuList = ref([])
+type DanmuItem = { danmuId: any; time: number; text: string; postTime: string }
+const danmuList = ref<DanmuItem[]>([])
 
 onMounted(() => {
-  mitter.on('loadDanmu', (data) => {
-    data.sort(function (a, b) {
+  mitter.on('loadDanmu', (data: DanmuItem[]) => {
+    data.sort(function (a: DanmuItem, b: DanmuItem) {
       return a.time - b.time
     })
     danmuList.value = data
@@ -60,8 +61,8 @@ onUnmounted(() => {
   mitter.off('loadDanmu')
 })
 
-const selectDanmu = ref({})
-const danmuSelect = (item) => {
+const selectDanmu = ref<Partial<DanmuItem>>({})
+const danmuSelect = (item: DanmuItem) => {
   selectDanmu.value = item
 }
 </script>
