@@ -34,7 +34,7 @@
   </el-dialog>
 </template>
 
-<script setup>
+<script setup lang="ts">
 const props = defineProps({
   draggable: {
     type: Boolean,
@@ -74,9 +74,9 @@ const props = defineProps({
 
 const maxHeight = window.innerHeight - props.top - 120;
 
-const emit = defineEmits();
-const close = () => {
-  emit("close");
+const emit = defineEmits<{ (e: 'close'): void }>();
+const close = (): void => {
+  emit('close');
 };
 </script>
 
