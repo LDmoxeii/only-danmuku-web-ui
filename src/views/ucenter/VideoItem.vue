@@ -101,7 +101,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {
   ref,
   reactive,
@@ -112,7 +112,7 @@ import {
   watch,
 } from "vue";
 import { useRouter } from "vue-router";
-const { proxy } = getCurrentInstance();
+const { proxy } = getCurrentInstance() as any;
 const router = useRouter();
 
 // @E=0:UNKNOW:未知状态|1:TRANSCODING:转码中|2:TRANSCODE_FAILED:转码失败|3:PENDING_REVIEW:待审核|4:REVIEW_PASSED:审核成功|5:REVIEW_FAILED:审核失败;@T=VideoStatus
@@ -123,18 +123,18 @@ const props = defineProps({
     default: {},
   },
 });
-const interactionInfo = ref(
+const interactionInfo = ref<string[]>(
   props.data.interaction ? props.data.interaction.split(",") : []
 );
 // 监听后端返回的互动字段，保持复选框与数据同步
 watch(
   () => props.data.interaction,
-  (val) => {
+  (val: string) => {
     interactionInfo.value = val ? val.split(",") : []
   },
   { immediate: true }
 )
-const saveInteractionInfo = async (e) => {
+const saveInteractionInfo = async (e: string[]) => {
   let result = await proxy.Request({
     url: proxy.Api.saveVideoInteraction,
     params: {
@@ -148,18 +148,18 @@ const saveInteractionInfo = async (e) => {
   }
 };
 
-const jumpUrl = {
+const jumpUrl: Record<string, string> = {
   editVideo: "/ucenter/editVideo",
   danmu: "/ucenter/danmu",
   comment: "/ucenter/comment",
 };
 
-const jump = (type) => {
+const jump = (type: keyof typeof jumpUrl) => {
   // 编辑等稿件相关页面使用视频稿件Id
   router.push(`${jumpUrl[type]}?videoPostId=${props.data.videoPostId}`);
 };
 
-const emit = defineEmits(["reload"]);
+const emit = defineEmits<{ (e: 'reload'): void }>();
 const deleteVideo = () => {
   proxy.Confirm({
     message: `确定要删除【${props.data.videoName}】吗？`,
