@@ -13,6 +13,5 @@ export type CategoryNode = {
 
 export async function loadAllCategory(): Promise<CategoryNode[] | null> {
   const res = await request({ url: `${base}/loadAllCategory` })
-  return res?.data ?? null
+  return res ?? null
 }
-

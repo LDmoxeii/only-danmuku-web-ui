@@ -4,7 +4,7 @@ const base = '/userAction'
 
 export async function doAction(params: { videoId: string | number; actionType: number; actionCount?: number; commentId?: string | number }): Promise<null | any> {
   const res = await request({ url: `${base}/doAction`, params })
-  return res?.data ?? null
+  return res ?? null
 }
 
 export const ACTION_TYPE = {
@@ -14,4 +14,3 @@ export const ACTION_TYPE = {
   COMMENT_LIKE: { value: 4 },
   COMMENT_HATE: { value: 5 },
 } as const
-

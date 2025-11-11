@@ -12,16 +12,15 @@ export type HistoryItem = {
 
 export async function loadHistory(params: { pageNum: number; pageSize?: number }): Promise<PageData<HistoryItem> | null> {
   const res = await request({ url: `${base}/loadHistory`, params })
-  return res?.data ?? null
+  return res ?? null
 }
 
 export async function cleanHistory(): Promise<any> {
   const res = await request({ url: `${base}/cleanHistory` })
-  return res?.data ?? null
+  return res ?? null
 }
 
 export async function delHistory(videoId: string | number): Promise<any> {
   const res = await request({ url: `${base}/delHistory`, params: { videoId } })
-  return res?.data ?? null
+  return res ?? null
 }
-

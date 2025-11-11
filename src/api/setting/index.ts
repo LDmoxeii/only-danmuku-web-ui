@@ -9,6 +9,5 @@ export type SysSetting = {
 
 export async function getSetting(): Promise<SysSetting | null> {
   const res = await request({ url: `${base}/getSetting` })
-  return res?.data ?? null
+  return res ?? null
 }
-
