@@ -40,7 +40,8 @@ const coverFile = asyncComputed(async () => {
     return null
   }
   if (typeof props.coverImage == 'string') {
-    return proxy.Api.sourcePath + props.coverImage
+    const { sourcePath } = await import('@/api/file')
+    return sourcePath + props.coverImage
   } else if (props.coverImage instanceof File) {
     const base64 = await convertFile2Base64(props.coverImage)
     return base64

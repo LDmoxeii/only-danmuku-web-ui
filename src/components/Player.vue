@@ -47,8 +47,9 @@ const props = defineProps({
 })
 
 const playerRef = ref()
+import { getVideoResource as apiGetVideoResource } from '@/api/file'
 const options = {
-  url: proxy.Api.getVideoResource,
+  url: apiGetVideoResource('') as any,
 }
 
 let player = null
@@ -222,7 +223,7 @@ onMounted(() => {
     fileId.value = _fileId
     //获取在线人数
     reportVideoPlayOnline()
-    player.switch = `${proxy.Api.getVideoResource}/${_fileId}/`
+    player.switch = apiGetVideoResource(_fileId)
     //切换弹幕
     player.plugins.artplayerPluginDanmuku.load()
   })

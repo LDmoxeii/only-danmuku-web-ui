@@ -13,7 +13,7 @@
               (index - 1) * partCount + partCount
             )" :to="`/v/${item.categoryCode}`">
               <span class="icon" v-if="item.icon">
-                <img :src="`${proxy.Api.sourcePath}${item.icon}`" />
+                <img :src="`${(await import('@/api/file')).sourcePath}${item.icon}`" />
               </span>
               <span class="category-name">{{ item.categoryName }}</span>
             </router-link>
