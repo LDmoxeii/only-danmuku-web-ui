@@ -18,7 +18,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { mitter } from '@/eventbus/eventBus'
 import VideoList from '@/views/videoList/VideoList.vue'
 import { useNavAction } from '@/stores/navActionStore'
@@ -35,7 +35,7 @@ import {
   inject,
   watch,
 } from 'vue'
-const { proxy } = getCurrentInstance()
+const { proxy } = getCurrentInstance() as any
 import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
 const router = useRouter()
@@ -43,7 +43,7 @@ const router = useRouter()
 import { useCategoryStore } from '@/stores/categoryStore'
 const categoryStore = useCategoryStore()
 
-const jump = (item = { categoryCode: '' }) => {
+const jump = (item: { categoryCode?: string } = { categoryCode: '' }) => {
   if (!item.categoryCode) {
     router.push({
       name: 'categoryVideo',
@@ -59,15 +59,15 @@ const jump = (item = { categoryCode: '' }) => {
 }
 
 //分类距离顶部距离
-const categoryTopDistance = ref(200)
+const categoryTopDistance = ref<number>(200)
 //分类是否固定
-const categoryFxied = ref(false)
+const categoryFxied = ref<boolean>(false)
 
 //初始化距离顶部距离
-let initScrollTop = 0
+let initScrollTop: number = 0
 //是否向下关东
-let scrollDown = true
-const scrollHandler = (curScrollTop) => {
+let scrollDown: boolean = true
+const scrollHandler = (curScrollTop: number) => {
   if (curScrollTop - initScrollTop > 0) {
     scrollDown = true
   } else {
