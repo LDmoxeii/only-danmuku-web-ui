@@ -36,7 +36,7 @@
   <VideoList></VideoList>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import { mitter } from '@/eventbus/eventBus'
 import VideoList from '@/views/videoList/VideoList.vue'
 import { useNavAction } from '@/stores/navActionStore'
@@ -51,11 +51,11 @@ import {
   onUnmounted,
 } from 'vue'
 import { useRouter } from 'vue-router'
-const { proxy } = getCurrentInstance()
+const { proxy } = getCurrentInstance() as any
 const router = useRouter()
 
-const commendPanelRef = ref()
-const carouselWidth = ref()
+const commendPanelRef = ref<HTMLElement | null>(null)
+const carouselWidth = ref<number>(0)
 
 const resetCarouselWidth = () => {
   let width =
@@ -84,9 +84,9 @@ onUnmounted(() => {
 })
 
 //轮播最多显示的视频数
-const carouselMaxCount = proxy.carouselMaxCount
-const carouselVideoList = ref([])
-const commendVideoList = ref([])
+const carouselMaxCount: number = proxy.carouselMaxCount
+const carouselVideoList = ref<any[]>([])
+const commendVideoList = ref<any[]>([])
 const loadRecommendVideo = async () => {
   let result = await proxy.Request({
     url: proxy.Api.loadRecommendVideo,
@@ -107,12 +107,12 @@ const loadRecommendVideo = async () => {
 }
 loadRecommendVideo()
 
-const carouselIndex = ref(0)
-const carouselChange = (e) => {
+const carouselIndex = ref<number>(0)
+const carouselChange = (e: number) => {
   carouselIndex.value = e
 }
 
-const elCarouselRef = ref()
+const elCarouselRef = ref<any>()
 const preCarousel = () => {
   elCarouselRef.value.prev()
 }
@@ -121,7 +121,7 @@ const nextCarousel = () => {
   elCarouselRef.value.next()
 }
 
-const setCarousel = (index) => {
+const setCarousel = (index: number) => {
   elCarouselRef.value.setActiveItem(index - 1 + '')
 }
 </script>
