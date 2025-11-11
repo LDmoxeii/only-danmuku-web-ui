@@ -33,6 +33,8 @@ const { proxy } = getCurrentInstance() as any
 const router = useRouter()
 const route = useRoute()
 
+import { loadFansList as apiLoadFansList, focus as apiFocus, cancelFocus as apiCancelFocus } from '@/api/uhome'
+
 const dataSource = ref<any>({
   list: [],
   pageNum: 1,
@@ -45,30 +47,19 @@ const loadDataList = async () => {
     pageNum: dataSource.value.pageNum,
     pageSize: dataSource.value.pageSize,
   }
-  const result = await proxy.Request({
-    url: proxy.Api.uHomeFansList,
-    params,
-  })
+  const result = await apiLoadFansList(params)
   if (!result) return
-  dataSource.value = result.data
+  dataSource.value = result
 }
 
 const focus = async (otherUserId: string) => {
-  const result = await proxy.Request({
-    url: proxy.Api.uHomeFocus,
-    showLoading: true,
-    params: { focusUserId: otherUserId },
-  })
+  const result = await apiFocus(otherUserId)
   if (!result) return
   loadDataList()
 }
 
 const cancelFocus = async (otherUserId: string) => {
-  const result = await proxy.Request({
-    url: proxy.Api.uHomeCancelFocus,
-    showLoading: true,
-    params: { focusUserId: otherUserId },
-  })
+  const result = await apiCancelFocus(otherUserId)
   if (!result) return
   loadDataList()
 }

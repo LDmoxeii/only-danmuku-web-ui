@@ -102,7 +102,8 @@
 
 <script setup lang="ts">
 import Tag from "@/components/Tag.vue";
-import { doUserAction } from "@/utils/Api";
+import { doAction as apiDoAction } from '@/api/userAction'
+import { userDelComment as apiUserDelComment, userTopComment as apiUserTopComment, userCancelTopComment as apiUserCancelTopComment } from '@/api/comment'
 import { ACTION_TYPE } from "@/utils/Constants";
 
 import VideoCommentSend from "./VideoCommentSend.vue";
@@ -143,13 +144,7 @@ const showReplyHandler = (item: any, replyLevel: number) => {
 };
 
 const doLike = (data: any) => {
-  doUserAction(
-    {
-      videoId: route.params.videoId as any,
-      actionType: ACTION_TYPE.COMMENT_LIKE.value,
-      commentId: data.commentId,
-    },
-    () => {
+  apiDoAction({ videoId: route.params.videoId as any, actionType: ACTION_TYPE.COMMENT_LIKE.value, commentId: data.commentId }).then(() => {
       if (data.hateCountActive) {
         data.hateCountActive = false;
         data.hateCount--;
@@ -161,18 +156,11 @@ const doLike = (data: any) => {
         data.likeCount++;
         data.likeCountActive = true;
       }
-    }
-  );
+    })
 };
 
 const doHate = (data: any) => {
-  doUserAction(
-    {
-      videoId: route.params.videoId as any,
-      actionType: ACTION_TYPE.COMMENT_HATE.value,
-      commentId: data.commentId,
-    },
-    () => {
+  apiDoAction({ videoId: route.params.videoId as any, actionType: ACTION_TYPE.COMMENT_HATE.value, commentId: data.commentId }).then(() => {
       if (data.likeCountActive) {
         data.likeCountActive = false;
         data.likeCount--;
@@ -184,20 +172,14 @@ const doHate = (data: any) => {
         data.hateCount++;
         data.hateCountActive = true;
       }
-    }
-  );
+    })
 };
 
 const delComment = () => {
   proxy.Confirm({
     message: "确定要删除评论",
     okfun: async () => {
-      let result = await proxy.Request({
-        url: proxy.Api.userDelComment,
-        params: {
-          commentId: props.data.commentId,
-        },
-      });
+      let result = await apiUserDelComment(props.data.commentId)
       if (!result) {
         return;
       }
@@ -213,15 +195,7 @@ const topComment = () => {
   proxy.Confirm({
     message: `确定要${props.data.topType == 1 ? "取消置顶" : "置顶"}吗？`,
     okfun: async () => {
-      let result = await proxy.Request({
-        url:
-          props.data.topType == 1
-            ? proxy.Api.userCancelTopComment
-            : proxy.Api.userTopComment,
-        params: {
-          commentId: props.data.commentId,
-        },
-      });
+      let result = props.data.topType == 1 ? await apiUserCancelTopComment(props.data.commentId) : await apiUserTopComment(props.data.commentId)
       if (!result) {
         return;
       }
