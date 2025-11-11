@@ -144,21 +144,21 @@
   ></UserHomeTheme>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import UserHomeTheme from "./UserHomeTheme.vue";
 import UserInfoEdit from "./UserInfoEdit.vue";
 import Account from "@/views/account/Account.vue";
 import LayoutHeader from "@/views/layout/LayoutHeader.vue";
 import { computed, getCurrentInstance, provide, ref } from "vue";
 import { useRoute, useRouter } from "vue-router";
-const { proxy } = getCurrentInstance();
+const { proxy } = getCurrentInstance() as any;
 const route = useRoute();
 const router = useRouter();
-import { useLoginStore } from "@/stores/loginStore.js";
+import { useLoginStore } from "@/stores/loginStore";
 const loginStore = useLoginStore();
-const currentUserId = route.params.userId;
+const currentUserId = route.params.userId as string;
 
-const navList = ref([
+const navList = ref<{ name: string; path: string; icon: string; pathNames: string[] }[]>([
   {
     name: "主页",
     path: "/user/" + currentUserId,
@@ -189,7 +189,7 @@ const myself = computed(() => {
   return loginStore.userInfo.userId == currentUserId;
 });
 
-const userInfo = ref({});
+const userInfo = ref<any>({});
 provide("userInfo", userInfo);
 const loadUserInfo = async () => {
   let result = await proxy.Request({
@@ -219,12 +219,16 @@ const loadUserInfo = async () => {
 };
 loadUserInfo();
 
-const userInfoEditRef = ref();
+const userInfoEditRef = ref<any>();
 const updateUserInfo = () => {
   userInfoEditRef.value.show(userInfo.value);
 };
 
-const focusUser = async (focusUserId, changeCountType = 0, fn) => {
+const focusUser = async (
+  focusUserId: number | string,
+  changeCountType: number = 0,
+  fn?: () => void
+) => {
   if (Object.keys(loginStore.userInfo).length == 0) {
     loginStore.setLogin(true);
     return;
@@ -249,7 +253,11 @@ const focusUser = async (focusUserId, changeCountType = 0, fn) => {
     fn();
   }
 };
-const cancelFocusUser = async (focusUserId, changeCountType = 0, fn) => {
+const cancelFocusUser = async (
+  focusUserId: number | string,
+  changeCountType: number = 0,
+  fn?: () => void
+) => {
   let result = await proxy.Request({
     url: proxy.Api.uHomeCancelFocus,
     showLoading: true,
@@ -271,15 +279,15 @@ const cancelFocusUser = async (focusUserId, changeCountType = 0, fn) => {
   }
 };
 
-provide("cancelFocusUser", (focusUserId, fn) => {
+provide("cancelFocusUser", (focusUserId: number | string, fn?: () => void) => {
   cancelFocusUser(focusUserId, 1, fn);
 });
 
-provide("focusUser", (focusUserId, fn) => {
+provide("focusUser", (focusUserId: number | string, fn?: () => void) => {
   focusUser(focusUserId, 1, fn);
 });
 
-const videoName = ref();
+const videoName = ref<string>("");
 const searchVideo = () => {
   router.push({
     path: `/user/${route.params.userId}/video`,
@@ -289,12 +297,12 @@ const searchVideo = () => {
   });
 };
 
-const userHomeThemeRef = ref();
+const userHomeThemeRef = ref<any>();
 const selectTheme = () => {
   userHomeThemeRef.value.show(userInfo.value.theme);
 };
 
-const changeTheme = (theme) => {
+const changeTheme = (theme: any) => {
   userInfo.value.theme = theme;
 };
 </script>
