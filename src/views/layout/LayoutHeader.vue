@@ -244,16 +244,13 @@ const navJump = (url: string) => {
 };
 
 //退出
+import { logout as apiLogout } from '@/api/account'
 const logout = () => {
   proxy.Confirm({
     message: "确定要退出?",
     okfun: async () => {
-      let result = await proxy.Request({
-        url: proxy.Api.logout,
-      });
-      if (!result) {
-        return;
-      }
+      const result = await apiLogout()
+      if (!result) return
       loginStore.saveUserInfo({});
     },
   });
