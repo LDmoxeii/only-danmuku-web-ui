@@ -31,7 +31,7 @@
   <VideoCoin ref="videoCoinRef"></VideoCoin>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import VideoCoin from "./VideoCoin.vue";
 import { doUserAction } from "@/utils/Api";
 import { ACTION_TYPE } from "@/utils/Constants";
@@ -39,22 +39,22 @@ import { ACTION_TYPE } from "@/utils/Constants";
 import { useLoginStore } from "@/stores/loginStore";
 const loginStore = useLoginStore();
 
-import { ref, reactive, getCurrentInstance, nextTick, inject } from "vue";
-const { proxy } = getCurrentInstance();
+import { ref, getCurrentInstance, inject } from "vue";
+const { proxy } = getCurrentInstance() as any;
 import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
 const router = useRouter();
 
-const videoInfo = inject("videoInfo");
+const videoInfo = inject<any>("videoInfo");
 
-const userAction = (type) => {
+const userAction = (type: keyof typeof ACTION_TYPE) => {
   if (Object.keys(loginStore.userInfo).length == 0) {
     loginStore.setLogin(true);
     return;
   }
   doUserAction(
     {
-      videoId: route.params.videoId,
+      videoId: route.params.videoId as any,
       actionType: ACTION_TYPE[type].value,
     },
     () => {
@@ -79,7 +79,7 @@ const userAction = (type) => {
   );
 };
 
-const videoCoinRef = ref();
+const videoCoinRef = ref<any>();
 const userActionCoin = () => {
   if (Object.keys(loginStore.userInfo).length == 0) {
     loginStore.setLogin(true);

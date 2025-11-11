@@ -4,23 +4,17 @@
   </template>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {
   ref,
-  reactive,
   getCurrentInstance,
-  nextTick,
   inject,
-  onMounted,
 } from "vue";
-const { proxy } = getCurrentInstance();
-import { useRoute, useRouter } from "vue-router";
-const route = useRoute();
-const router = useRouter();
+const { proxy } = getCurrentInstance() as any;
 
-const dataList = ref([]);
+const dataList = ref<any[]>([]);
 
-const videoInfo = inject("videoInfo");
+const videoInfo = inject<any>("videoInfo");
 
 const loadDataList = async () => {
   let result = await proxy.Request({

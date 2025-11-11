@@ -40,22 +40,22 @@
   </div>
 </template>
 
-<script setup>
-import {mitter} from "@/eventbus/eventBus.js";
-import {ACTION_TYPE} from "@/utils/Constants.js";
+<script setup lang="ts">
+import { mitter } from "@/eventbus/eventBus";
+import { ACTION_TYPE } from "@/utils/Constants";
 import VideoCommentItem from "./VideoCommentItem.vue";
 import VideoCommentSend from "./VideoCommentSend.vue";
-import {computed, getCurrentInstance, inject, onMounted, onUnmounted, provide, ref,} from "vue";
+import { computed, getCurrentInstance, inject, onMounted, onUnmounted, provide, ref } from "vue";
 import {useRoute, useRouter} from "vue-router";
 import {useLoginStore} from "@/stores/loginStore";
 
-const {proxy} = getCurrentInstance();
+const { proxy } = getCurrentInstance() as any;
 const route = useRoute();
 const router = useRouter();
 const loginStore = useLoginStore();
 
 //判断是否显示弹幕
-const videoInfo = inject("videoInfo");
+const videoInfo = inject<any>("videoInfo");
 const showComment = computed(() => {
   return (
       videoInfo.value.interaction == null ||
@@ -74,17 +74,17 @@ const showReplyHandler = (commentId) => {
 };
 provide("showReply", showReplyHandler);
 
-const loadingData = ref(false);
-const dataSource = ref({
+const loadingData = ref<boolean>(false);
+const dataSource = ref<any>({
   list: [],
   pageNum: 1,
   pageSize: 15,
   pageTotal: 1,
   totalCount: 0,
 });
-const orderType = ref(0);
+const orderType = ref<number>(0);
 
-const changeOrder = (_orderType) => {
+const changeOrder = (_orderType: number) => {
   orderType.value = _orderType;
   loadCommentList();
 };
@@ -129,7 +129,7 @@ const loadCommentList = async () => {
 loadCommentList();
 
 //设置已点赞
-const setCommentActive = (userActionMap, item) => {
+const setCommentActive = (userActionMap: Record<string, any>, item: any) => {
   const userActon = userActionMap[item.commentId];
   if (userActon) {
     if (ACTION_TYPE.COMMENT_LIKE.value == userActon.actionType) {

@@ -86,8 +86,8 @@
   </div>
 </template>
 
-<script setup>
-import { ACTION_TYPE } from "@/utils/Constants.js";
+<script setup lang="ts">
+import { ACTION_TYPE } from "@/utils/Constants";
 import { useNavAction } from "@/stores/navActionStore";
 const navActionStore = useNavAction();
 
@@ -98,24 +98,17 @@ import VideoDanmu from "./VideoDanmu.vue";
 import VideoPList from "./VideoPList.vue";
 import VideoRecommend from "./VideoRecommend.vue";
 import Player from "@/components/Player.vue";
-import {
-  ref,
-  reactive,
-  getCurrentInstance,
-  nextTick,
-  onMounted,
-  provide,
-} from "vue";
+import { ref, getCurrentInstance, nextTick, onMounted, provide } from "vue";
 import { useRouter, useRoute } from "vue-router";
-const { proxy } = getCurrentInstance();
+const { proxy } = getCurrentInstance() as any;
 const router = useRouter();
 const route = useRoute();
-import { mitter } from "@/eventbus/eventBus.js";
-import { useLoginStore } from "@/stores/loginStore.js";
+import { mitter } from "@/eventbus/eventBus";
+import { useLoginStore } from "@/stores/loginStore";
 const loginStore = useLoginStore();
 
-const userInfo = ref({});
-const getUserInfo = async (userId) => {
+const userInfo = ref<any>({});
+const getUserInfo = async (userId: string | number) => {
   let result = await proxy.Request({
     url: proxy.Api.uHomeGetUsesrInfo,
     params: {
@@ -191,13 +184,13 @@ getVideoInfo();
 provide("videoInfo", videoInfo);
 
 //播放器高度
-const playerHeight = ref(0);
-provide("playerHeight", (height) => {
+const playerHeight = ref<number>(0);
+provide("playerHeight", (height: number) => {
   playerHeight.value = height;
 });
 
-const wideScreen = ref(false);
-const changeWideScreenHandler = (result) => {
+const wideScreen = ref<boolean>(false);
+const changeWideScreenHandler = (result: boolean) => {
   wideScreen.value = result;
 };
 

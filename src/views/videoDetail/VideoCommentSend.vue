@@ -92,17 +92,16 @@
   </div>
 </template>
 
-<script setup>
-import emojiList from "@/utils/Emoji.js";
-import {mitter} from "@/eventbus/eventBus.js";
-import {uploadImage} from "@/utils/Api";
-import {getCurrentInstance, inject, onBeforeUnmount, onMounted, ref} from "vue";
-import {useRoute, useRouter} from "vue-router";
-import {useLoginStore} from "@/stores/loginStore";
+<script setup lang="ts">
+import emojiList from "@/utils/Emoji";
+import { mitter } from "@/eventbus/eventBus";
+import { uploadImage } from "@/utils/Api";
+import { getCurrentInstance, inject, onBeforeUnmount, onMounted, ref } from "vue";
+import { useRoute } from "vue-router";
+import { useLoginStore } from "@/stores/loginStore";
 
-const {proxy} = getCurrentInstance();
+const { proxy } = getCurrentInstance() as any;
 const route = useRoute();
-const router = useRouter();
 
 const loginStore = useLoginStore();
 
@@ -116,24 +115,24 @@ const props = defineProps({
   },
 });
 
-const formData = ref({});
-const formDataRef = ref();
+const formData = ref<any>({});
+const formDataRef = ref<any>();
 
-const rules = {
+const rules: any = {
   content: [{required: true, message: "请输入评论内容"}],
 };
 
 //插入图片
-const selectFile = (file) => {
+const selectFile = (file: any) => {
   formData.value.imgPath = file.file;
 };
 
-const delImage = (index) => {
+const delImage = (index?: number) => {
   formData.value.imgPath = null;
 };
 
-const showReply = inject("showReply");
-const submitComment = async (event) => {
+const showReply = inject<any>("showReply");
+const submitComment = async (event: MouseEvent) => {
   event.preventDefault();
 
   if (Object.keys(loginStore.userInfo).length == 0) {
@@ -141,7 +140,7 @@ const submitComment = async (event) => {
     return;
   }
 
-  const params =
+  const params: any =
       props.sendType === 0
           ? {
             content: formData.value.content,
@@ -153,7 +152,7 @@ const submitComment = async (event) => {
     proxy.Message.warning("请输入评论");
     return;
   }
-  params.videoId = route.params.videoId;
+  params.videoId = route.params.videoId as any;
   //上传图片
   if (params.imgPath) {
     const imgPath = await uploadImage(params.imgPath, true);
@@ -175,9 +174,9 @@ const submitComment = async (event) => {
 };
 
 //插入表情
-const elPopoverRef = ref();
-const activeEmoji = ref("笑脸");
-const sendEmoji = (emoji) => {
+const elPopoverRef = ref<any>();
+const activeEmoji = ref<string>("笑脸");
+const sendEmoji = (emoji: string) => {
   formData.value.content = formData.value.content
       ? formData.value.content + emoji
       : emoji;

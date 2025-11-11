@@ -22,33 +22,22 @@
   </div>
 </template>
 
-<script setup>
-import {
-  ref,
-  reactive,
-  getCurrentInstance,
-  nextTick,
-  onMounted,
-  computed,
-  inject,
-  onUpdated,
-} from "vue";
-const { proxy } = getCurrentInstance();
-import { useRoute, useRouter } from "vue-router";
-const route = useRoute();
-const router = useRouter();
+<script setup lang="ts">
+import { ref, getCurrentInstance, onMounted, inject } from "vue";
+const { proxy } = getCurrentInstance() as any;
 
-const videoInfo = inject("videoInfo");
+const videoInfo = inject<any>("videoInfo");
 
-const showExpandBtn = ref(false);
+const showExpandBtn = ref<boolean>(false);
 //是否展开
-const expandType = ref(false);
+const expandType = ref<boolean>(false);
 const expand = () => {
   expandType.value = !expandType.value;
 };
 
 onMounted(() => {
-  const height = document.querySelector("#summary-inner").clientHeight;
+  const el = document.querySelector("#summary-inner") as HTMLElement | null;
+  const height = el ? el.clientHeight : 0;
   if (height > 90) {
     expandType.value = false;
     showExpandBtn.value = true;

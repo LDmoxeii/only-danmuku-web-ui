@@ -26,27 +26,18 @@
   </div>
 </template>
 
-<script setup>
-import { mitter } from "@/eventbus/eventBus.js";
+<script setup lang="ts">
+import { mitter } from "@/eventbus/eventBus";
 
-import {
-  ref,
-  reactive,
-  getCurrentInstance,
-  nextTick,
-  inject,
-  onMounted,
-  onUnmounted,
-  computed,
-} from "vue";
-const { proxy } = getCurrentInstance();
+import { ref, getCurrentInstance, nextTick, inject, onMounted, onUnmounted, computed } from "vue";
+const { proxy } = getCurrentInstance() as any;
 import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
 const router = useRouter();
-const autoPlay = ref(true);
-const currentP = ref(route.query.p ? Number.parseInt(route.query.p) : 1);
-const emit = defineEmits(["selectVideoFile"]);
-const videoList = ref([]);
+const autoPlay = ref<boolean>(true);
+const currentP = ref<number>(route.query.p ? Number.parseInt(route.query.p as string) : 1);
+const emit = defineEmits<{ (e: 'selectVideoFile', fileId: string | number): void }>();
+const videoList = ref<any[]>([]);
 const loadVideoPList = async () => {
   let result = await proxy.Request({
     url: proxy.Api.loadVideoPList,
@@ -63,7 +54,7 @@ const loadVideoPList = async () => {
 };
 loadVideoPList();
 
-const selectVideo = (index) => {
+const selectVideo = (index: number) => {
   currentP.value = index;
   router.push({
     path: route.path,

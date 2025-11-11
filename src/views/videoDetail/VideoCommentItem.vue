@@ -100,24 +100,23 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import Tag from "@/components/Tag.vue";
 import { doUserAction } from "@/utils/Api";
-import { ACTION_TYPE } from "@/utils/Constants.js";
+import { ACTION_TYPE } from "@/utils/Constants";
 
 import VideoCommentSend from "./VideoCommentSend.vue";
 import VideoCommentItem from "./VideoCommentItem.vue";
 import Avatar from "@/components/Avatar.vue";
-import { ref, reactive, getCurrentInstance, nextTick, inject } from "vue";
-const { proxy } = getCurrentInstance();
-import { useRoute, useRouter } from "vue-router";
+import { getCurrentInstance, nextTick, inject } from "vue";
+const { proxy } = getCurrentInstance() as any;
+import { useRoute } from "vue-router";
 const route = useRoute();
-const router = useRouter();
 
 import { useLoginStore } from "@/stores/loginStore";
 const loginStore = useLoginStore();
 
-import { mitter } from "@/eventbus/eventBus.js";
+import { mitter } from "@/eventbus/eventBus";
 
 const props = defineProps({
   data: {
@@ -130,9 +129,9 @@ const props = defineProps({
     default: 1,
   },
 });
-const videoInfo = inject("videoInfo");
-const showReply = inject("showReply");
-const showReplyHandler = (item, replyLevel) => {
+const videoInfo = inject<any>("videoInfo");
+const showReply = inject<any>("showReply");
+const showReplyHandler = (item: any, replyLevel: number) => {
   showReply(replyLevel == 1 ? item.commentId : item.pCommentId);
   nextTick(() => {
     const commentData = {
@@ -143,10 +142,10 @@ const showReplyHandler = (item, replyLevel) => {
   });
 };
 
-const doLike = (data) => {
+const doLike = (data: any) => {
   doUserAction(
     {
-      videoId: route.params.videoId,
+      videoId: route.params.videoId as any,
       actionType: ACTION_TYPE.COMMENT_LIKE.value,
       commentId: data.commentId,
     },
@@ -166,10 +165,10 @@ const doLike = (data) => {
   );
 };
 
-const doHate = (data) => {
+const doHate = (data: any) => {
   doUserAction(
     {
-      videoId: route.params.videoId,
+      videoId: route.params.videoId as any,
       actionType: ACTION_TYPE.COMMENT_HATE.value,
       commentId: data.commentId,
     },
