@@ -8,9 +8,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, getCurrentInstance } from 'vue'
+import { ref } from 'vue'
 import { useRoute } from 'vue-router'
-const { proxy } = getCurrentInstance() as any
+import { loadAllVideo as apiLoadAllVideo } from '@/api/ucenter'
 const route = useRoute()
 
 type VideoItem = { videoId: number | string; videoName: string }
@@ -20,11 +20,8 @@ const searchForm = ref<{ videoId: number | string | undefined }>({
 })
 const allVideoList = ref<VideoItem[]>([])
 const loadAllVideo = async () => {
-  const result = await proxy.Request({
-    url: proxy.Api.ucLoadAllVideo,
-  })
-  if (!result) return
-  allVideoList.value = result.data as VideoItem[]
+  const list = await apiLoadAllVideo()
+  allVideoList.value = list as any
 }
 loadAllVideo()
 

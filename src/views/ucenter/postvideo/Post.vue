@@ -68,7 +68,8 @@ import {
   inject,
 } from 'vue'
 
-import { uploadImage } from '@/utils/Api'
+import { uploadImage } from '@/api/file'
+import { postVideo as apiPostVideo, getVideoByVideoId as apiGetVideoByVideoId } from '@/api/ucenter'
 
 const { proxy } = getCurrentInstance() as any
 import { useRoute, useRouter } from 'vue-router'
@@ -141,11 +142,7 @@ const submitForm = () => {
       }
       params.videoCover = videoCover
     }
-    let result = await proxy.Request({
-      url: proxy.Api.postVideo,
-      showLoading: true,
-      params,
-    })
+    let result = await apiPostVideo(params)
     if (!result) {
       return
     }
@@ -161,17 +158,11 @@ const init = async () => {
     videoUploaderRef.value.initUploader(startUpload.value, [])
   })
   if (videoPostId.value) {
-    let result = await proxy.Request({
-      url: proxy.Api.getVideoByVideoId,
-      params: {
-        // 后端调整：此处传视频稿件Id
-        videoPostId: videoPostId.value,
-      },
-    })
+    let result = await apiGetVideoByVideoId(videoPostId.value)
     if (!result) {
       return
     }
-    formData.value = result.data.videoInfo
+    formData.value = result.videoInfo
     //处理tags
     formData.value.tags = formData.value.tags.split(',')
     //处理分类（仅后端提供的 parentCategoryId）
@@ -188,10 +179,7 @@ const init = async () => {
       : []
 
     nextTick(() => {
-      videoUploaderRef.value.initUploader(
-        startUpload.value,
-        result.data.videoInfoFileList
-      )
+      videoUploaderRef.value.initUploader(startUpload.value, result.videoInfoFileList)
     })
   }
 }

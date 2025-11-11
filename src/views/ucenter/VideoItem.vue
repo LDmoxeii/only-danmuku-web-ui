@@ -134,15 +134,9 @@ watch(
   },
   { immediate: true }
 )
+import { saveVideoInteraction as apiSaveVideoInteraction, deleteVideo as apiDeleteVideo } from '@/api/ucenter'
 const saveInteractionInfo = async (e: string[]) => {
-  let result = await proxy.Request({
-    url: proxy.Api.saveVideoInteraction,
-    params: {
-      // 后端调整：此处传视频稿件Id
-      videoPostId: props.data.videoPostId,
-      interaction: e.join(","),
-    },
-  });
+  let result = await apiSaveVideoInteraction(props.data.videoPostId, e.join(','))
   if (!result) {
     return;
   }
@@ -164,16 +158,10 @@ const deleteVideo = () => {
   proxy.Confirm({
     message: `确定要删除【${props.data.videoName}】吗？`,
     okfun: async () => {
-      let result = await proxy.Request({
-        url: proxy.Api.ucDeleteVideo,
-        params: {
-          // 后端调整：此处传视频稿件Id
-          videoPostId: props.data.videoPostId,
-        },
-      });
-      if (!result) {
-        return;
-      }
+  let result = await apiDeleteVideo(props.data.videoPostId)
+  if (!result) {
+    return;
+  }
       proxy.Message.success("删除成功");
       emit("reload");
     },

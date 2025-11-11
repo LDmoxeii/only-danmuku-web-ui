@@ -91,31 +91,22 @@ const dataSource = ref<any>({
   pageTotal: 1,
   totalCount: 0,
 });
+import { loadMessage as apiLoadMessage, delMessage as apiDelMessage, getNoReadCountGroup as apiGetNoReadCountGroup, readAll as apiReadAll } from '@/api/message'
 const loadDataList = async () => {
   let params: any = {
     pageNum: dataSource.value.pageNum,
     messageType: curMessageNav.value.messageType,
   }
-  let result = await proxy.Request({
-    url: proxy.Api.loadUserMessage,
-    params,
-  })
-  if (!result) {
-    return
-  }
-  dataSource.value = result.data
+  let result = await apiLoadMessage(params)
+  if (!result) return
+  dataSource.value = result
 }
 
 const delMessage = (messageId: string) => {
   proxy.Confirm({
     message: '确定要删除消息吗？',
     okfun: async () => {
-      let result = await proxy.Request({
-        url: proxy.Api.delMessage,
-        params: {
-          messageId,
-        },
-      })
+      let result = await apiDelMessage(messageId)
       if (!result) {
         return
       }
@@ -125,19 +116,11 @@ const delMessage = (messageId: string) => {
 }
 
 const getNoReadCountGroup = async () => {
-  let result = await proxy.Request({
-    url: proxy.Api.getNoReadCountGroup,
-  })
-  if (!result) {
-    return
-  }
+  let result = await apiGetNoReadCountGroup()
+  if (!result) return
   messageNav.value.forEach((nav) => {
-    const messageTypeData = result.data.find((item) => {
-      return item.messageType == nav.messageType
-    })
-    if (messageTypeData) {
-      nav.noReadCount = messageTypeData.messageCount
-    }
+    const messageTypeData = result.find((item: any) => item.messageType == nav.messageType)
+    if (messageTypeData) nav.noReadCount = messageTypeData.messageCount
   })
 }
 
@@ -147,12 +130,7 @@ const readAll = async (item: any) => {
   if (item.noReadCount == 0) {
     return
   }
-  let result = await proxy.Request({
-    url: proxy.Api.readAll,
-    params: {
-      messageType: item.messageType,
-    },
-  })
+  let result = await apiReadAll(item.messageType)
   if (!result) {
     return
   }

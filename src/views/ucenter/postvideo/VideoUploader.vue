@@ -70,6 +70,7 @@ const { proxy } = getCurrentInstance() as any
 const route = useRoute()
 
 import { mitter } from '@/eventbus/eventBus'
+import { preUploadVideo as apiPreUploadVideo, uploadVideo as apiUploadVideo, delUploadVideo as apiDelUploadVideo } from '@/api/file'
 
 const props = withDefaults(defineProps<{ videoList: any[] }>(), {
   videoList: () => [] as any[],
@@ -203,22 +204,9 @@ const uploadFile = async (uid: any, chunkIndex?: number) => {
   const chunks = Math.ceil(fileSize / CHUNK_SIZE)
 
   if (!currentFile.uploadId) {
-    let resultData = await proxy.Request({
-      url: proxy.Api.preUploadVideo,
-      params: {
-        fileName: currentFile.fileName,
-        chunks,
-      },
-      errorCallback: (errorMsg) => {
-        currentFile.status = STATUS.fail.value
-        currentFile.errorMsg = errorMsg
-      },
-    })
-    if (!resultData) {
-      return
-    }
-    //设置文件Id
-    currentFile.uploadId = resultData.data
+    const uploadId = await apiPreUploadVideo({ fileName: currentFile.fileName, chunks }, { onError: (errorMsg: any) => { currentFile.status = STATUS.fail.value; currentFile.errorMsg = errorMsg } })
+    if (!uploadId) return
+    currentFile.uploadId = uploadId
   }
 
   for (let i = chunkIndex; i < chunks; i++) {
@@ -231,30 +219,12 @@ const uploadFile = async (uid: any, chunkIndex?: number) => {
     //切割文件
     let chunkFile = file.slice(start, end)
     //上传文件
-    let uploadResult = await proxy.Request({
-      url: proxy.Api.uploadVideo,
-      dataType: 'file',
-      params: {
-        chunkFile: chunkFile,
-        chunkIndex: i,
-        uploadId: currentFile.uploadId,
-      },
-      showError: false,
-      errorCallback: (errorMsg) => {
-        currentFile.status = STATUS.fail.value
-        currentFile.errorMsg = errorMsg
-      },
-      uploadProgressCallback: (event: any) => {
-        let loaded = event.loaded
-        if (loaded > fileSize) {
-          loaded = fileSize
-        }
-        currentFile.uploadSize = i * CHUNK_SIZE + loaded
-        currentFile.uploadPercent = Math.floor(
-          (currentFile.uploadSize / fileSize) * 100
-        )
-      },
-    })
+    let uploadResult = await apiUploadVideo({ chunkFile, chunkIndex: i, uploadId: currentFile.uploadId }, { showError: false, onError: (errorMsg: any) => { currentFile.status = STATUS.fail.value; currentFile.errorMsg = errorMsg }, onProgress: (event: any) => {
+      let loaded = event.loaded
+      if (loaded > fileSize) loaded = fileSize
+      currentFile.uploadSize = i * CHUNK_SIZE + loaded
+      currentFile.uploadPercent = Math.floor((currentFile.uploadSize / fileSize) * 100)
+    } })
     if (uploadResult == null) {
       break
     }
@@ -295,16 +265,7 @@ const delFile = async (index: number) => {
     return
   }
   //如果是新上传的文件，删除直接删除服务器上的临时文件
-  await proxy.Request({
-    url: proxy.Api.delUploadVideo,
-    dataType: 'file',
-    params: {
-      uploadId: currentFile.uploadId,
-      // 后端调整：删除上传的视频需要传视频稿件Id（编辑场景）
-      videoPostId: route.query.videoPostId,
-    },
-    showError: false,
-  })
+  await apiDelUploadVideo(currentFile.uploadId)
 }
 
 //编辑标题

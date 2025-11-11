@@ -100,32 +100,23 @@ const tableData = ref<any>({
   pageNum: 1,
   pageSize: 15,
 });
+import { loadComment as apiUcenterLoadComment, delComment as apiUcenterDelComment } from '@/api/ucenter'
 const loadDataList = async () => {
   let params: any = {
     pageNum: tableData.value.pageNum,
     pageSize: tableData.value.pageSize,
     videoId: currentVideoId.value,
   };
-  let result = await proxy.Request({
-    url: proxy.Api.ucLoadComment,
-    params,
-  });
-  if (!result) {
-    return;
-  }
-  Object.assign(tableData.value, result.data);
+  let result = await apiUcenterLoadComment(params)
+  if (!result) return
+  Object.assign(tableData.value, result)
 };
 
 const delComment = (commentId: string) => {
   proxy.Confirm({
     message: "确定要删除吗？",
     okfun: async () => {
-      let result = await proxy.Request({
-        url: proxy.Api.ucDelComment,
-        params: {
-          commentId,
-        },
-      });
+      let result = await apiUcenterDelComment(commentId)
       if (!result) {
         return;
       }

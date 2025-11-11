@@ -88,33 +88,24 @@ const dataSource = ref<any>({
   pageTotal: 1,
   totalCount: 0,
 });
+import { loadVideoList as apiUcenterLoadVideoList, getVideoCountInfo as apiUcenterGetVideoCountInfo } from '@/api/ucenter'
 const loadVideoList = async () => {
   let params: any = {
     pageNum: dataSource.value.pageNum,
     videoNameFuzzy: videoNameFuzzy.value,
     status: status.value,
   };
-
-  let result = await proxy.Request({
-    url: proxy.Api.loadUcenterVideoList,
-    params,
-  });
-  if (!result) {
-    return;
-  }
-  dataSource.value = result.data;
+  let result = await apiUcenterLoadVideoList(params)
+  if (!result) return
+  dataSource.value = result
 };
 loadVideoList();
 
 const countInfo = ref({ inProgress: 0, auditPassCount: 0, auditFailCount: 0 });
 const loadCountInfo = async () => {
-  let result = await proxy.Request({
-    url: proxy.Api.getUcenterVideoCountInfo,
-  });
-  if (!result) {
-    return;
-  }
-  countInfo.value = result.data;
+  let result = await apiUcenterGetVideoCountInfo()
+  if (!result) return
+  countInfo.value = result
 };
 loadCountInfo();
 

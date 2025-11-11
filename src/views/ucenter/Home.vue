@@ -93,15 +93,12 @@ const dataPartList = ref<any[]>([
   },
 ]);
 
+import { getActualTimeStatisticsInfo as apiGetActualTimeStatisticsInfo, getWeekStatisticsInfo as apiGetWeekStatisticsInfo } from '@/api/ucenter'
 const getActualTimeStatisticsInfo = async () => {
-  let result = await proxy.Request({
-    url: proxy.Api.ucGetActualTimeStatisticsInfo,
-  });
-  if (!result) {
-    return;
-  }
-  const totalCountInfo = result.data.totalCountInfo;
-  const preDayData = result.data.preDayData;
+  let result = await apiGetActualTimeStatisticsInfo()
+  if (!result) return
+  const totalCountInfo = result.totalCountInfo
+  const preDayData = result.preDayData
 
   dataPartList.value.forEach((item) => {
     item.totalCount = totalCountInfo[item.totalCountKey];
@@ -129,18 +126,13 @@ const loadWeekDataHandler = (item: any) => {
 
 const currentDataPart = ref(dataPartList.value[0]);
 const loadWeekData = async () => {
-  let result = await proxy.Request({
-    url: proxy.Api.getWeekStatisticsInfo,
-    params: {
-      dataType: currentDataPart.value.preDataType,
-    },
-  });
+  let result = await apiGetWeekStatisticsInfo(currentDataPart.value.preDataType)
   if (!result) {
     return;
   }
   const dateArray = [];
   const dataCountArray = [];
-  result.data.forEach((item) => {
+  result.forEach((item: any) => {
     dateArray.push(item.statisticsDate);
     dataCountArray.push(item.statisticsCount);
   });
