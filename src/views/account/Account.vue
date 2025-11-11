@@ -150,14 +150,11 @@ const loginStore = useLoginStore();
 
 //验证码
 const checkCodeInfo = ref<any>({});
+import { checkCode as apiCheckCode, register as apiRegister, login as apiLogin } from '@/api/account'
 const changeCheckCode = async () => {
-  let result = await proxy.Request({
-    url: proxy.Api.checkCode,
-  });
-  if (!result) {
-    return;
-  }
-  checkCodeInfo.value = result.data;
+  const result = await apiCheckCode()
+  if (!result) return
+  checkCodeInfo.value = result
 };
 
 //登录，注册 弹出配置
@@ -223,13 +220,11 @@ const doSubmit = () => {
     if (opType.value == 1) {
       params.password = params.password;
     }
-    let result = await proxy.Request({
-      url: opType.value == 0 ? proxy.Api.register : proxy.Api.login,
-      params: params,
-      errorCallback: () => {
-        changeCheckCode();
-      },
-    });
+    let result = opType.value == 0 ? await apiRegister(params as any) : await apiLogin(params as any)
+    if (!result) {
+      changeCheckCode();
+      return;
+    }
     if (!result) {
       return;
     }
@@ -240,10 +235,10 @@ const doSubmit = () => {
     } else if (opType.value == 1) {
       proxy.Message.success("登录成功");
       loginStore.setLogin(false);
-      loginStore.saveUserInfo(result.data);
+      loginStore.saveUserInfo(result);
       // 统一封装：Cookie仅保存纯token，不做前缀/编码，Header由请求封装补齐
-      if (result.data.token) {
-        proxy.VueCookies.set("Authorization", result.data.token)
+      if (result.token) {
+        proxy.VueCookies.set("Authorization", result.token)
       }
     }
   });
