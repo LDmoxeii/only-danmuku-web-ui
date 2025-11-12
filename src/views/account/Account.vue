@@ -225,6 +225,10 @@ const doSubmit = () => {
         proxy.Message.success("登录成功");
         loginStore.setLogin(false);
         loginStore.saveUserInfo(result as any);
+        // 统一封装：Cookie仅保存纯token，不做前缀/编码，Header由请求封装补齐
+        if (result.token) {
+          proxy.VueCookies.set("Authorization", result.token)
+        }
       }
     } catch (e) {
       await changeCheckCode();
