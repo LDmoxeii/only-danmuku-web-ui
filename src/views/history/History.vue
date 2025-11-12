@@ -74,10 +74,11 @@ const cleanAll = () => {
   proxy.Confirm({
     message: '确定要清空历史记录吗？',
     okfun: async () => {
-      const result = await apiCleanHistory()
-      if (!result) return
-      proxy.Message.success('删除成功')
-      dataSource.value = { list: [] }
+      try {
+        await apiCleanHistory()
+        proxy.Message.success('删除成功')
+        dataSource.value = { list: [] }
+      } catch (e) {}
     },
   })
 }
@@ -86,10 +87,11 @@ const delHisotry = (videoId: string | number) => {
   proxy.Confirm({
     message: '确定要删除记录吗？',
     okfun: async () => {
-      const result = await apiDelHistory(videoId)
-      if (!result) return
-      proxy.Message.success('删除成功')
-      dataSource.value.list = dataSource.value.list.filter((item: any) => item.videoId != videoId)
+      try {
+        await apiDelHistory(videoId)
+        proxy.Message.success('删除成功')
+        dataSource.value.list = dataSource.value.list.filter((item: any) => item.videoId != videoId)
+      } catch (e) {}
     },
   })
 }

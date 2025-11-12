@@ -53,14 +53,12 @@ const loadDataList = async () => {
 }
 
 const focus = async (otherUserId: string) => {
-  const result = await apiFocus(otherUserId)
-  if (!result) return
+  try { await apiFocus(otherUserId) } catch (e) { return }
   loadDataList()
 }
 
 const cancelFocus = async (otherUserId: string) => {
-  const result = await apiCancelFocus(otherUserId)
-  if (!result) return
+  try { await apiCancelFocus(otherUserId) } catch (e) { return }
   loadDataList()
 }
 </script>

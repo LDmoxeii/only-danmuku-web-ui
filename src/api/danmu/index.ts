@@ -7,7 +7,6 @@ export async function loadDanmu(params: { fileId: string | number; videoId: stri
   return await request<DanmuItem[]>({url: `${base}/loadDanmu`, params})
 }
 
-export async function postDanmu(params: { videoId: string | number; fileId: string | number; text: string; mode: number; color: string; time: number }): Promise<any> {
-  return await request<any>({url: `${base}/postDanmu`, params})
+export async function postDanmu(params: { videoId: string | number; fileId: string | number; text: string; mode: number; color: string; time: number }): Promise<void> {
+  return await request<void>({url: `${base}/postDanmu`, params})
 }
-

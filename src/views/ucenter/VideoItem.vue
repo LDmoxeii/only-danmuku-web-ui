@@ -136,10 +136,7 @@ watch(
 )
 import { saveVideoInteraction as apiSaveVideoInteraction, deleteVideo as apiDeleteVideo } from '@/api/ucenter'
 const saveInteractionInfo = async (e: string[]) => {
-  let result = await apiSaveVideoInteraction(props.data.videoPostId, e.join(','))
-  if (!result) {
-    return;
-  }
+  try { await apiSaveVideoInteraction(props.data.videoPostId, e.join(',')) } catch (err) { return }
 };
 
 const jumpUrl: Record<string, string> = {
@@ -158,10 +155,7 @@ const deleteVideo = () => {
   proxy.Confirm({
     message: `确定要删除【${props.data.videoName}】吗？`,
     okfun: async () => {
-  let result = await apiDeleteVideo(props.data.videoPostId)
-  if (!result) {
-    return;
-  }
+  try { await apiDeleteVideo(props.data.videoPostId) } catch (e) { return }
       proxy.Message.success("删除成功");
       emit("reload");
     },

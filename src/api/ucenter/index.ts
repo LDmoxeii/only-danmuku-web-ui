@@ -17,11 +17,11 @@ export async function getVideoByVideoId(videoPostId: string | number): Promise<a
 export async function getVideoCountInfo(): Promise<UCenterVideoCountInfo> {
   return await request<UCenterVideoCountInfo>({url: `${base}/getVideoCountInfo`})
 }
-export async function saveVideoInteraction(videoPostId: string | number, interaction: string): Promise<any> {
-  return await request<any>({url: `${base}/saveVideoInteraction`, params: {videoPostId, interaction}})
+export async function saveVideoInteraction(videoPostId: string | number, interaction: string): Promise<void> {
+  return await request<void>({url: `${base}/saveVideoInteraction`, params: {videoPostId, interaction}})
 }
-export async function deleteVideo(videoPostId: string | number): Promise<any> {
-  return await request<any>({url: `${base}/deleteVideo`, params: {videoPostId}})
+export async function deleteVideo(videoPostId: string | number): Promise<void> {
+  return await request<void>({url: `${base}/deleteVideo`, params: {videoPostId}})
 }
 
 // 互动（评论/弹幕）
@@ -31,14 +31,14 @@ export async function loadAllVideo(): Promise<Array<{ videoId: string | number; 
 export async function loadComment(params: { pageNum: number; pageSize?: number; videoId?: string | number }): Promise<PageData<any>> {
   return await request<PageData<any>>({url: `${base}/loadComment`, params})
 }
-export async function delComment(commentId: string | number): Promise<any> {
-  return await request<any>({url: `${base}/delComment`, params: {commentId}})
+export async function delComment(commentId: string | number): Promise<void> {
+  return await request<void>({url: `${base}/delComment`, params: {commentId}})
 }
 export async function loadDanmu(params: { pageNum: number; pageSize?: number; videoId?: string | number }): Promise<PageData<any>> {
   return await request<PageData<any>>({url: `${base}/loadDanmu`, params})
 }
-export async function delDanmu(danmuId: string | number): Promise<any> {
-  return await request<any>({url: `${base}/delDanmu`, params: {danmuId}})
+export async function delDanmu(danmuId: string | number): Promise<void> {
+  return await request<void>({url: `${base}/delDanmu`, params: {danmuId}})
 }
 
 // 统计

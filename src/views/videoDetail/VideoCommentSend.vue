@@ -159,15 +159,13 @@ const submitComment = async (event: MouseEvent) => {
     const imgPath = await uploadImage(params.imgPath, true);
     params.imgPath = imgPath;
   }
-  let result = await apiPostComment(params as any)
-  if (!result) {
-    return;
-  }
+  try { await apiPostComment(params as any) } catch (e) { return }
+  
   formDataRef.value.resetFields();
   formData.value = {};
   proxy.Message.success("发布成功");
   showReply();
-  mitter.emit("postCommentSuccess", result.data);
+  mitter.emit("postCommentSuccess");
 };
 
 //插入表情
@@ -288,3 +286,5 @@ onBeforeUnmount(() => {
   }
 }
 </style>
+
+

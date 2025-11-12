@@ -116,11 +116,8 @@ const delComment = (commentId: string) => {
   proxy.Confirm({
     message: "确定要删除吗？",
     okfun: async () => {
-      let result = await apiUcenterDelComment(commentId)
-      if (!result) {
-        return;
-      }
-      proxy.Message.success("删除成功");
+      try { await apiUcenterDelComment(commentId) } catch (e) { return }
+      proxy.Message.success("ɾ���ɹ�");
       loadDataList();
     },
   });
@@ -161,3 +158,4 @@ const delComment = (commentId: string) => {
   margin: 5px 0px;
 }
 </style>
+

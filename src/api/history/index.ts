@@ -8,11 +8,10 @@ export async function loadHistory(params: { pageNum: number; pageSize?: number }
   return await request<PageData<HistoryItem>>({url: `${base}/loadHistory`, params})
 }
 
-export async function cleanHistory(): Promise<any> {
-  return await request<any>({url: `${base}/cleanHistory`})
+export async function cleanHistory(): Promise<void> {
+  return await request<void>({url: `${base}/cleanHistory`})
 }
 
-export async function delHistory(videoId: string | number): Promise<any> {
-  return await request<any>({url: `${base}/delHistory`, params: {videoId}})
+export async function delHistory(videoId: string | number): Promise<void> {
+  return await request<void>({url: `${base}/delHistory`, params: {videoId}})
 }
-

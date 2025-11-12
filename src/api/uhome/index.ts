@@ -11,21 +11,20 @@ export async function getUserInfo(userId: string | number): Promise<UserInfo> {
   return res
 }
 
-export async function updateUserInfo(params: { nickName: string; avatar: string; sex: number; birthday?: string; school?: string; personIntroduction?: string; noticeInfo?: string }): Promise<any> {
-  const res = await request<any>({ url: `${base}/updateUserInfo`, method: 'post', params })
-  return res
+export async function updateUserInfo(params: { nickName: string; avatar: string; sex: number; birthday?: string; school?: string; personIntroduction?: string; noticeInfo?: string }): Promise<void> {
+  return await request<void>({ url: `${base}/updateUserInfo`, method: 'post', params })
 }
 
-export async function saveTheme(theme: number): Promise<any> {
-  return await request<any>({url: `${base}/saveTheme`, method: 'post', params: {theme}})
+export async function saveTheme(theme: number): Promise<void> {
+  return await request<void>({url: `${base}/saveTheme`, method: 'post', params: {theme}})
 }
 
-export async function focus(focusUserId: string | number): Promise<any> {
-  return await request<any>({url: `${base}/focus`, method: 'post', params: {focusUserId}})
+export async function focus(focusUserId: string | number): Promise<void> {
+  return await request<void>({url: `${base}/focus`, method: 'post', params: {focusUserId}})
 }
 
-export async function cancelFocus(focusUserId: string | number): Promise<any> {
-  return await request<any>({url: `${base}/cancelFocus`, method: 'post', params: {focusUserId}})
+export async function cancelFocus(focusUserId: string | number): Promise<void> {
+  return await request<void>({url: `${base}/cancelFocus`, method: 'post', params: {focusUserId}})
 }
 
 export async function loadFocusList(params: { pageNum: number; pageSize?: number }): Promise<PageData<FocusFansItem>> {

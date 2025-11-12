@@ -106,10 +106,7 @@ const delMessage = (messageId: string) => {
   proxy.Confirm({
     message: '确定要删除消息吗？',
     okfun: async () => {
-      let result = await apiDelMessage(messageId)
-      if (!result) {
-        return
-      }
+      try { await apiDelMessage(messageId) } catch (e) { return }
       loadDataList()
     },
   })
@@ -130,10 +127,7 @@ const readAll = async (item: any) => {
   if (item.noReadCount == 0) {
     return
   }
-  let result = await apiReadAll(item.messageType)
-  if (!result) {
-    return
-  }
+  try { await apiReadAll(item.messageType) } catch (e) { return }
   item.noReadCount = 0
 }
 
@@ -236,3 +230,5 @@ onMounted(() => {
   }
 }
 </style>
+
+

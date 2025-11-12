@@ -142,12 +142,9 @@ const initPlayer = () => {
           })
         },
         beforeEmit: async (danmu) => {
-          let result = await postDanmu(danmu)
+          try { await postDanmu(danmu) } catch (e) { return false }
           //重新获取一下弹幕列表
           loadDanmuList()
-          if (!result) {
-            return false
-          }
           mitter.emit('danmSend')
           proxy.Message.success('发布成功')
           return true
@@ -191,7 +188,7 @@ const postDanmu = (danmu) => {
   danmu.fileId = fileId.value
   danmu.videoId = route.params.videoId
   danmu.time = Math.round(danmu.time)
-  return apiPostDanmu(danmuku as any)
+  return apiPostDanmu(danmu as any)
 }
 
 //弹幕数量
