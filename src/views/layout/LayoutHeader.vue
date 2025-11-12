@@ -7,11 +7,11 @@
           <router-link class="iconfont icon-logo menu-item" to="/">首页</router-link>
         </template>
         <div class="nav-list">
-          <div class="nav-part" v-for="index in categoryPartCount">
+          <div class="nav-part" v-for="index in categoryPartCount" :key="index">
             <router-link class="nav-item" v-for="item in categoryStore.categoryList.slice(
               (index - 1) * partCount,
               (index - 1) * partCount + partCount
-            )" :to="`/v/${item.categoryCode}`">
+            )" :key="item.categoryCode" :to="`/v/${item.categoryCode}`">
               <span class="icon" v-if="item.icon">
                 <img :src="`${sourcePath}${item.icon}`"  alt=""/>
               </span>

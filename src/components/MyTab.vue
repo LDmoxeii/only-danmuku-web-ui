@@ -3,6 +3,7 @@
     <div
       :class="['tab-item', index == modelValue ? 'active' : '']"
       v-for="(item, index) in tags"
+      :key="index"
       @click="selectTab(index)"
     >
       {{ item.name }}

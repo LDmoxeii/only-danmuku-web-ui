@@ -10,7 +10,7 @@
         'grid-template-columns': `repeat(${proxy.rowCategoryCount}, 1fr)`,
       }"
     >
-      <template v-for="index in showItemCount">
+      <template v-for="index in showItemCount" :key="index">
         <!-- 行数大于等于分类数-->
         <el-popover
           :width="187"
@@ -41,6 +41,7 @@
             <router-link
               class="child"
               v-for="sub in categoryStore.categoryList[index - 1].children"
+              :key="sub.categoryCode"
               :title="sub.categoryName"
               :to="`/v/${categoryStore.categoryList[index - 1].categoryCode}/${
                 sub.categoryCode
@@ -65,9 +66,7 @@
         </router-link>
       </template>
       <!--行数 小于分类数，余数量展示更多-->
-      <template
-        v-if="categoryStore.categoryList.length > proxy.rowCategoryCount * 2"
-      >
+      <template v-if="categoryStore.categoryList.length > proxy.rowCategoryCount * 2">
         <el-popover
           :width="187"
           trigger="hover"
@@ -88,6 +87,7 @@
                 proxy.rowCategoryCount * 2 - 1,
                 categoryStore.categoryList.length
               )"
+              :key="item.categoryCode"
               :to="`/v/${item.categoryCode}`"
               target="_blank"
             >
@@ -113,16 +113,14 @@
         'grid-template-columns': `repeat(${proxy.rowCategoryCount}, 1fr)`,
       }"
     >
-      <template v-for="item in categoryStore.categoryList">
+      <template v-for="item in categoryStore.categoryList" :key="item.categoryCode">
         <router-link class="category-item" :to="`/v/${item.categoryCode}`">
           {{ item.categoryName }}
         </router-link>
       </template>
     </div>
-    <div
-      :class="['category-op iconfont', mouseOver ? 'icon-up' : 'icon-down']"
-      v-show="categoryStore.categoryList.length > proxy.rowCategoryCount"
-    ></div>
+    <div :class="['category-op iconfont', mouseOver ? 'icon-up' : 'icon-down']"
+      v-show="categoryStore.categoryList.length > proxy.rowCategoryCount"></div>
   </div>
 </template>
 

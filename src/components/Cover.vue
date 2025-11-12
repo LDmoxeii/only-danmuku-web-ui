@@ -85,28 +85,39 @@ const props = defineProps({
   },
 });
 
-const fileImage = ref();
+const fileImage = ref<string | null>(null)
+// 监听文件型的 source，生成预览 base64
+import { watch } from 'vue'
+watch(
+  () => props.source,
+  (val) => {
+    if (val instanceof File) {
+      const reader = new FileReader()
+      reader.readAsDataURL(val)
+      reader.onload = ({ target }) => {
+        fileImage.value = (target as any)?.result || null
+      }
+    } else {
+      fileImage.value = null
+    }
+  },
+  { immediate: true }
+)
+
 const fileSource = computed(() => {
   if (!props.source && !props.defaultImg) {
-    fileImage.value = null;
-    return null;
+    return null
   }
   if (!props.source && props.defaultImg) {
-    return proxy.Utils.getLocalImage(props.defaultImg);
+    return proxy.Utils.getLocalImage(props.defaultImg)
   }
   if (props.source instanceof File) {
-    let img = new FileReader();
-    img.readAsDataURL(props.source);
-    img.onload = ({ target }) => {
-      fileImage.value = target.result;
-    };
-    return;
-  } else if (typeof props.source === "string") {
-    return `${sourcePath}${props.source}`;
-  } else {
-    return;
+    return fileImage.value
+  } else if (typeof props.source === 'string') {
+    return `${sourcePath}${props.source}`
   }
-});
+  return null
+})
 
 const imageList = computed(() => {
   if (!props.preview) {

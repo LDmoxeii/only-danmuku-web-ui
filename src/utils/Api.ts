@@ -103,7 +103,7 @@ const Api = {
 
 //上传封面
 const uploadImage = async (file: File, createThumbnail = false) => {
-    let result = await Request({
+    const result = await Request({
         url: Api.uploadImage,
         params: {
             file,
@@ -117,7 +117,7 @@ const uploadImage = async (file: File, createThumbnail = false) => {
 }
 
 const doUserAction = async (config: any, callback: () => void) => {
-    let result = await Request({
+    const result = await Request({
         url: Api.userAction,
         params: config,
         showLoading: true,

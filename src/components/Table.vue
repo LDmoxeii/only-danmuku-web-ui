@@ -68,7 +68,7 @@
         :total="dataSource.totalCount"
         :page-sizes="[15, 30, 50, 100]"
         :page-size="dataSource.pageSize"
-        :current-page.sync="dataSource.pageNum"
+        v-model:current-page="dataSource.pageNum"
         layout="total, sizes, prev, pager, next, jumper"
         @size-change="handlePageSizeChange"
         @current-change="handlepageNumChange"
@@ -92,7 +92,7 @@ const props = defineProps({
   },
   options: {
     type: Object,
-    default: {},
+    default: () => ({}),
   },
   extHeight: {
     default: 70,
@@ -151,12 +151,15 @@ const handleSelectionChange = (row: any) => {
 
 //切换每页大小
 const handlePageSizeChange = (size: number) => {
+  // eslint-disable-next-line vue/no-mutating-props
   props.dataSource.pageSize = size;
+  // eslint-disable-next-line vue/no-mutating-props
   props.dataSource.pageNum = 1;
   props.fetch();
 };
 // 切换页码
 const handlepageNumChange = (pageNum: number) => {
+  // eslint-disable-next-line vue/no-mutating-props
   props.dataSource.pageNum = pageNum;
   props.fetch();
 };

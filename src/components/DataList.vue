@@ -9,7 +9,7 @@
   </div>
   <div class="pagination" v-if="showPagination && dataSource.pageTotal > 1">
     <el-pagination v-if="dataSource.pageTotal > 1" background :total="dataSource.totalCount"
-      :current-page.sync="dataSource.pageNum" layout="prev, pager, next" @current-change="handlepageNumChange"
+      v-model:current-page="dataSource.pageNum" layout="prev, pager, next" @current-change="handlepageNumChange"
       :page-size="dataSource.pageSize"></el-pagination>
   </div>
 </template>
@@ -25,7 +25,6 @@ const props = withDefaults(
 
 const emit = defineEmits<{ (e: 'loadData'): void }>()
 const handlepageNumChange = (pageNum: number) => {
-  props.dataSource.pageNum = pageNum
   emit('loadData')
 }
 </script>

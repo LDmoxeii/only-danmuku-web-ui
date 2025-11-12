@@ -15,7 +15,7 @@
       v-if="dataSource.pageTotal > 1"
       background
       :total="dataSource.totalCount"
-      :current-page.sync="dataSource.pageNum"
+      v-model:current-page="dataSource.pageNum"
       layout="prev, pager, next"
       @current-change="handlepageNumChange"
       :page-size="dataSource.pageSize"
@@ -40,8 +40,6 @@ const props = defineProps({
 
 const emit = defineEmits(['loadData'])
 const handlepageNumChange = (pageNum: number) => {
-  const ds: any = (props as any).dataSource
-  if (ds) ds.pageNum = pageNum
   emit('loadData')
 }
 </script>

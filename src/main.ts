@@ -37,7 +37,7 @@ app.use(router)
 app.component('Collapse', Collapse)
 app.component('Avatar', Avatar)
 app.component('Cover', Cover)
-app.component('Dialog', Dialog)
+// eslint-disable-next-line vue/no-reserved-component-names\napp.component('Dialog', Dialog)
 app.component('ImageCoverSelect', ImageCoverSelect)
 app.component('DataList', DataList)
 app.component('NoData', NoData)
@@ -65,3 +65,4 @@ app.config.globalProperties.carouselMaxCount = 5
 app.config.globalProperties.bodyPadding = 150
 
 app.mount('#app')
+

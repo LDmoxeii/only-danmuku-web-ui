@@ -6,7 +6,7 @@
       }">
       <el-carousel :height="carouselWidth * 0.6 + 'px'" indicator-position="none" arrow="never" ref="elCarouselRef"
         @change="carouselChange">
-        <el-carousel-item v-for="(item, index) in carouselVideoList" :key="item" :name="index + ''">
+        <el-carousel-item v-for="(item, index) in carouselVideoList" :key="item.videoId || index" :name="index + ''">
           <div class="roll-image">
             <router-link :to="`/video/${carouselVideoList[carouselIndex].videoId}`" target="_blank">
               <img :src="`${proxy.Api.sourcePath}${item.videoCover}`"  alt=""/>
@@ -24,13 +24,13 @@
           </div>
         </div>
         <div class="dtos">
-          <div :class="['dto-item', carouselIndex == item - 1 ? 'active' : '']" v-for="item in carouselVideoList.length"
+          <div :class="['dto-item', carouselIndex == item - 1 ? 'active' : '']" v-for="item in carouselVideoList.length" :key="item"
             @click="setCarousel(item)"></div>
         </div>
       </div>
     </div>
     <div class="video-list">
-      <VideoItem v-for="item in commendVideoList" :data="item"></VideoItem>
+      <VideoItem v-for="item in commendVideoList" :key="item.videoId" :data="item"></VideoItem>
     </div>
   </div>
   <VideoList></VideoList>

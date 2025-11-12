@@ -38,7 +38,7 @@ const formatDate = (timestamp?: number | string | Date) => {
     }
 }
 const size2Str = (limit: number) => {
-    var size = "";
+    let size = "";
     if (limit < 0.1 * 1024) {                            //小于0.1KB，则转化成B
         size = limit.toFixed(2) + "B"
     } else if (limit < 1024 * 1024) {            //小于0.1MB，则转化成KB
@@ -48,18 +48,18 @@ const size2Str = (limit: number) => {
     } else {                                            //其他转化成GB
         size = (limit / (1024 * 1024 * 1024)).toFixed(2) + "GB"
     }
-    var sizeStr = size + "";                        //转成字符串
-    var index = sizeStr.indexOf(".");                    //获取小数点处的索引
-    var dou = sizeStr.substring(index + 1, 2)            //获取小数点后两位的值
+    const sizeStr = size + "";                        //转成字符串
+    const index = sizeStr.indexOf(".");                    //获取小数点处的索引
+    const dou = sizeStr.substring(index + 1, 2)            //获取小数点后两位的值
     if (dou == "00") {                                //判断后两位是否为00，如果是则删除00               
         return sizeStr.substring(0, index) + sizeStr.substr(index + 3, 2)
     }
     return size;
 }
 const convertSecondsToHMS = (seconds: number) => {
-    var hours = Math.floor(seconds / 3600);
-    var minutes = Math.floor((seconds % 3600) / 60);
-    var remainingSeconds = seconds % 60;
+    const hours = Math.floor(seconds / 3600);
+    const minutes = Math.floor((seconds % 3600) / 60);
+    const remainingSeconds = seconds % 60;
 
     return (hours == 0 ? "" : hours.toString().padStart(2, '0') + ":") + minutes.toString().padStart(2, '0') + ":" + remainingSeconds.toString().padStart(2, '0');
 }
@@ -91,3 +91,4 @@ export default {
     getLocalImage,
     resetHtmlContent
 }
+

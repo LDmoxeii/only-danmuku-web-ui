@@ -9,7 +9,7 @@
     :width="width"
     @close="close"
   >
-    <template #header="{ close, titleId, titleClass }">
+    <template #header>
       <div v-if="title" class="title">{{ title }}</div>
       <slot v-else name="header"></slot>
     </template>
@@ -23,7 +23,8 @@
       <div class="dialog-footer">
         <el-button link @click="close" v-if="showCancel"> 取消 </el-button>
         <el-button
-          v-for="btn in buttons"
+          v-for="(btn, index) in buttons"
+          :key="index"
           :type="btn.type || 'primary'"
           @click="btn.click"
         >

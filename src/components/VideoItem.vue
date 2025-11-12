@@ -15,7 +15,7 @@
     </router-link>
     <div class="video-info">
       <!--高亮html展示-->
-      <router-link class="title" :to="`/video/${data.videoId}`" v-html="data.videoName" target="_blank"></router-link>
+      <router-link class="title" :to="`/video/${data.videoId}`" target="_blank">{{ data.videoName }}</router-link>
       <router-link class="user-name" :to="`/user/${data.userId}`" target="_blank">
         <span class="iconfont icon-upzhu">{{ data.nickName }} · </span>
         <span>{{ proxy.Utils.formatDate(data.createTime) }}</span>
@@ -36,7 +36,7 @@ const props = defineProps({
   //数据
   data: {
     type: Object,
-    default: {},
+    default: () => ({}),
   },
   //距离顶部距离
   marginTop: {
