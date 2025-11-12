@@ -107,7 +107,7 @@
                   @keyup.enter="doSubmit"
               >
                 <template #prefix>
-                  <span class="iconfont icon-check code"></span>
+                  <span class="iconfont icon-checkcode"></span>
                 </template>
               </el-input>
               <img

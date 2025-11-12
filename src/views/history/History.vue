@@ -103,7 +103,7 @@ const goDetail = (videoId: string | number) => {
 
 <style lang="scss" scoped>
 .history-list {
-  margin: 20px auto 0px;
+  margin: 20px auto 0;
   width: 1200px;
   .top-info {
     display: flex;

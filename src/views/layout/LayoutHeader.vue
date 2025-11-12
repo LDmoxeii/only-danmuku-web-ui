@@ -247,8 +247,7 @@ const logout = () => {
   proxy.Confirm({
     message: "确定要退出?",
     okfun: async () => {
-      const result = await apiLogout()
-      if (!result) return
+      try { await apiLogout() } catch (e) { return }
       loginStore.saveUserInfo({});
     },
   });

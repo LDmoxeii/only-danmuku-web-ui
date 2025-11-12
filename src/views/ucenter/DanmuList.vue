@@ -94,10 +94,7 @@ const delDanmu = (danmuId: string) => {
   proxy.Confirm({
     message: '确定要删除吗？',
     okfun: async () => {
-      let result = await apiUcenterDelDanmu(danmuId)
-      if (!result) {
-        return
-      }
+      try { await apiUcenterDelDanmu(danmuId) } catch (e) { return }
       proxy.Message.success('删除成功')
       loadDataList()
     },

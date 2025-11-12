@@ -17,11 +17,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, getCurrentInstance } from 'vue'
-const { proxy } = getCurrentInstance()
-import { useRoute, useRouter } from 'vue-router'
-const route = useRoute()
-const router = useRouter()
+import { ref } from 'vue'
 import { loadHotVideoList as apiLoadHotVideoList } from '@/api/video'
 
 const loadingData = ref<boolean>(false)
@@ -46,12 +42,12 @@ loadDataList()
 
 <style lang="scss" scoped>
 .hot-container {
-  margin: 20px auto 0px;
+  margin: 20px auto 0;
   min-width: 1070px;
   max-width: 1286px;
   .hot-part-title-panel {
     border-bottom: 1px solid #ddd;
-    padding: 10px 0px 20px 0px;
+    padding: 10px 0 20px 0;
     display: flex;
     .hot-24 {
       font-size: 20px;

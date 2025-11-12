@@ -9,7 +9,7 @@
         <el-carousel-item v-for="(item, index) in carouselVideoList" :key="item" :name="index + ''">
           <div class="roll-image">
             <router-link :to="`/video/${carouselVideoList[carouselIndex].videoId}`" target="_blank">
-              <img :src="`${proxy.Api.sourcePath}${item.videoCover}`" />
+              <img :src="`${proxy.Api.sourcePath}${item.videoCover}`"  alt=""/>
             </router-link>
           </div>
         </el-carousel-item>
@@ -43,16 +43,11 @@ import { useNavAction } from '@/stores/navActionStore'
 const navActionStore = useNavAction()
 import {
   ref,
-  reactive,
   getCurrentInstance,
-  nextTick,
   onMounted,
-  provide,
   onUnmounted,
 } from 'vue'
-import { useRouter } from 'vue-router'
 const { proxy } = getCurrentInstance() as any
-const router = useRouter()
 import { loadRecommendVideo as apiLoadRecommendVideo } from '@/api/video'
 
 const commendPanelRef = ref<HTMLElement | null>(null)
@@ -142,7 +137,7 @@ const setCarousel = (index: number) => {
     }
     .carousel-bottom {
       position: absolute;
-      bottom: 0px;
+      bottom: 0;
       width: 100%;
       height: 65px;
       //background: linear-gradient(to top, #646464, #8e8e8e);
