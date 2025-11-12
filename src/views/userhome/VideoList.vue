@@ -21,11 +21,10 @@
 
 <script setup lang="ts">
 import VideoItem from './VideoItem.vue'
-import { ref, getCurrentInstance, watch } from 'vue'
-const { proxy } = getCurrentInstance() as any
-import { useRoute, useRouter } from 'vue-router'
+import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 const route = useRoute()
-const router = useRouter()
+import { loadVideoList as apiLoadVideoList } from '@/api/uhome'
 
 const activeTab = ref<number>(0)
 
@@ -44,20 +43,15 @@ const loadVideoList = async () => {
     orderType: activeTab.value,
   }
   params.userId = route.params.userId
-  let result = await proxy.Request({
-    url: proxy.Api.uHomeLoadVideo,
-    params,
-  })
-  if (!result) {
-    return
-  }
-  dataSource.value = result.data
+  const res = await apiLoadVideoList(params)
+  if (!res) return
+  dataSource.value = res as any
 }
 loadVideoList()
 
 watch(
   () => route.query.videoName,
-  (newVal, oldVal) => {
+  (newVal, _) => {
     videoName.value = newVal
     loadVideoList()
   },

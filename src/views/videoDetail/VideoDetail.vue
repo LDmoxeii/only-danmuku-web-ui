@@ -99,9 +99,8 @@ import VideoPList from "./VideoPList.vue";
 import VideoRecommend from "./VideoRecommend.vue";
 import Player from "@/components/Player.vue";
 import { ref, getCurrentInstance, nextTick, onMounted, provide } from "vue";
-import { useRouter, useRoute } from "vue-router";
+import { useRoute } from "vue-router";
 const { proxy } = getCurrentInstance() as any;
-const router = useRouter();
 const route = useRoute();
 import { mitter } from "@/eventbus/eventBus";
 import { useLoginStore } from "@/stores/loginStore";
@@ -120,16 +119,7 @@ const focusUser = async (changeCount) => {
     loginStore.setLogin(true);
     return;
   }
-  let result = await proxy.Request({
-    url: changeCount == 1 ? proxy.Api.uHomeFocus : proxy.Api.uHomeCancelFocus,
-    showLoading: true,
-    params: {
-      focusUserId: userInfo.value.userId,
-    },
-  });
-  if (!result) {
-    return;
-  }
+  try { await ((changeCount == 1) ? (await import('@/api/uhome')).focus(userInfo.value.userId) : (await import('@/api/uhome')).cancelFocus(userInfo.value.userId)) } catch (e) { return }
   if (changeCount == 1) {
     userInfo.value.haveFocus = true;
     userInfo.value.fansCount++;

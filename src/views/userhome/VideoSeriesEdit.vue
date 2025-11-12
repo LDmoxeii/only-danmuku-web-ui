@@ -58,9 +58,8 @@
 <script setup lang="ts">
 import { ref, getCurrentInstance, nextTick } from 'vue'
 const { proxy } = getCurrentInstance() as any
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 const route = useRoute()
-const router = useRouter()
 
 const dialogConfig = ref<any>({
   show: false,
@@ -133,34 +132,7 @@ const submit = () => {
       return
     }
     params.videoIds = params.videoIds.join(',')
-    let result = await proxy.Request({
-      url:
-        opType.value == 2
-          ? proxy.Api.uHomeSeriesSaveSeriesVideo
-          : proxy.Api.uHomeSeriesSaveVideoSeries,
-      params,
-    })
-    if (!result) {
-      return
-    }
-    proxy.Message.success('保存成功')
-    dialogConfig.value.show = false
-    emit('reload')
-  })
-}
-
-const videoList = ref<any[]>([])
-const loadVideoList = async () => {
-  let result = await proxy.Request({
-    url: proxy.Api.uHomeSeriesLoadAllVideo,
-    params: {
-      seriesId: route.params.seriesId,
-    },
-  })
-  if (!result) {
-    return
-  }
-  videoList.value = result.data
+    try { const res = await (await import('@/api/uhome/series')).loadAllVideo({ seriesId: route.params.seriesId as any }); videoList.value = res as any } catch (e) { return }
 }
 </script>
 

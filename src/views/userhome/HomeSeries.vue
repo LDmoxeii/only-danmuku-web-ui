@@ -40,11 +40,9 @@
 import "@/assets/scss/uhome.scss";
 import VideoSeriesEdit from "./VideoSeriesEdit.vue";
 import VideoItem from "./VideoItem.vue";
-import { ref, getCurrentInstance, computed } from "vue";
-const { proxy } = getCurrentInstance() as any;
-import { useRoute, useRouter } from "vue-router";
+import { ref, computed } from "vue";
+import { useRoute } from "vue-router";
 const route = useRoute();
-const router = useRouter();
 import { useLoginStore } from "@/stores/loginStore";
 const loginStore = useLoginStore();
 
@@ -55,17 +53,11 @@ const myself = computed(() => {
 
 //视频系列
 const seriesList = ref<any[]>([]);
+import { loadVideoSeriesWithVideo as apiLoadVideoSeriesWithVideo } from '@/api/uhome/series'
 const loadSeriesList = async () => {
-  let result = await proxy.Request({
-    url: proxy.Api.uHomeSeriesLoadVideoSeriesWithVideo,
-    params: {
-      userId: route.params.userId,
-    },
-  });
-  if (!result) {
-    return;
-  }
-  seriesList.value = result.data;
+  const res = await apiLoadVideoSeriesWithVideo({ userId: route.params.userId as any })
+  if (!res) return
+  seriesList.value = res as any;
 };
 loadSeriesList();
 

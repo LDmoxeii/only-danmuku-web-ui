@@ -79,17 +79,7 @@ const seriesInfo = ref<any>({})
 const videoList = ref<any[]>([])
 
 const getSeriesDetail = async () => {
-  let result = await proxy.Request({
-    url: proxy.Api.uHomeSeriesGetVideoSeriesDetail,
-    params: {
-      seriesId: route.params.seriesId,
-    },
-  })
-  if (!result) {
-    return
-  }
-  seriesInfo.value = result.data.videoSeries
-  videoList.value = result.data.seriesVideoList
+  try { const res = await (await import('@/api/uhome/series')).getVideoSeriesDetail(route.params.seriesId as any); seriesInfo.value = (res as any).videoSeries; videoList.value = (res as any).seriesVideoList } catch (e) { return }
   if (myself.value) {
     videoList.value.unshift({
       seriesId: 'add',
@@ -103,16 +93,7 @@ const changeSort = async () => {
     return item.videoId
   })
   videoIds.splice(0, 1)
-  let result = await proxy.Request({
-    url: proxy.Api.uHomeSeriesSaveSeriesVideo,
-    params: {
-      seriesId: route.params.seriesId,
-      videoIds: videoIds.join(','),
-    },
-  })
-  if (!result) {
-    return
-  }
+  try { await (await import('@/api/uhome/series')).saveSeriesVideo({ seriesId: route.params.seriesId as any, videoIds: videoIds.join(',') }) } catch (e) { return }
   proxy.Message.success('排序成功')
 }
 
@@ -125,7 +106,7 @@ const delVideo = (item: any) => {
     message: `确定要删除【${item.videoName}】吗？`,
     okfun: async () => {
       let result = await proxy.Request({
-        url: proxy.Api.uHomeSeriesDelSeriesVideo,
+        /* replaced */
         params: {
           seriesId: route.params.seriesId,
           videoId: item.videoId,
@@ -145,7 +126,7 @@ const delSeries = () => {
     message: `确定要删除【${seriesInfo.value.seriesName}】吗？`,
     okfun: async () => {
       let result = await proxy.Request({
-        url: proxy.Api.uHomeSeriesDelVideoSeries,
+        /* replaced */
         params: {
           seriesId: route.params.seriesId,
         },

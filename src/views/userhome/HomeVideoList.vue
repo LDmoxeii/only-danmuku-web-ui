@@ -23,11 +23,10 @@
 <script setup lang="ts">
 import "@/assets/scss/uhome.scss";
 import VideoItem from "./VideoItem.vue";
-import { ref, getCurrentInstance } from "vue";
-const { proxy } = getCurrentInstance() as any;
-import { useRoute, useRouter } from "vue-router";
+import { ref } from "vue";
+import { useRoute } from "vue-router";
 const route = useRoute();
-const router = useRouter();
+import { loadVideoList as apiLoadVideoList } from '@/api/uhome'
 
 const dataSource = ref<any>({
   list: [],
@@ -37,17 +36,9 @@ const dataSource = ref<any>({
   totalCount: 0,
 });
 const loadVideoList = async () => {
-  let result = await proxy.Request({
-    url: proxy.Api.uHomeLoadVideo,
-    params: {
-      userId: route.params.userId,
-      type: 0,
-    },
-  });
-  if (!result) {
-    return;
-  }
-  dataSource.value = result.data;
+  const res = await apiLoadVideoList({ pageNum: 1, userId: route.params.userId as any, type: 0 })
+  if (!res) return
+  dataSource.value = res as any
 };
 loadVideoList();
 </script>

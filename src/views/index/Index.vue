@@ -48,8 +48,9 @@ import {
   onUnmounted,
 } from 'vue'
 const { proxy } = getCurrentInstance() as any
-
-import { sourcePath } from '@/api/file'const commendPanelRef = ref<HTMLElement | null>(null)
+import { loadRecommendVideo as apiLoadRecommendVideo } from '@/api/video'
+import { sourcePath } from '@/api/file'
+const commendPanelRef = ref<HTMLElement | null>(null)
 const carouselWidth = ref<number>(0)
 
 const resetCarouselWidth = () => {

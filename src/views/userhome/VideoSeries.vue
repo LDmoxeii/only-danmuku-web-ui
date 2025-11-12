@@ -8,7 +8,7 @@
       class="video-list"
       draggable=".list-item"
     >
-      <template v-for="(item, index) in videoSeriesList" :key="item.seriesId">
+      <template v-for="(item) in videoSeriesList" :key="item.seriesId">
         <div
           class="video-item-add"
           @click="showVieoSeries"
@@ -56,20 +56,11 @@ const myself = computed(() => {
 
 const videoSeriesList = ref<any[]>([]);
 const loadVideoSeries = async () => {
-  let result = await proxy.Request({
-    url: proxy.Api.uHomeSeriesLoadVideoSeries,
-    params: {
-      userId: route.params.userId,
-    },
-  });
-  if (!result) {
-    return;
-  }
-  videoSeriesList.value = result.data;
+  const res = await (await import('@/api/uhome/series')).loadVideoSeries({ userId: route.params.userId as any })
+  if (!res) return
+  videoSeriesList.value = res as any
   if (myself.value) {
-    videoSeriesList.value.unshift({
-      seriesId: "add",
-    });
+    videoSeriesList.value.unshift({ seriesId: 'add' })
   }
 };
 loadVideoSeries();
@@ -84,14 +75,11 @@ const changeSort = async () => {
   });
   seriesIds.splice(0, 1);
   let result = await proxy.Request({
-    url: proxy.Api.uHomeSeriesChangeVideoSeriesSort,
+    /* replaced */
     params: {
       seriesIds: seriesIds.join(","),
     },
   });
-  if (!result) {
-    return;
-  }
   proxy.Message.success("排序成功");
 };
 
