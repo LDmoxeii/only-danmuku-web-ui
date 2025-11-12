@@ -24,18 +24,12 @@
 </template>
 
 <script setup lang="ts">
-type PageResult<T = any> = {
-  list: T[]
-  totalCount: number
-  pageNum: number
-  pageSize: number
-  pageTotal: number
-}
+import type { PageData } from '@/api/_types'
 
 withDefaults(
   defineProps<{
     gridCount?: number
-    dataSource: PageResult<any>
+    dataSource: PageData<any>
     showPagination?: boolean
   }>(),
   { gridCount: 5, showPagination: true }

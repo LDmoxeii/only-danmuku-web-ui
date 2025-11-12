@@ -15,9 +15,10 @@
 </template>
 
 <script setup lang="ts">
+import type { PageData } from '@/api/_types'
 withDefaults(
   defineProps<{
-    dataSource: any
+    dataSource: PageData<any>
     showPagination?: boolean
   }>(),
   { showPagination: true }
