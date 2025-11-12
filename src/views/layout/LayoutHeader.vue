@@ -37,8 +37,8 @@
               </div>
             </div>
             <div class="search-tag-list">
-              <el-tag v-for="tag in searchHistoryStore.searchHistory" :key="tag.name" closable type="info"
-                class="search-tag" @click="searchKeyword(tag)" @close="searchHistoryStore.delHistory(tag)">{{ tag
+              <el-tag v-for="tag in searchHistoryStore.searchHistory" :key="tag" closable type="info"
+                class="search-tag" @click="searchKeyword(tag as string)" @close="searchHistoryStore.delHistory(tag as string)">{{ tag
                 }}</el-tag>
             </div>
             <div class="hot-search-title">热搜</div>
@@ -136,16 +136,7 @@ import {useSearchHistoryStore} from "@/stores/searchHisotryStore";
 //退出
 import {logout as apiLogout} from '@/api/account'
 
-defineProps({
-  theme: {
-    type: String,
-    default: "light", //"light" 白色  dark://黑色
-  },
-  hotSearchList: {
-    type: Array,
-    default: () => [],
-  },
-});
+withDefaults(defineProps<{ theme?: string; hotSearchList?: string[] }>(), { theme: 'light', hotSearchList: () => [] });
 
 const { proxy } = getCurrentInstance() as any;
 const route = useRoute();
