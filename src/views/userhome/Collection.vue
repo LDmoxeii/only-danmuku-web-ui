@@ -33,7 +33,6 @@
 </template>
 
 <script setup lang="ts">
-import VideoItem from './VideoItem.vue'
 import { ref, getCurrentInstance } from 'vue'
 const { proxy } = getCurrentInstance() as any
 import { useRoute, useRouter } from 'vue-router'

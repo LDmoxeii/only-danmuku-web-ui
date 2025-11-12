@@ -41,15 +41,9 @@ const currentTheme = ref<number>(0);
 const emit = defineEmits(['changeTheme']);
 const selectTheme = async (item: number) => {
   currentTheme.value = item;
-  let result = await proxy.Request({
-    url: proxy.Api.saveTheme,
-    params: {
-      theme: item,
-    },
-  });
-  if (!result) {
-    return;
-  }
+  try {
+    await apiSaveTheme(item)
+  } catch (e) { return }
   showDrawer.value = false;
   emit("changeTheme", item);
 };
