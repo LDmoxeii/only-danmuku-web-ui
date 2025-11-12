@@ -224,10 +224,7 @@ const focusUser = async (
     loginStore.setLogin(true);
     return;
   }
-  let result = await (await import('@/api/uhome')).focus(focusUserId)
-  if (!result) {
-    return;
-  }
+  try { await (await import('@/api/uhome')).focus(focusUserId) } catch (e) { return }
   if (changeCountType == 0) {
     userInfo.value.haveFocus = true;
     userInfo.value.fansCount++;
@@ -243,10 +240,7 @@ const cancelFocusUser = async (
   changeCountType: number = 0,
   fn?: () => void
 ) => {
-  let result = await (await import('@/api/uhome')).cancelFocus(focusUserId)
-  if (!result) {
-    return;
-  }
+  try { await (await import('@/api/uhome')).cancelFocus(focusUserId) } catch (e) { return }
   if (changeCountType == 0) {
     userInfo.value.haveFocus = false;
     userInfo.value.fansCount--;
