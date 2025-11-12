@@ -73,7 +73,7 @@ const changeSort = async () => {
   let seriesIds = videoSeriesList.value.map((item: any) => item.seriesId)
   seriesIds.splice(0, 1)
   try { await (await import('@/api/uhome/series')).changeVideoSeriesSort(seriesIds.join(',')) } catch (e) { return }
-  proxy.Message.success('����ɹ�')
+  proxy.Message.success("排序成功");
 };
 
 const jump = (item: any) => {

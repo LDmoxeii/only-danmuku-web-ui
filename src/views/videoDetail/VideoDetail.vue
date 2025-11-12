@@ -114,7 +114,7 @@ const getUserInfo = async (userId: string | number) => {
   userInfo.value = data
 };
 
-const focusUser = async (changeCount) => {
+const focusUser = async (changeCount: number) => {
   if (Object.keys(loginStore.userInfo).length == 0) {
     loginStore.setLogin(true);
     return;
@@ -129,7 +129,25 @@ const focusUser = async (changeCount) => {
   }
 };
 
-const videoInfo = ref({});
+type VideoInfo = {
+  videoName: string
+  playCount: number
+  danmuCount: number
+  createTime: string | number
+  likeCountActive: boolean
+  collectCountActive: boolean
+  coinCountActive: boolean
+  [key: string]: any
+}
+const videoInfo = ref<VideoInfo>({
+  videoName: '',
+  playCount: 0,
+  danmuCount: 0,
+  createTime: '',
+  likeCountActive: false,
+  collectCountActive: false,
+  coinCountActive: false,
+})
 import { getVideoInfo as apiGetVideoInfo } from '@/api/video'
 const getVideoInfo = async () => {
   const result = await apiGetVideoInfo(route.params.videoId as string)
@@ -139,8 +157,7 @@ const getVideoInfo = async () => {
 
   //处理详情数据
   const resultData: any = result.videoInfo;
-  let introduction = resultData.introduction || "";
-  introduction = proxy.Utils.resetHtmlContent(resultData.introduction);
+  const introduction = proxy.Utils.resetHtmlContent(resultData.introduction);
   const tags = resultData.tags ? resultData.tags.split(",") : [];
   resultData.introduction = introduction;
   resultData.tags = tags;
