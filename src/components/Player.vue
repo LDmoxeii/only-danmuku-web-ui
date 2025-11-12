@@ -15,20 +15,16 @@
 import { mitter } from '@/eventbus/eventBus'
 import {
   ref,
-  reactive,
   getCurrentInstance,
   nextTick,
   onMounted,
-  onUnmounted,
   onBeforeUnmount,
-  watch,
   inject,
   computed,
 } from 'vue'
 import Hls from 'hls.js'
-import { useRouter, useRoute } from 'vue-router'
+import { useRoute } from 'vue-router'
 const { proxy } = getCurrentInstance() as any
-const router = useRouter()
 const route = useRoute()
 import Artplayer from 'artplayer'
 import artplayerPluginDanmuku from 'artplayer-plugin-danmuku'
@@ -53,8 +49,6 @@ const options = {
 }
 
 let player = null
-let currentTime = null
-let startTime = null
 
 const initPlayer = () => {
   //隐藏右键菜单

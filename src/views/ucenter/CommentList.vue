@@ -9,7 +9,7 @@
       :options="tableOptions"
       :extHeight="tableOptions.extHeight"
     >
-      <template #slotComment="{ index, row }">
+      <template #slotComment="{ row }">
         <div class="comment-info">
           <Avatar :avatar="row.avatar" :userId="row.userId"></Avatar>
           <div class="comment">
@@ -50,7 +50,7 @@
         </div>
       </template>
 
-      <template #slotVideo="{ index, row }">
+      <template #slotVideo="{ row }">
         <router-link
           :to="`/video/${row.videoId}`"
           target="_blank"
@@ -68,9 +68,8 @@
 import VideoSearchSelect from "./VideoSerchSelect.vue";
 import Table from "@/components/Table.vue";
 import { ref, getCurrentInstance } from 'vue'
-import { useRouter, useRoute } from "vue-router";
+import { useRoute } from "vue-router";
 const { proxy } = getCurrentInstance() as any
-const router = useRouter();
 const route = useRoute();
 
 const currentVideoId = ref<any>(route.query.videoId)

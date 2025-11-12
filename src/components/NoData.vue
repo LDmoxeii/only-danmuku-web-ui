@@ -6,7 +6,7 @@
 </template>
 
 <script setup lang="ts">
-const props = withDefaults(defineProps<{ msg?: string }>(), {
+withDefaults(defineProps<{ msg?: string }>(), {
   msg: '暂无数据',
 })
 </script>

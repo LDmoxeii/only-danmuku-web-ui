@@ -40,11 +40,9 @@
 
 <script setup lang="ts">
 import Account from '@/views/account/Account.vue'
-import { ref, getCurrentInstance, watch } from 'vue'
-const { proxy } = getCurrentInstance() as any
-import { useRoute, useRouter } from 'vue-router'
+import { ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
 const route = useRoute()
-const router = useRouter()
 
 import { useLoginStore } from '@/stores/loginStore'
 const loginStore = useLoginStore()

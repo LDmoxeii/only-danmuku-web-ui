@@ -2,22 +2,23 @@
   <div class="danmu-panel">
     <VideoSearchSelect @loadData="loadData4VideoSelect"></VideoSearchSelect>
     <Table ref="tableInfoRef" :columns="columns" :fetch="loadDataList" :dataSource="tableData" :options="tableOptions"
-      :extHeight="tableOptions.extHeight">
+           :extHeight="tableOptions.extHeight">
 
-      <template #slotNickName="{index,row}">
-        <router-link target="_blank" class="nick-name" :to="`/user/${row.userId}`">{{row.nickName}}</router-link>
+      <template #slotNickName="{row}">
+        <router-link target="_blank" class="nick-name" :to="`/user/${row.userId}`">{{ row.nickName }}</router-link>
       </template>
-      <template #time="{ index, row }">
-        {{proxy.Utils.convertSecondsToHMS(Math.round(row.time))}}
+      <template #time="{ row }">
+        {{ proxy.Utils.convertSecondsToHMS(Math.round(row.time)) }}
       </template>
 
-      <template #slotOperation="{ index, row }">
+      <template #slotOperation="{ row }">
         <a href="javascript:void(0)" class="a-link" @click="delDanmu(row.danmuId)">删除</a>
       </template>
 
-      <template #slotText="{index,row}">
-        <div>{{row.text}}</div>
-        <router-link target="_blank" class="video-info" :to="`/video/${row.videoId}`">视频：{{row.videoName}}</router-link>
+      <template #slotText="{row}">
+        <div>{{ row.text }}</div>
+        <router-link target="_blank" class="video-info" :to="`/video/${row.videoId}`">视频：{{ row.videoName }}
+        </router-link>
       </template>
     </Table>
   </div>
@@ -26,10 +27,10 @@
 <script setup lang="ts">
 import VideoSearchSelect from './VideoSerchSelect.vue'
 import Table from '@/components/Table.vue'
-import { ref, getCurrentInstance } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-const { proxy } = getCurrentInstance() as any
-const router = useRouter()
+import {ref, getCurrentInstance} from 'vue'
+import {useRoute} from 'vue-router'
+
+const {proxy} = getCurrentInstance() as any
 const route = useRoute()
 
 const currentVideoId = ref<any>(route.query.videoId)
@@ -78,7 +79,8 @@ const tableData = ref<any>({
   pageNum: 1,
   pageSize: 15,
 });
-import { loadDanmu as apiUcenterLoadDanmu, delDanmu as apiUcenterDelDanmu } from '@/api/ucenter'
+import {loadDanmu as apiUcenterLoadDanmu, delDanmu as apiUcenterDelDanmu} from '@/api/ucenter'
+
 const loadDataList = async () => {
   let params: any = {
     pageNum: tableData.value.pageNum,
@@ -94,7 +96,11 @@ const delDanmu = (danmuId: string) => {
   proxy.Confirm({
     message: '确定要删除吗？',
     okfun: async () => {
-      try { await apiUcenterDelDanmu(danmuId) } catch (e) { return }
+      try {
+        await apiUcenterDelDanmu(danmuId)
+      } catch (e) {
+        return
+      }
       proxy.Message.success('删除成功')
       loadDataList()
     },
@@ -110,6 +116,7 @@ const delDanmu = (danmuId: string) => {
   color: var(--text3);
   text-decoration: none;
 }
+
 .nick-name {
   font-size: 14px;
   color: var(--text2);

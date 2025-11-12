@@ -58,14 +58,12 @@ import TagInput from './TagInput.vue'
 import VideoUploader from './VideoUploader.vue'
 import {
   ref,
-  reactive,
   getCurrentInstance,
   nextTick,
   onMounted,
   onUnmounted,
   watch,
   provide,
-  inject,
 } from 'vue'
 
 import { uploadImage } from '@/api/file'
@@ -107,7 +105,6 @@ provide('cutImageCallback', ({ coverImage }: { coverImage: File }) => {
 })
 
 const videoUploaderRef = ref<any>()
-const videoList = ref<any[]>([])
 
 const submitForm = () => {
   const uploadFileList = videoUploaderRef.value.getUploadFileList()
@@ -136,7 +133,7 @@ const submitForm = () => {
     }
     //判断文件
     if (params.videoCover instanceof File) {
-      const videoCover = await uploadImage(params.videoCover)
+      const videoCover = await uploadImage(params.videoCover, false)
       if (!videoCover) {
         return
       }
@@ -185,7 +182,7 @@ const init = async () => {
 }
 watch(
   () => route.query.videoPostId,
-  (newVal: any, oldVal: any) => {
+  (newVal: any, _: any) => {
     if (newVal) {
       startUpload.value = true
     } else {

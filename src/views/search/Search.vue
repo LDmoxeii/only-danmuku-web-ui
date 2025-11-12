@@ -26,9 +26,8 @@
 </template>
 
 <script setup lang="ts">
-import { ref, getCurrentInstance, onMounted, watch } from 'vue'
+import { ref, onMounted, watch } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-const { proxy } = getCurrentInstance()
 const router = useRouter()
 const route = useRoute()
 
@@ -120,16 +119,12 @@ onMounted(() => {
   navActionStore.setForceFixedHeader(true)
 })
 
-const goDetail = (videoId) => {
-  router.push(`/video/${videoId}`)
-}
-
 watch(
   () => route.query.keyword,
-  (newVal, oldVal) => {
+  (newVal, _) => {
     if (newVal) {
       loadDataList()
-      searchHistoryStore.addHistory(newVal)
+      searchHistoryStore.addHistory(newVal as  string)
     }
   },
   { immediate: true, deep: true }

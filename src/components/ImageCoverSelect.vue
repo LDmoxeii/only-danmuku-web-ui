@@ -14,8 +14,6 @@ import ImageCoverCut from './ImageCoverCut.vue'
 import { ref, getCurrentInstance } from 'vue'
 import { asyncComputed } from '@vueuse/core'
 
-const { proxy } = getCurrentInstance() as any
-
 const props = defineProps({
   coverImage: {
     type: [String, File],

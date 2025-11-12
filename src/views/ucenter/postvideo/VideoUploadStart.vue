@@ -51,8 +51,6 @@ const sysSettingStore = useSysSettingStore()
 
 import { getCurrentInstance } from 'vue'
 const { proxy } = getCurrentInstance() as any
-import { useRoute } from 'vue-router'
-const route = useRoute()
 
 import { mitter } from '@/eventbus/eventBus'
 

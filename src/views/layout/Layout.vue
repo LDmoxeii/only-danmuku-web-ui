@@ -70,16 +70,6 @@ import {
   computed,
 } from 'vue'
 const { proxy } = getCurrentInstance() as any
-const menuList = ref<{ name: string; path: string }[]>([
-  {
-    name: '首页',
-    path: '/',
-  },
-  {
-    name: '板块',
-    path: '/fishing',
-  },
-])
 
 const mouseOver = ref<boolean>(false)
 const lineCategoryMouseHandler = (type: number) => {
@@ -114,8 +104,6 @@ const windowResizeHandler = () => {
   mitter.emit('windowResize')
 }
 
-const categoryMap = categoryStore.categoryMap
-
 const backgroundImage = computed(() => {
   const background = categoryStore.cureentPCategory
     ? categoryStore.cureentPCategory.background
@@ -148,7 +136,7 @@ const getNoReadCount = async () => {
 }
 watch(
   () => loginStore.userInfo,
-  (newVal, oldVal) => {
+  (newVal, _) => {
     if (newVal) {
       getNoReadCount()
     }

@@ -24,7 +24,7 @@
         <img
           :src="proxy.Utils.getLocalImage(img404)"
           class="el-image__inner"
-          :style="{ 'object-fit': fit }"
+          :style="{ objectFit: fit }"
         />
       </template>
     </el-image>

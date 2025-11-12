@@ -35,7 +35,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, getCurrentInstance } from "vue";
+import { getCurrentInstance } from "vue";
 const { proxy } = getCurrentInstance() as any;
 const props = defineProps({
   data: {

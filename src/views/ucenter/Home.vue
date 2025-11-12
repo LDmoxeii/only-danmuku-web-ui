@@ -27,11 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, getCurrentInstance, nextTick, shallowRef } from 'vue'
-const { proxy } = getCurrentInstance() as any
-import { useRoute, useRouter } from 'vue-router'
-const route = useRoute()
-const router = useRouter()
+import { ref, nextTick, shallowRef } from 'vue'
 import * as echarts from 'echarts'
 
 const dataPartList = ref<any[]>([

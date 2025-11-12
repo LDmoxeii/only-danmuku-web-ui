@@ -27,11 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, getCurrentInstance } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
-const { proxy } = getCurrentInstance() as any
-const router = useRouter()
-const route = useRoute()
+import { ref } from 'vue'
 
 import { loadFansList as apiLoadFansList, focus as apiFocus, cancelFocus as apiCancelFocus } from '@/api/uhome'
 

@@ -64,11 +64,7 @@
 
 <script setup lang="ts">
 import VideoItem from "./VideoItem.vue";
-import { ref, getCurrentInstance, onMounted, onUnmounted } from 'vue'
-const { proxy } = getCurrentInstance() as any
-import { useRoute, useRouter } from "vue-router";
-const route = useRoute();
-const router = useRouter();
+import { ref, onMounted, onUnmounted } from 'vue'
 
 const videoNameFuzzy = ref<string | undefined>();
 const status = ref<number | null | undefined>();
