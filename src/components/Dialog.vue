@@ -36,6 +36,14 @@
 </template>
 
 <script setup lang="ts">
+import type { PropType } from 'vue'
+
+type DialogButton = {
+  text: string
+  click: () => void | Promise<void>
+  type?: string
+}
+
 const props = defineProps({
   draggable: {
     type: Boolean,
@@ -65,7 +73,8 @@ const props = defineProps({
     default: "30%",
   },
   buttons: {
-    type: Array,
+    type: Array as PropType<DialogButton[]>,
+    default: () => [],
   },
   padding: {
     type: Number,
