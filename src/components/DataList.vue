@@ -9,13 +9,13 @@
   </div>
   <div class="pagination" v-if="showPagination && dataSource.pageTotal > 1">
     <el-pagination v-if="dataSource.pageTotal > 1" background :total="dataSource.totalCount"
-      v-model:current-page="dataSource.pageNum" layout="prev, pager, next" @current-change="handlepageNumChange"
+      :current-page="dataSource.pageNum" layout="prev, pager, next" @current-change="handlepageNumChange"
       :page-size="dataSource.pageSize"></el-pagination>
   </div>
 </template>
 
 <script setup lang="ts">
-const props = withDefaults(
+withDefaults(
   defineProps<{
     dataSource: any
     showPagination?: boolean

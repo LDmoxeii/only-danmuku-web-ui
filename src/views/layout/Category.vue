@@ -7,7 +7,7 @@
     <div
       class="category-list"
       :style="{
-        'grid-template-columns': `repeat(${proxy.rowCategoryCount}, 1fr)`,
+        'grid-template-columns': `repeat(${rowCategoryCount}, 1fr)`,
       }"
     >
       <template v-for="index in showItemCount" :key="index">
@@ -66,7 +66,7 @@
         </router-link>
       </template>
       <!--行数 小于分类数，余数量展示更多-->
-      <template v-if="categoryStore.categoryList.length > proxy.rowCategoryCount * 2">
+      <template v-if="categoryStore.categoryList.length > rowCategoryCount * 2">
         <el-popover
           :width="187"
           trigger="hover"
@@ -84,7 +84,7 @@
             <router-link
               class="child"
               v-for="item in categoryStore.categoryList.slice(
-                proxy.rowCategoryCount * 2 - 1,
+                rowCategoryCount * 2 - 1,
                 categoryStore.categoryList.length
               )"
               :key="item.categoryCode"
@@ -110,7 +110,7 @@
     <div
       class="category-list"
       :style="{
-        'grid-template-columns': `repeat(${proxy.rowCategoryCount}, 1fr)`,
+        'grid-template-columns': `repeat(${rowCategoryCount}, 1fr)`,
       }"
     >
       <template v-for="item in categoryStore.categoryList" :key="item.categoryCode">
@@ -120,7 +120,7 @@
       </template>
     </div>
     <div :class="['category-op iconfont', mouseOver ? 'icon-up' : 'icon-down']"
-      v-show="categoryStore.categoryList.length > proxy.rowCategoryCount"></div>
+      v-show="categoryStore.categoryList.length > rowCategoryCount"></div>
   </div>
 </template>
 
@@ -128,16 +128,16 @@
 import { useCategoryStore } from "@/stores/categoryStore";
 const categoryStore = useCategoryStore();
 
-import {
-  getCurrentInstance,
-  computed,
-} from "vue";
+import { getCurrentInstance, computed } from "vue";
 import { useRoute } from "vue-router";
 const { proxy } = getCurrentInstance() as any;
 const route = useRoute();
 
 // 每行分类数量（来自全局配置），用于模板中的类型安全引用
-const rowCategoryCount: number = proxy.rowCategoryCount as number
+const rowCategoryCount = computed<number>(() => {
+  const val = (proxy && (proxy as any).rowCategoryCount) as number | undefined
+  return typeof val === 'number' && val > 0 ? val : 8
+})
 
 defineProps({
   showType: {
@@ -153,8 +153,8 @@ defineProps({
 const showItemCount = computed(() => {
   //总数量大于 行数*2 就去行数-1，增加更多按钮
   let count = categoryStore.categoryList.length;
-  if (categoryStore.categoryList.length > proxy.rowCategoryCount * 2) {
-    count = proxy.rowCategoryCount * 2 - 1;
+  if (categoryStore.categoryList.length > rowCategoryCount.value * 2) {
+    count = rowCategoryCount.value * 2 - 1;
   }
   return count;
 });

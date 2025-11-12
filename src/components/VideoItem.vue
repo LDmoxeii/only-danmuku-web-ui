@@ -32,7 +32,7 @@
 import { getCurrentInstance } from 'vue'
 const { proxy } = getCurrentInstance() as any
 
-const props = defineProps({
+defineProps({
   //数据
   data: {
     type: Object,

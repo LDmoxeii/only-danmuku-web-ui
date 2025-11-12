@@ -39,7 +39,7 @@ import { reportVideoPlayOnline as apiReportVideoPlayOnline } from '@/api/video'
 import { loadDanmu as apiLoadDanmu, postDanmu as apiPostDanmu } from '@/api/danmu'
 const loginStore = useLoginStore()
 
-const props = defineProps({
+defineProps({
   fileId: {
     type: String,
     default: '',
@@ -179,13 +179,13 @@ const changeWideScreen = () => {
   emit('changeWideScreen', wideScreen.value)
 }
 
-const fileId = ref()
+const currentFileId = ref()
 const postDanmu = (danmu: any) => {
   if (Object.keys(loginStore.userInfo).length == 0) {
     loginStore.setLogin(true)
     return
   }
-  danmu.fileId = fileId.value
+  danmu.fileId = currentFileId.value
   danmu.videoId = route.params.videoId
   danmu.time = Math.round(danmu.time)
   return apiPostDanmu(danmu as any)
@@ -194,10 +194,10 @@ const postDanmu = (danmu: any) => {
 //弹幕数量
 const danmuCount = ref(0)
 const loadDanmuList = async () => {
-  if (!fileId.value) {
+  if (!currentFileId.value) {
     return []
   }
-  const result = await apiLoadDanmu({ fileId: fileId.value, videoId: route.params.videoId as any })
+  const result = await apiLoadDanmu({ fileId: currentFileId.value, videoId: route.params.videoId as any })
   if (!result) return []
   mitter.emit('loadDanmu', result)
   danmuCount.value = result.length
@@ -217,7 +217,7 @@ onMounted(() => {
   })
 
   mitter.on('changeP', (_fileId) => {
-    fileId.value = _fileId
+    currentFileId.value = _fileId
     //获取在线人数
     reportVideoPlayOnline()
     player.switch = apiGetVideoResource(_fileId)
@@ -246,10 +246,10 @@ const startTimer = () => {
 
 const onLineCount = ref(1)
 const reportVideoPlayOnline = async () => {
-  if (!fileId.value) {
+  if (!currentFileId.value) {
     return
   }
-  const result = await apiReportVideoPlayOnline(fileId.value, loginStore.deviceId)
+  const result = await apiReportVideoPlayOnline(currentFileId.value, loginStore.deviceId)
   if (!result) return
   onLineCount.value = result
 }

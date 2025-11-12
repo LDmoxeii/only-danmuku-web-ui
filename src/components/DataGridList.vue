@@ -15,7 +15,7 @@
       v-if="dataSource.pageTotal > 1"
       background
       :total="dataSource.totalCount"
-      v-model:current-page="dataSource.pageNum"
+      :current-page="dataSource.pageNum"
       layout="prev, pager, next"
       @current-change="handlepageNumChange"
       :page-size="dataSource.pageSize"
@@ -24,7 +24,7 @@
 </template>
 
 <script setup lang="ts">
-const props = defineProps({
+defineProps({
   gridCount: {
     type: Number,
     default: 5,

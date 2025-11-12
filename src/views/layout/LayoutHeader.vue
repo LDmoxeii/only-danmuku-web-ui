@@ -136,14 +136,14 @@ import {useSearchHistoryStore} from "@/stores/searchHisotryStore";
 //退出
 import {logout as apiLogout} from '@/api/account'
 
-const props = defineProps({
+defineProps({
   theme: {
     type: String,
     default: "light", //"light" 白色  dark://黑色
   },
   hotSearchList: {
     type: Array,
-    default: [],
+    default: () => [],
   },
 });
 
