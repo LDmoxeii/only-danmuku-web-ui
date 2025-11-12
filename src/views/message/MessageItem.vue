@@ -40,7 +40,7 @@ const { proxy } = getCurrentInstance() as any;
 const props = defineProps({
   data: {
     type: Object,
-    default: {},
+    default: () => ({}),
   },
 });
 
@@ -49,11 +49,10 @@ const MESSAGE_TYPE = {
   2: "点赞",
   3: "收藏",
   4: "评论",
-};
+} as const;
 
 const convertTitle = (): string => {
-  if (props.data.messageType == 4) {
-    if (props.data.extendDto.messageContentReply) {
+  if (props.data.messageType == 4) {\n    if ((props as any).data?.extendDto?.messageContentReply) {
       return `在视频中回复了你的评论`;
     }
     return `在视频中发表了评论`;
