@@ -34,7 +34,7 @@ import MessageSys from './MessageSys.vue'
 import MessageItem from './MessageItem.vue'
 import { ref, getCurrentInstance, onMounted } from 'vue'
 import { useRouter, useRoute } from 'vue-router'
-const { proxy } = getCurrentInstance()
+const { proxy } = getCurrentInstance() as any
 const router = useRouter()
 const route = useRoute()
 
@@ -102,7 +102,7 @@ const loadDataList = async () => {
   dataSource.value = result
 }
 
-const delMessage = (messageId: string) => {
+const delMessage = (messageId: string | number) => {
   proxy.Confirm({
     message: '确定要删除消息吗？',
     okfun: async () => {
