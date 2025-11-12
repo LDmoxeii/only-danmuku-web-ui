@@ -70,17 +70,10 @@ const showVieoSeries = () => {
 };
 
 const changeSort = async () => {
-  let seriesIds = videoSeriesList.value.map((item: any) => {
-    return item.seriesId;
-  });
-  seriesIds.splice(0, 1);
-  let result = await proxy.Request({
-    /* replaced */
-    params: {
-      seriesIds: seriesIds.join(","),
-    },
-  });
-  proxy.Message.success("排序成功");
+  let seriesIds = videoSeriesList.value.map((item: any) => item.seriesId)
+  seriesIds.splice(0, 1)
+  try { await (await import('@/api/uhome/series')).changeVideoSeriesSort(seriesIds.join(',')) } catch (e) { return }
+  proxy.Message.success('����ɹ�')
 };
 
 const jump = (item: any) => {

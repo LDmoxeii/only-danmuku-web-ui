@@ -24,7 +24,7 @@
 
     <VueDraggable v-model="videoList" @Update="changeSort" handle=".move-handler" class="video-list"
       draggable=".list-item">
-      <template v-for="(item, index) in videoList" :key="item.seriesId">
+      <template v-for="(item) in videoList" :key="item.seriesId">
         <div class="video-item-add" @click="addVideo" v-if="item.seriesId == 'add'">
           <div class="iconfont icon-add"></div>
           <div class="add-info">添加视频</div>

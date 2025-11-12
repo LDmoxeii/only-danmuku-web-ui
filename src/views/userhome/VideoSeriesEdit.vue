@@ -152,7 +152,8 @@ const loadVideoList = async () => {
     const res = await (await import('@/api/uhome/series')).loadAllVideo({ seriesId: route.params.seriesId as any })
     videoList.value = res as any
   } catch (e) { return }
-}</script>
+}
+</script>
 
 <style lang="scss" scoped>
 .op-btns {
