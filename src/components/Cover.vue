@@ -17,11 +17,11 @@
     >
       <template #placeholder>
         <div class="loading" :style="{ height: loadingHeight + 'px' }">
-          <img :src="proxy.Utils.getLocalImage('playing.gif')" />
+          <img :src="proxy.Utils.getLocalImage('playing.gif')"  alt=""/>
         </div>
       </template>
       <template #error>
-        <img :src="errorImgSrc" class="el-image__inner" :style="errorImgStyle" />
+        <img :src="errorImgSrc" class="el-image__inner" :style="errorImgStyle"  alt=""/>
       </template>
     </el-image>
     <div v-else class="no-image">请选择图片</div>

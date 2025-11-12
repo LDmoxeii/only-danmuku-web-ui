@@ -24,22 +24,25 @@
 </template>
 
 <script setup lang="ts">
-defineProps({
-  gridCount: {
-    type: Number,
-    default: 5,
-  },
-  dataSource: {
-    type: Object,
-  },
-  showPagination: {
-    type: Boolean,
-    default: true,
-  },
-});
+type PageResult<T = any> = {
+  list: T[]
+  totalCount: number
+  pageNum: number
+  pageSize: number
+  pageTotal: number
+}
 
-const emit = defineEmits(['loadData'])
-const handlepageNumChange = (pageNum: number) => {
+withDefaults(
+  defineProps<{
+    gridCount?: number
+    dataSource: PageResult<any>
+    showPagination?: boolean
+  }>(),
+  { gridCount: 5, showPagination: true }
+)
+
+const emit = defineEmits<{ (e: 'loadData'): void }>()
+const handlepageNumChange = (_pageNum: number) => {
   emit('loadData')
 }
 </script>

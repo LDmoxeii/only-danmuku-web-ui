@@ -24,7 +24,7 @@ withDefaults(
 )
 
 const emit = defineEmits<{ (e: 'loadData'): void }>()
-const handlepageNumChange = (pageNum: number) => {
+const handlepageNumChange = (_: number) => {
   emit('loadData')
 }
 </script>
