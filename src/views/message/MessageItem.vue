@@ -52,7 +52,8 @@ const MESSAGE_TYPE = {
 } as const;
 
 const convertTitle = (): string => {
-  if (props.data.messageType == 4) {\n    if ((props as any).data?.extendDto?.messageContentReply) {
+  if (props.data.messageType == 4) {
+    if ((props as any).data?.extendDto?.messageContentReply) {
       return `在视频中回复了你的评论`;
     }
     return `在视频中发表了评论`;
