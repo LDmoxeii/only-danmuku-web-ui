@@ -42,14 +42,10 @@
 </template>
 
 <script setup lang="ts">
-import { uploadImage } from '@/utils/Api'
+import { uploadImage } from '@/api/file'
+import { updateUserInfo as apiUpdateUserInfo } from '@/api/uhome'
 import { ref, getCurrentInstance, nextTick, provide } from 'vue'
 const { proxy } = getCurrentInstance() as any
-import { useRoute, useRouter } from 'vue-router'
-const route = useRoute()
-const router = useRouter()
-import { useLoginStore } from '@/stores/loginStore'
-const loginStore = useLoginStore()
 
 const dialogConfig = ref<any>({
   show: false,
@@ -58,7 +54,7 @@ const dialogConfig = ref<any>({
     {
       type: 'primary',
       text: '确定',
-      click: (e) => {
+      click: (_) => {
         submitForm()
       },
     },
@@ -97,20 +93,14 @@ const submitForm = () => {
     Object.assign(params, formData.value)
 
     if (params.avatar instanceof File) {
-      const avatar = await uploadImage(params.avatar)
+      const avatar = await uploadImage(params.avatar, true)
       if (!avatar) {
         return
       }
       params.avatar = avatar
     }
 
-    let result = await proxy.Request({
-      url: proxy.Api.uHomeUpdateUserInfo,
-      params,
-    })
-    if (!result) {
-      return
-    }
+    try { await apiUpdateUserInfo(params) } catch (e) { return }
     dialogConfig.value.show = false
     proxy.Message.success('修改成功')
     emit('reload')

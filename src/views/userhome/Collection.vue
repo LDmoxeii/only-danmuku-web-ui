@@ -58,14 +58,7 @@ const loadVideoList = async () => {
     pageNum: dataSource.value.pageNum,
   }
   params.userId = route.params.userId
-  let result = await proxy.Request({
-    url: proxy.Api.uHomeLoadCollection,
-    params,
-  })
-  if (!result) {
-    return
-  }
-  dataSource.value = result.data
+  try { const res = await (await import('@/api/uhome')).loadUserCollection(params); dataSource.value = res as any } catch (e) { return }
 }
 loadVideoList()
 
@@ -73,16 +66,7 @@ const cancelCollection = (data: any) => {
   proxy.Confirm({
     message: '确定要取消收藏吗？',
     okfun: async () => {
-      let result = await proxy.Request({
-        url: proxy.Api.userAction,
-        params: {
-          videoId: data.videoId,
-          actionType: 3,
-        },
-      })
-      if (!result) {
-        return
-      }
+      try { await (await import('@/api/userAction')).doAction({ videoId: data.videoId, actionType: 3 }) } catch (e) { return }
       loadVideoList()
     },
   })

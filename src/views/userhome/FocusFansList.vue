@@ -48,10 +48,9 @@
 </template>
 
 <script setup lang="ts">
-import { ref, getCurrentInstance, watch, inject } from 'vue'
+import { ref, watch, inject } from 'vue'
 import { useRoute } from "vue-router";
 import { loadFocusList as apiLoadFocusList, loadFansList as apiLoadFansList } from '@/api/uhome'
-const { proxy } = getCurrentInstance() as any;
 const route = useRoute();
 
 const dataSource = ref<any>({

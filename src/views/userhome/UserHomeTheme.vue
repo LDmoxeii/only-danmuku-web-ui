@@ -31,6 +31,7 @@
 <script setup lang="ts">
 import { ref, getCurrentInstance } from 'vue'
 const { proxy } = getCurrentInstance() as any
+import { saveTheme as apiSaveTheme } from '@/api/uhome'
 
 const showDrawer = ref<boolean>(false);
 
