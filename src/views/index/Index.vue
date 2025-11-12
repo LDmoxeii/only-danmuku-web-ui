@@ -9,7 +9,7 @@
         <el-carousel-item v-for="(item, index) in carouselVideoList" :key="item.videoId || index" :name="index + ''">
           <div class="roll-image">
             <router-link :to="`/video/${carouselVideoList[carouselIndex].videoId}`" target="_blank">
-              <img :src="`${proxy.Api.sourcePath}${item.videoCover}`"  alt=""/>
+              <img :src="`${sourcePath}${item.videoCover}`"  alt=""/>
             </router-link>
           </div>
         </el-carousel-item>
@@ -48,9 +48,8 @@ import {
   onUnmounted,
 } from 'vue'
 const { proxy } = getCurrentInstance() as any
-import { loadRecommendVideo as apiLoadRecommendVideo } from '@/api/video'
 
-const commendPanelRef = ref<HTMLElement | null>(null)
+import { sourcePath } from '@/api/file'const commendPanelRef = ref<HTMLElement | null>(null)
 const carouselWidth = ref<number>(0)
 
 const resetCarouselWidth = () => {
