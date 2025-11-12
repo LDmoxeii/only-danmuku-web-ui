@@ -5,20 +5,20 @@
 </template>
 
 <script setup lang="ts">
-import { onBeforeMount, ref } from 'vue'
-import { ElConfigProvider } from 'element-plus'
+import {onBeforeMount, ref} from 'vue'
+import {ElConfigProvider} from 'element-plus'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import VueCookies from 'vue-cookies'
 import FingerprintJS from '@fingerprintjs/fingerprintjs'
 
-import { useLoginStore } from '@/stores/loginStore'
-import { useSysSettingStore } from '@/stores/sysSettingStore'
-import { useCategoryStore } from '@/stores/categoryStore'
-import { useSearchHistoryStore } from '@/stores/searchHisotryStore'
+import {useLoginStore} from '@/stores/loginStore'
+import {useSysSettingStore} from '@/stores/sysSettingStore'
+import {useCategoryStore} from '@/stores/categoryStore'
+import {useSearchHistoryStore} from '@/stores/searchHisotryStore'
 
-import { autoLogin as apiAutoLogin } from '@/api/account'
-import { getSetting as apiGetSetting } from '@/api/setting'
-import { loadAllCategory as apiLoadAllCategory } from '@/api/category'
+import {autoLogin as apiAutoLogin} from '@/api/account'
+import {getSetting as apiGetSetting} from '@/api/setting'
+import {loadAllCategory as apiLoadAllCategory} from '@/api/category'
 
 const loginStore = useLoginStore()
 const sysSettingStore = useSysSettingStore()
@@ -36,10 +36,9 @@ const getDeviceId = async () => {
       const result = await fp.get()
       deviceId = result.visitorId
     } catch (_) {
-      const uuid = (globalThis.crypto && 'randomUUID' in globalThis.crypto)
-        ? (globalThis.crypto as any).randomUUID()
-        : Math.random().toString(36).slice(2) + Date.now().toString(36)
-      deviceId = uuid
+      deviceId = (globalThis.crypto && 'randomUUID' in globalThis.crypto)
+          ? (globalThis.crypto as any).randomUUID()
+          : Math.random().toString(36).slice(2) + Date.now().toString(36)
     }
     ;(VueCookies as any).set('deviceId', deviceId, -1)
   }
