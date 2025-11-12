@@ -194,7 +194,7 @@ const showItemCount = computed(() => {
     grid-gap: 8px;
     .category-item {
       line-height: 30px;
-      padding: 0px 5px;
+      padding: 0 5px;
       overflow: hidden;
       text-overflow: ellipsis;
       white-space: nowrap;
@@ -245,7 +245,7 @@ const showItemCount = computed(() => {
       color: #61666d;
     }
     .info {
-      margin-top: 0px;
+      margin-top: 0;
       font-size: 15px;
       color: #61666d;
     }

@@ -180,7 +180,7 @@ const changeWideScreen = () => {
 }
 
 const fileId = ref()
-const postDanmu = (danmu) => {
+const postDanmu = (danmu: any) => {
   if (Object.keys(loginStore.userInfo).length == 0) {
     loginStore.setLogin(true)
     return
