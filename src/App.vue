@@ -9,6 +9,7 @@ import { onBeforeMount, ref } from 'vue'
 import { ElConfigProvider } from 'element-plus'
 import zhCn from 'element-plus/es/locale/lang/zh-cn'
 import VueCookies from 'vue-cookies'
+import FingerprintJS from '@fingerprintjs/fingerprintjs'
 
 import { useLoginStore } from '@/stores/loginStore'
 import { useSysSettingStore } from '@/stores/sysSettingStore'
@@ -27,16 +28,22 @@ const searchHistoryStore = useSearchHistoryStore()
 const config = ref({ max: 1 })
 
 // 设备ID：首选现有 cookie，否则生成 uuid 保存
-const getDeviceId = () => {
+const getDeviceId = async () => {
   let deviceId = (VueCookies as any).get('deviceId') as string | undefined
   if (!deviceId) {
-    const uuid = (globalThis.crypto && 'randomUUID' in globalThis.crypto)
-      ? (globalThis.crypto as any).randomUUID()
-      : Math.random().toString(36).slice(2) + Date.now().toString(36)
-    deviceId = uuid
+    try {
+      const fp = await FingerprintJS.load()
+      const result = await fp.get()
+      deviceId = result.visitorId
+    } catch (_) {
+      const uuid = (globalThis.crypto && 'randomUUID' in globalThis.crypto)
+        ? (globalThis.crypto as any).randomUUID()
+        : Math.random().toString(36).slice(2) + Date.now().toString(36)
+      deviceId = uuid
+    }
     ;(VueCookies as any).set('deviceId', deviceId, -1)
   }
-  loginStore.saveDeviceId(deviceId)
+  loginStore.saveDeviceId(deviceId!)
 }
 
 // 自动登录：若存在 Authorization cookie，则后端校验并返回用户信息

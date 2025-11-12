@@ -13,6 +13,7 @@
     "check": "npm run type-check && npm run lint"
   },
   "dependencies": {
+    "@fingerprintjs/fingerprintjs": "4.2.2",
     "artplayer": "^5.3.0",
     "artplayer-plugin-danmuku": "^5.2.0",
     "axios": "^1.13.2",
@@ -32,10 +33,10 @@
   },
   "devDependencies": {
     "@types/node": "^24.10.0",
-    "@vitejs/plugin-vue": "^6.0.1",
-    "@vue/tsconfig": "^0.8.1",
     "@typescript-eslint/eslint-plugin": "^7.0.0",
     "@typescript-eslint/parser": "^7.0.0",
+    "@vitejs/plugin-vue": "^6.0.1",
+    "@vue/tsconfig": "^0.8.1",
     "eslint": "^8.57.0",
     "eslint-plugin-vue": "^9.17.0",
     "typescript": "~5.9.3",
