@@ -1,5 +1,5 @@
 <template>
-  <div class="tag" :style="{'border':`1px solid ${TYPE[type].color}`,'color':`${TYPE[type].color}`}">{{TYPE[type].text}}
+  <div class="tag" :style="{'border':`1px solid ${TYPE[props.type].color}`,'color':`${TYPE[props.type].color}`}">{{ TYPE[props.type].text }}
   </div>
 </template>
 
@@ -12,7 +12,7 @@ const TYPE: Record<number, { text: string; color: string }> = {
   },
 }
 
-defineProps<{ type?: number }>()
+const props = withDefaults(defineProps<{ type?: number }>(), { type: 0 })
 </script>
 
 <style lang="scss" scoped>
