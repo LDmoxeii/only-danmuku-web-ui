@@ -78,47 +78,52 @@
   </div>
 </template>
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, type PropType } from "vue";
+import type { PageData } from '@/api/_types'
 
 const emit = defineEmits<{
   (e: "rowSelected", row: any): void;
   (e: "rowClick", row: any): void;
 }>();
 const props = defineProps({
-  dataSource: Object,
+  dataSource: {
+    type: Object as PropType<PageData<any>>,
+    default: () => ({ list: [], pageNum: 1, pageSize: 10, totalCount: 0, pageTotal: 0 }),
+  },
   showPagination: {
     type: Boolean,
     default: true,
   },
   options: {
-    type: Object,
+    type: Object as PropType<{ stripe?: boolean; border?: boolean; tableHeight?: number; selectType?: 'checkbox' | 'radio' | string; showIndex?: boolean }>,
     default: () => ({}),
   },
   extHeight: {
     default: 70,
   },
-  columns: Array,
-  fetch: Function, // 获取数据的函数
+  columns: {
+    type: Array as PropType<any[]>,
+    default: () => [],
+  },
+  fetch: Function as PropType<() => void>, // 获取数据的函数
   initFetch: {
     type: Boolean,
     default: true,
   },
-  selected: Function,
+  selected: Function as PropType<(row: any, index: number) => boolean | void>,
 });
 
 //顶部 60 ,导航tab 39 内容padding 20，内容区域距离顶部 10，分页区域高度 42  内容区域el-card padding 10*2
 const topHeight = 60 + 39 + 20 + 10 + 42 + 20 + 2;
 
 const tableHeight = ref(
-  props.options.tableHeight
-    ? props.options.tableHeight
-    : window.innerHeight - topHeight - props.extHeight
+  props.options?.tableHeight ?? (window.innerHeight - topHeight - (props.extHeight as number))
 );
 
 //初始化
 const init = () => {
-  if (props.initFetch && props.fetch) {
-    props.fetch();
+  if (props.initFetch) {
+    props.fetch?.();
   }
 };
 init();
@@ -126,15 +131,15 @@ init();
 const dataTable = ref<any>();
 //清除选中
 const clearSelection = (): void => {
-  dataTable.value.clearSelection();
+  dataTable.value?.clearSelection();
 };
 
 //设置行选中
 const setCurrentRow = (rowKey: string, rowValue: any): void => {
-  let row = props.dataSource.list.find((item) => {
+  let row = props.dataSource.list.find((item: any) => {
     return item[rowKey] === rowValue;
   });
-  dataTable.value.setCurrentRow(row);
+  dataTable.value?.setCurrentRow(row);
 };
 //将子组件暴露出去，否则父组件无法调用
 defineExpose({ setCurrentRow, clearSelection });
@@ -155,20 +160,18 @@ const handlePageSizeChange = (size: number) => {
   props.dataSource.pageSize = size;
   // eslint-disable-next-line vue/no-mutating-props
   props.dataSource.pageNum = 1;
-  props.fetch();
+  props.fetch?.();
 };
 // 切换页码
 const handlepageNumChange = (pageNum: number) => {
   // eslint-disable-next-line vue/no-mutating-props
   props.dataSource.pageNum = pageNum;
-  props.fetch();
+  props.fetch?.();
 };
 
 //复选事件
 const selectedHandler = (row: any, index: number) => {
-  if (props.selected) {
-    return props.selected(row, index);
-  }
+  return props.selected?.(row, index) as any;
 };
 </script>
 <style lang="scss">
