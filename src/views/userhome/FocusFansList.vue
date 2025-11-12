@@ -49,9 +49,9 @@
 
 <script setup lang="ts">
 import { ref, getCurrentInstance, watch, inject } from 'vue'
-import { useRouter, useRoute } from "vue-router";
+import { useRoute } from "vue-router";
+import { loadFocusList as apiLoadFocusList, loadFansList as apiLoadFansList } from '@/api/uhome'
 const { proxy } = getCurrentInstance() as any;
-const router = useRouter();
 const route = useRoute();
 
 const dataSource = ref<any>({
@@ -62,21 +62,14 @@ const dataSource = ref<any>({
   totalCount: 0,
 });
 const loadDataList = async () => {
-  let params: any = {
+  const params = {
     pageNum: dataSource.value.pageNum,
     pageSize: dataSource.value.pageSize,
-  };
-  let result = await proxy.Request({
-    url:
-      route.name == "uhomeFocus"
-        ? proxy.Api.uHomeFocusList
-        : proxy.Api.uHomeFansList,
-    params,
-  });
-  if (!result) {
-    return;
   }
-  dataSource.value = result.data;
+  try {
+    const res = route.name == 'uhomeFocus' ? await apiLoadFocusList(params) : await apiLoadFansList(params)
+    dataSource.value = res as any
+  } catch (_) {}
 };
 
 const cancelFocusUser = inject<any>('cancelFocusUser');
@@ -95,7 +88,7 @@ const focus = (otherUserId: string) => {
 
 watch(
   () => route.name,
-  (newVal, oldVal) => {
+  (newVal, _) => {
     if (newVal == "uhomeFocus" || newVal == "uhomeFans") {
       loadDataList();
     }
