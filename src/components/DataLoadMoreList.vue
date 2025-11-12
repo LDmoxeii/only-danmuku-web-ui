@@ -12,7 +12,7 @@
   </div>
   <div
     v-if="
-      dataSource.pageNum >= dataSource.pageTotal &&
+      dataSource.pageNum >= (dataSource.pageTotal || 0) &&
       !loading &&
       dataSource.list.length > 0
     "
@@ -26,28 +26,24 @@
 <script setup lang="ts">
 import { mitter } from '@/eventbus/eventBus'
 import { getCurrentInstance, onMounted, onUnmounted } from 'vue'
+import type { PageData } from '@/api/_types'
 const { proxy } = getCurrentInstance() as any
 
-const props = defineProps({
-  layoutType: {
-    type: String,
-    default: "grid",
-  },
-  dataSource: {
-    type: Object,
-  },
-  loading: {
-    type: Boolean,
-  },
-  loadEndMsg: {
-    type: String,
-    default: "已经到底啦~~",
-  },
-  gridCount: {
-    type: Number,
-    default: 5,
-  },
-});
+const props = withDefaults(
+  defineProps<{
+    layoutType?: 'grid' | string
+    dataSource: PageData<any>
+    loading?: boolean
+    loadEndMsg?: string
+    gridCount?: number
+  }>(),
+  {
+    layoutType: 'grid',
+    loading: false,
+    loadEndMsg: '已到底部~~',
+    gridCount: 5,
+  }
+)
 
 const emit = defineEmits(['loadData'])
 const scrollHandler = (curScrollTop: number) => {
@@ -55,7 +51,7 @@ const scrollHandler = (curScrollTop: number) => {
     return
   }
   const ds: any = (props as any).dataSource
-  if (props.loading || ds.pageNum >= ds.pageTotal) {
+  if (props.loading || ds.pageNum >= (ds.pageTotal || 0)) {
     return
   }
   let cur = Number(ds.pageNum)

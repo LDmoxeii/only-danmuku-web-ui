@@ -4,7 +4,7 @@ export interface PageData<T> {
   pageNum: number
   pageSize: number
   totalCount: number
-  pageTotal?: number
+  pageTotal: number
 }
 
 // 通用空返回
