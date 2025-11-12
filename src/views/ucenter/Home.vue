@@ -126,8 +126,8 @@ const loadWeekData = async () => {
   if (!result) {
     return;
   }
-  const dateArray = [];
-  const dataCountArray = [];
+  const dateArray: string[] = [];
+  const dataCountArray: number[] = [];
   result.forEach((item: any) => {
     dateArray.push(item.statisticsDate);
     dataCountArray.push(item.statisticsCount);
