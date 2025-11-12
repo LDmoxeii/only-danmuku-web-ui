@@ -71,30 +71,28 @@ const dialogConfig = ref({
     {
       type: 'primary',
       text: '确定',
-      click: (e) => {
+      click: () => {
         cutImage()
       },
     },
   ],
 })
 
-const cropperRef = ref()
-const previewsImage = ref()
-const prview = (data) => {
-  cropperRef.value.getCropData((data) => {
+const cropperRef = ref<any>()
+const previewsImage = ref<string>()
+const prview = (_data: any) => {
+  cropperRef.value.getCropData((data: string) => {
     previewsImage.value = data
   })
 }
 
-const sourceImage = ref()
-const selectFile = (file) => {
-  console.log(props.cutWidth, props.scale)
-
-  file = file.file
-  let img = new FileReader()
-  img.readAsDataURL(file)
-  img.onload = ({ target }) => {
-    sourceImage.value = target.result
+const sourceImage = ref<string | undefined>()
+const selectFile = (options: any) => {
+  const file: File = options.file as File
+  const reader = new FileReader()
+  reader.readAsDataURL(file)
+  reader.onload = () => {
+    sourceImage.value = reader.result as string
   }
 }
 
@@ -110,7 +108,7 @@ defineExpose({
   show,
 })
 
-const cutImageCallback = inject('cutImageCallback')
+const cutImageCallback = inject<(args: { coverImage: File }) => void>('cutImageCallback')
 //裁剪
 const cutImage = () => {
   //截图的高宽
@@ -131,7 +129,7 @@ const cutImage = () => {
     )
     return
   }
-  cropperRef.value.getCropBlob((blob) => {
+  cropperRef.value.getCropBlob((blob: Blob) => {
     const file = new File(
       [blob],
       'temp.' + blob.type.substring(blob.type.indexOf('/') + 1),
@@ -139,9 +137,11 @@ const cutImage = () => {
     )
     dialogConfig.value.show = false
 
-    cutImageCallback({
-      coverImage: file,
-    })
+    if (cutImageCallback) {
+      cutImageCallback({
+        coverImage: file,
+      })
+    }
   })
 }
 </script>
