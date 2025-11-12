@@ -28,8 +28,6 @@ export async function cancelFocus(focusUserId: string | number): Promise<any> {
   return await request<any>({url: `${base}/cancelFocus`, method: 'post', params: {focusUserId}})
 }
 
-// types moved to ./types
-
 export async function loadFocusList(params: { pageNum: number; pageSize?: number }): Promise<PageData<FocusFansItem>> {
   return await request<PageData<FocusFansItem>>({url: `${base}/loadFocusList`, method: 'post', params})
 }
@@ -37,8 +35,6 @@ export async function loadFocusList(params: { pageNum: number; pageSize?: number
 export async function loadFansList(params: { pageNum: number; pageSize?: number }): Promise<PageData<FocusFansItem>> {
   return await request<PageData<FocusFansItem>>({url: `${base}/loadFansList`, method: 'post', params})
 }
-
-// types moved to ./types
 
 export async function loadVideoList(params: { pageNum: number; pageSize?: number; userId?: string | number; type?: number; videoName?: string; orderType?: number }): Promise<PageData<UserHomeVideoItem>> {
   return await request<PageData<UserHomeVideoItem>>({url: `${base}/loadVideoList`, method: 'post', params})

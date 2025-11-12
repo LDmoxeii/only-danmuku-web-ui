@@ -1,62 +1,64 @@
-import axios, { AxiosInstance, AxiosRequestConfig } from 'axios'
+import axios from 'axios'
+import type { AxiosInstance, AxiosRequestConfig } from 'axios'
 import { ElLoading } from 'element-plus'
 import Message from '../utils/Message'
-import VueCookies from 'vue-cookies'
 import { useLoginStore } from '@/stores/loginStore'
 
-const contentTypeForm = 'application/x-www-form-urlencoded;charset=UTF-8'
-const contentTypeJson = 'application/json'
-const responseTypeJson = 'json'
+// 全局默认头
+axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
+axios.defaults.headers['clientid'] = (import.meta as any).env?.VITE_APP_CLIENT_ID
 
 let loading: ReturnType<typeof ElLoading.service> | null = null
 const instance: AxiosInstance = axios.create({ withCredentials: true, baseURL: '/api', timeout: 10 * 1000 })
+
+// 参数序列化（兼容嵌套对象、数组）
+const tansParams = (params: Record<string, any> = {}): string => {
+  let result = ''
+  const add = (key: string, val: any) => {
+    if (val === undefined || val === null || val === '') return
+    result += `${encodeURIComponent(key)}=${encodeURIComponent(val)}&`
+  }
+  const build = (prefix: string, obj: any) => {
+    if (Array.isArray(obj)) {
+      obj.forEach((v) => add(prefix, v))
+    } else if (Object.prototype.toString.call(obj) === '[object Object]') {
+      Object.keys(obj).forEach((k) => build(`${prefix}[${k}]`, obj[k]))
+    } else {
+      add(prefix, obj)
+    }
+  }
+  Object.keys(params).forEach((prop) => build(prop, params[prop]))
+  return result
+}
 
 instance.interceptors.request.use(
   (config: any) => {
     if (config.showLoading) {
       loading = ElLoading.service({ lock: true, text: '加载中......', background: 'rgba(0, 0, 0, 0.7)' })
     }
-    // token 注入（从 Cookies）
-    const rawCookieToken = (VueCookies as any).get('Authorization') as string | undefined
-    const decodedToken = rawCookieToken ? decodeURIComponent(rawCookieToken) : ''
-    const authHeader = decodedToken ? (decodedToken.startsWith('Bearer ') ? decodedToken : `Bearer ${decodedToken}`) : ''
+    const loginStore: any = useLoginStore()
+    const token = loginStore?.userInfo?.token
+    const authHeader = token ? (String(token).startsWith('Bearer ') ? String(token) : `Bearer ${token}`) : ''
     config.headers = config.headers || {}
     if (authHeader) config.headers['Authorization'] = authHeader
     config.headers['X-Requested-With'] = 'XMLHttpRequest'
 
-    // 默认 method 使用 post，除非显式指定
-    config.method = (config.method || 'post').toLowerCase()
+    // GET 请求映射 params 到 url
+    if (config.method === 'get' && config.params) {
+      let url = config.url + '?' + tansParams(config.params)
+      url = url.slice(0, -1)
+      config.params = {}
+      config.url = url
+    }
 
     // 上传进度回调兼容字段
     if (config.uploadProgressCallback && !config.onUploadProgress) {
       config.onUploadProgress = config.uploadProgressCallback
     }
 
-    // 统一处理 POST 请求体，优先支持 JSON
-    const isPost = config.method === 'post'
-    const isJson = config.dataType === 'json'
-    const isFile = config.dataType === 'file'
-
-    if (isPost) {
-      if (isJson) {
-        config.headers['Content-Type'] = 'application/json'
-        if (!config.data && config.params) {
-          config.data = config.params
-          delete config.params
-        }
-      } else {
-        // FormData 收敛：支持文件与普通字段
-        const formData = new FormData()
-        const payload = config.data ?? config.params ?? {}
-        Object.keys(payload || {}).forEach((key) => {
-          const val = payload[key]
-          formData.append(key, val == null ? '' : val)
-        })
-        config.data = formData
-        delete config.params
-        // 让浏览器自动设置 multipart 边界
-        if (config.headers && config.headers['Content-Type']) delete config.headers['Content-Type']
-      }
+    // 若外部直接传入 FormData，同样放开 Content-Type 让浏览器设置边界
+    if (config.data instanceof FormData && config.headers && config.headers['Content-Type']) {
+      delete config.headers['Content-Type']
     }
     return config
   },
@@ -80,14 +82,14 @@ instance.interceptors.response.use(
       return Promise.reject({ showError: false })
     }
     if (errorCallback) errorCallback(responseData)
-    if (showError) Message.error(responseData?.info || '请求失败')
-    return Promise.reject({ showError, msg: responseData?.info })
+    if (showError) Message.error(responseData?.message || '请求失败')
+    return Promise.reject({ showError, msg: responseData?.message })
   },
   (error: any) => {
     if (error?.config?.showLoading && loading) loading.close()
     const showError = error?.config?.showError !== false
     if (showError) Message.error('网络异常')
-    return Promise.reject({ showError: !!showError, msg: '网络异常' })
+    return Promise.reject({ showError: showError, msg: '网络异常' })
   }
 )
 
@@ -107,4 +109,3 @@ const request = <T = any>(config: RequestConfig): Promise<T> => {
 }
 
 export default request
-export { instance as axiosInstance }

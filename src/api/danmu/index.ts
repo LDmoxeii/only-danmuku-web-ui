@@ -3,7 +3,7 @@ import type {DanmuItem} from './types'
 
 const base = '/danmu'
 
-export async function loadDanmu(params: { fileId: string | number; videoId: string | number }): Promise<DanmuItem[] | null> {
+export async function loadDanmu(params: { fileId: string | number; videoId: string | number }): Promise<DanmuItem[]> {
   return await request<DanmuItem[]>({url: `${base}/loadDanmu`, params})
 }
 

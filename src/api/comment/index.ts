@@ -3,7 +3,7 @@ import type {LoadCommentResult} from './types'
 
 const base = '/comment'
 
-export async function loadComment(params: { videoId: string | number; pageNum: number; pageSize?: number }): Promise<LoadCommentResult | null> {
+export async function loadComment(params: { videoId: string | number; pageNum: number; pageSize?: number }): Promise<LoadCommentResult> {
   return await request<LoadCommentResult>({url: `${base}/loadComment`, method: 'post', params})
 }
 

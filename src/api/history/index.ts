@@ -4,8 +4,6 @@ import type {HistoryItem} from './types'
 
 const base = '/history'
 
-// types moved to ./types
-
 export async function loadHistory(params: { pageNum: number; pageSize?: number }): Promise<PageData<HistoryItem>> {
   return await request<PageData<HistoryItem>>({url: `${base}/loadHistory`, params})
 }
