@@ -42,13 +42,9 @@ defineProps({
   },
 })
 
-const playerRef = ref()
+const playerRef = ref<string | HTMLDivElement | null>(null)
 import { getVideoResource as apiGetVideoResource } from '@/api/file'
-const options = {
-  url: apiGetVideoResource('') as any,
-}
-
-let player = null
+let player: any = null
 
 const initPlayer = () => {
   //隐藏右键菜单
@@ -58,11 +54,11 @@ const initPlayer = () => {
   //自动回放功能的最小记录时长，单位为秒，默认为 5
   Artplayer.AUTO_PLAYBACK_MIN = 10
   player = new Artplayer({
-    container: playerRef.value,
+    container: playerRef.value as string | HTMLDivElement,
     url: ``,
     type: 'm3u8',
     customType: {
-      m3u8: function (video, url, art) {
+      m3u8: function (video: HTMLVideoElement, url: string, art: any) {
         if (Hls.isSupported()) {
           if (art.hls) art.hls.destroy()
           const hls = new Hls()
@@ -93,7 +89,7 @@ const initPlayer = () => {
     autoPlayback: true, //自动回放
     //自定义图标
     icons: {
-      state: document.querySelector('#play'),
+      state: document.querySelector('#play') as HTMLElement,
     },
     controls: [
       {
@@ -105,7 +101,7 @@ const initPlayer = () => {
           color: '#fff',
           display: 'flex',
         },
-        click: function (...args) {
+        click: function () {
           changeWideScreen()
         },
       },
@@ -118,21 +114,21 @@ const initPlayer = () => {
           color: '#fff',
           display: 'none',
         },
-        click: function (...args) {
+        click: function () {
           changeWideScreen()
         },
       },
     ],
     plugins: [
       artplayerPluginDanmuku({
-        mount: document.querySelector('#danmu'),
+        mount: document.querySelector('#danmu') as HTMLDivElement,
         theme: 'light',
         emitter: true,
         danmuku: function () {
-          return new Promise(async (resovle) => {
+          return new Promise<any[]>(async (resovle) => {
             //是否展示弹幕
             const danmuList = await loadDanmuList()
-            return resovle(danmuList)
+            return resovle(danmuList as any)
           })
         },
         beforeEmit: async (danmu) => {
@@ -146,7 +142,7 @@ const initPlayer = () => {
       }),
     ],
   })
-  player.on('hover', (state) => {
+  player.on('hover', (state: boolean) => {
     let display = 'none'
     if (state) {
       display = 'flex'
@@ -154,7 +150,7 @@ const initPlayer = () => {
     player.template.$bottom.style.display = display
   })
   //视频播放完成
-  player.on('video:ended', (e) => {
+  player.on('video:ended', () => {
     mitter.emit('playEnd')
   })
 }
@@ -173,7 +169,7 @@ const changeWideScreen = () => {
   emit('changeWideScreen', wideScreen.value)
 }
 
-const currentFileId = ref()
+const currentFileId = ref<string | null>(null)
 const postDanmu = (danmu: any) => {
   if (Object.keys(loginStore.userInfo).length == 0) {
     loginStore.setLogin(true)
@@ -187,7 +183,7 @@ const postDanmu = (danmu: any) => {
 
 //弹幕数量
 const danmuCount = ref(0)
-const loadDanmuList = async () => {
+const loadDanmuList = async (): Promise<any[]> => {
   if (!currentFileId.value) {
     return []
   }
@@ -195,26 +191,27 @@ const loadDanmuList = async () => {
   if (!result) return []
   mitter.emit('loadDanmu', result)
   danmuCount.value = result.length
-  return result
+  return result as any
 }
 
 const playerHeight = ref(500)
-const setPlayerHeight = inject('playerHeight')
+const setPlayerHeight = inject<((h: number) => void) | null>('playerHeight', null)
 
 onMounted(() => {
   nextTick(() => {
     initPlayer()
     //滚动条的宽度是8，页面未全部加载完获取不到滚动条的宽度，所以这里提前减去滚动条的宽度
-    const height = Math.round((playerRef.value.clientWidth - 8) * 0.5625)
+    const width = (playerRef.value as HTMLDivElement)?.clientWidth ?? 0
+    const height = Math.round((width - 8) * 0.5625)
     playerHeight.value = height
-    setPlayerHeight(height)
+    setPlayerHeight && setPlayerHeight(height)
   })
 
-  mitter.on('changeP', (_fileId) => {
+  mitter.on('changeP', (_fileId: string) => {
     currentFileId.value = _fileId
     //获取在线人数
     reportVideoPlayOnline()
-    player.switch = apiGetVideoResource(_fileId)
+    player.switch = apiGetVideoResource(_fileId) as any
     //切换弹幕
     player.plugins.artplayerPluginDanmuku.load()
   })
@@ -231,7 +228,7 @@ onBeforeUnmount(() => {
 })
 
 //获取在线人数轮训上报，类似上报心跳
-let timmer = ref(null)
+let timmer = ref<ReturnType<typeof setInterval> | null>(null)
 const startTimer = () => {
   timmer.value = setInterval(() => {
     reportVideoPlayOnline()
@@ -243,7 +240,7 @@ const reportVideoPlayOnline = async () => {
   if (!currentFileId.value) {
     return
   }
-  const result = await apiReportVideoPlayOnline(currentFileId.value, loginStore.deviceId)
+  const result = await apiReportVideoPlayOnline(currentFileId.value as string, loginStore.deviceId as string)
   if (!result) return
   onLineCount.value = result
 }
@@ -256,11 +253,11 @@ const cleanTimer = () => {
 }
 
 //判断是否显示弹幕
-const videoInfo = inject('videoInfo')
+const videoInfo = inject<any>('videoInfo')
 const showDanmu = computed(() => {
   return (
-    videoInfo.value.interaction == null ||
-    videoInfo.value.interaction.indexOf('0') == -1
+    videoInfo?.value?.interaction == null ||
+    videoInfo?.value?.interaction.indexOf('0') == -1
   )
 })
 </script>
