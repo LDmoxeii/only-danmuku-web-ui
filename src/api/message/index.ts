@@ -9,14 +9,13 @@ export async function getNoReadCountGroup(): Promise<MessageGroupItem[]> {
 }
 
 export async function readAll(messageType: number): Promise<any> {
-  return await request<any>({url: `${base}/readAll`, params: {messageType}})
+  return await request<any>({url: `${base}/readAll`, data: {messageType}})
 }
 
 export async function loadMessage(params: { pageNum: number; pageSize?: number; messageType: number }): Promise<PageData<any>> {
-  return await request<PageData<any>>({url: `${base}/loadMessage`, params})
+  return await request<PageData<any>>({url: `${base}/loadMessage`, data: params})
 }
 
 export async function delMessage(messageId: string | number): Promise<any> {
-  return await request<any>({url: `${base}/delMessage`, params: {messageId}})
+  return await request<any>({url: `${base}/delMessage`, data: {messageId}})
 }
-

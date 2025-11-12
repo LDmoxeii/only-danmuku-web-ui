@@ -13,4 +13,3 @@ export const ACTION_TYPE = {
   COMMENT_LIKE: { value: 4 },
   COMMENT_HATE: { value: 5 },
 } as const
-

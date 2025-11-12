@@ -54,4 +54,3 @@ export async function getWeekStatisticsInfo(dataType: number): Promise<Array<{ s
     statisticsCount: number
   }>>({url: `${base}/getWeekStatisticsInfo`, params: {dataType}})
 }
-

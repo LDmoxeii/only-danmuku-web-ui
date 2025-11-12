@@ -43,4 +43,3 @@ export async function loadVideoList(params: { pageNum: number; pageSize?: number
 export async function loadUserCollection(params: { pageNum: number; pageSize?: number; userId?: string | number }): Promise<PageData<UserHomeVideoItem>> {
   return await request<PageData<UserHomeVideoItem>>({url: `${base}/loadUserCollection`, method: 'post', params})
 }
-

@@ -22,4 +22,3 @@ export async function userTopComment(commentId: string | number): Promise<null |
 export async function userCancelTopComment(commentId: string | number): Promise<null | any> {
   return await request<any>({url: `${base}/cancelTopComment`, method: 'post', params: {commentId}})
 }
-

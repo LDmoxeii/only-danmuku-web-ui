@@ -46,4 +46,3 @@ export async function getSearchKeywordTop(): Promise<string[]> {
 export async function loadHotVideoList(params: { pageNum: number; pageSize?: number }): Promise<LoadVideoResult> {
     return await request<LoadVideoResult>({url: `${base}/loadHotVideoList`, method: 'post', params})
 }
-
