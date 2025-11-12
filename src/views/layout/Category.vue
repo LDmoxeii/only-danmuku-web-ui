@@ -131,18 +131,15 @@ import { useCategoryStore } from "@/stores/categoryStore";
 const categoryStore = useCategoryStore();
 
 import {
-  ref,
-  reactive,
   getCurrentInstance,
-  nextTick,
   computed,
-  provide,
-  inject,
 } from "vue";
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 const { proxy } = getCurrentInstance() as any;
-const router = useRouter();
 const route = useRoute();
+
+// 每行分类数量（来自全局配置），用于模板中的类型安全引用
+const rowCategoryCount: number = proxy.rowCategoryCount as number
 
 const props = defineProps({
   showType: {
@@ -164,12 +161,7 @@ const showItemCount = computed(() => {
   return count;
 });
 
-const extendClass = computed(() => {
-  if (props.showType == 0) {
-    return "";
-  }
-  return props.mouseOver ? "" : "category-list-out";
-});
+// extendClass 未在模板中使用，移除避免未使用警告
 </script>
 
 <style lang="scss" scoped>
