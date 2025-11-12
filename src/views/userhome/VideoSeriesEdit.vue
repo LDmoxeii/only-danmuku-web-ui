@@ -132,9 +132,27 @@ const submit = () => {
       return
     }
     params.videoIds = params.videoIds.join(',')
-    try { const res = await (await import('@/api/uhome/series')).loadAllVideo({ seriesId: route.params.seriesId as any }); videoList.value = res as any } catch (e) { return }
+    try {
+      if (opType.value == 2) {
+        await (await import('@/api/uhome/series')).saveSeriesVideo(params)
+      } else {
+        await (await import('@/api/uhome/series')).saveVideoSeries(params)
+      }
+    } catch (e) { return }
+    proxy.Message.success('保存成功')
+    dialogConfig.value.show = false
+    emit('reload')
+  })
 }
-</script>
+
+// 候选视频列表（第二步勾选）
+const videoList = ref<any[]>([])
+const loadVideoList = async () => {
+  try {
+    const res = await (await import('@/api/uhome/series')).loadAllVideo({ seriesId: route.params.seriesId as any })
+    videoList.value = res as any
+  } catch (e) { return }
+}</script>
 
 <style lang="scss" scoped>
 .op-btns {
