@@ -13,9 +13,15 @@
 
 <script setup lang="ts">
 
-defineProps<{ tags?: Array<{ name: string }>; modelValue?: number }>()
+withDefaults(
+  defineProps<{ tags?: Array<{ name: string }>; modelValue?: number }>(),
+  { tags: () => [], modelValue: 0 }
+)
 
-const emit = defineEmits<["update:modelValue", "clickHandler"]>()
+const emit = defineEmits<{
+  (e: 'update:modelValue', value: number): void
+  (e: 'clickHandler'): void
+}>()
 const selectTab = (index: number) => {
   emit('update:modelValue', index)
   emit('clickHandler')
