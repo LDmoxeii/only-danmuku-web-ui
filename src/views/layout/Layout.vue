@@ -63,19 +63,13 @@ import LayoutHeader from './LayoutHeader.vue'
 import { sourcePath } from '@/api/file'
 import {
   ref,
-  reactive,
   getCurrentInstance,
-  nextTick,
   onMounted,
   onUnmounted,
-  inject,
   watch,
   computed,
 } from 'vue'
-import { useRouter, useRoute } from 'vue-router'
 const { proxy } = getCurrentInstance() as any
-const router = useRouter()
-const route = useRoute()
 const menuList = ref<{ name: string; path: string }[]>([
   {
     name: '首页',
@@ -89,27 +83,15 @@ const menuList = ref<{ name: string; path: string }[]>([
 
 const mouseOver = ref<boolean>(false)
 const lineCategoryMouseHandler = (type: number) => {
-  if (type == 1) {
-    mouseOver.value = true
-  } else {
-    mouseOver.value = false
-  }
+  mouseOver.value = type == 1;
 }
 
 const showFixedHeader = ref<boolean>(false)
 const showFixedCategory = ref<boolean>(false)
 
 const showFixedTopHandler = (curScrollTop: number) => {
-  if (curScrollTop <= 20) {
-    showFixedHeader.value = false
-  } else {
-    showFixedHeader.value = true
-  }
-  if (curScrollTop > 250) {
-    showFixedCategory.value = true
-  } else {
-    showFixedCategory.value = false
-  }
+  showFixedHeader.value = curScrollTop > 20;
+  showFixedCategory.value = curScrollTop > 250;
 }
 
 onMounted(() => {
@@ -183,11 +165,11 @@ body {
 <style lang="scss" scoped>
 .main-container {
   position: relative;
-  margin: 0px auto;
+  margin: 0 auto;
   background: #fff;
   min-height: calc(100vh);
   .header {
-    margin: 0px auto;
+    margin: 0 auto;
     height: 180px;
     background-color: #7c9ce1;
     background-position: center;
@@ -200,7 +182,7 @@ body {
     position: fixed;
     width: 100%;
     z-index: 1001;
-    top: 0px;
+    top: 0;
     background: #fff;
     height: 64px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
@@ -214,11 +196,11 @@ body {
     padding: 10px 150px;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.08);
     .category-fixed-inner {
-      margin: 0px auto;
+      margin: 0 auto;
     }
   }
   .body-container {
-    padding: 0px var(--bodyPadding);
+    padding: 0 var(--bodyPadding);
     .category {
       margin-top: 20px;
     }
@@ -228,7 +210,7 @@ body {
 @media screen and (max-width: 1500px) {
   .main-container {
     .body-container {
-      padding: 0px 60px;
+      padding: 0 60px;
     }
   }
 }

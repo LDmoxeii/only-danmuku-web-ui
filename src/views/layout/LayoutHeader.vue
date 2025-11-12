@@ -13,7 +13,7 @@
               (index - 1) * partCount + partCount
             )" :to="`/v/${item.categoryCode}`">
               <span class="icon" v-if="item.icon">
-                <img :src="`${sourcePath}${item.icon}`" />
+                <img :src="`${sourcePath}${item.icon}`"  alt=""/>
               </span>
               <span class="category-name">{{ item.categoryName }}</span>
             </router-link>
@@ -125,20 +125,16 @@
 </template>
 
 <script setup lang="ts">
-import { mitter } from "@/eventbus/eventBus";
-import {
-  ref,
-  reactive,
-  getCurrentInstance,
-  nextTick,
-  onMounted,
-  onUnmounted,
-  inject,
-  computed,
-  watch,
-} from "vue";
+import {mitter} from "@/eventbus/eventBus";
+import {computed, getCurrentInstance, onMounted, onUnmounted, ref,} from "vue";
 
-import { sourcePath } from '@/api/file'
+import {sourcePath} from '@/api/file'
+import {useRoute, useRouter} from "vue-router";
+import {useLoginStore} from "@/stores/loginStore";
+import {useCategoryStore} from "@/stores/categoryStore";
+import {useSearchHistoryStore} from "@/stores/searchHisotryStore";
+//退出
+import {logout as apiLogout} from '@/api/account'
 
 const props = defineProps({
   theme: {
@@ -152,16 +148,12 @@ const props = defineProps({
 });
 
 const { proxy } = getCurrentInstance() as any;
-import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
 const router = useRouter();
-import { useLoginStore } from "@/stores/loginStore";
 const loginStore = useLoginStore();
 
-import { useCategoryStore } from "@/stores/categoryStore";
 const categoryStore = useCategoryStore();
 
-import { useSearchHistoryStore } from "@/stores/searchHisotryStore";
 const searchHistoryStore = useSearchHistoryStore();
 
 const userCountInfo = ref<any>({});
@@ -174,8 +166,7 @@ const getCountInfo = async () => {
 //分类列表
 const partCount = 5;
 const categoryPartCount = computed(() => {
-  const count = Math.ceil(categoryStore.categoryList.length / partCount);
-  return count;
+  return Math.ceil(categoryStore.categoryList.length / partCount);
 });
 
 const loginHandler = () => {
@@ -241,8 +232,6 @@ const navJump = (url: string) => {
   window.open(url, "_blank");
 };
 
-//退出
-import { logout as apiLogout } from '@/api/account'
 const logout = () => {
   proxy.Confirm({
     message: "确定要退出?",
@@ -258,7 +247,7 @@ const logout = () => {
 .header-bar {
   width: 100%;
   height: 64px;
-  padding: 0px 25px;
+  padding: 0 25px;
   display: grid;
   grid-template-columns: 1fr 1fr 1fr;
 
@@ -291,7 +280,7 @@ const logout = () => {
     color: #61666d;
 
     .search-panel {
-      margin: 0px auto;
+      margin: 0 auto;
       position: relative;
       max-width: 80%;
 
@@ -299,7 +288,7 @@ const logout = () => {
         width: 100%;
         position: absolute;
         top: 10px;
-        left: 0px;
+        left: 0;
         border: 1px solid #e3e5e7;
         border-radius: 8px;
         overflow: hidden;
@@ -431,8 +420,8 @@ const logout = () => {
         transition: transform 0.3s;
         position: absolute;
         z-index: 10001;
-        left: 0px;
-        top: 0px;
+        left: 0;
+        top: 0;
       }
 
       .user-info-panel {
@@ -443,7 +432,7 @@ const logout = () => {
         top: 60px;
         left: -150px;
         border-radius: 5px;
-        box-shadow: 0px 0px 12px rgba(0, 0, 0, 0.12);
+        box-shadow: 0 0 12px rgba(0, 0, 0, 0.12);
         z-index: 10000;
         opacity: 0;
         transition: opacity 0.3s;
@@ -456,7 +445,7 @@ const logout = () => {
         }
 
         .count-info {
-          margin: 10px 0px;
+          margin: 10px 0;
           display: flex;
           justify-content: space-around;
 
@@ -477,11 +466,10 @@ const logout = () => {
 
         .item {
           font-size: 14px;
-          display: block;
           text-align: left;
           line-height: 40px;
           color: var(--text3);
-          padding: 0px 20px;
+          padding: 0 20px;
           text-decoration: none;
           display: flex;
           justify-content: space-between;
@@ -524,7 +512,7 @@ const logout = () => {
     .user-panel-item {
       text-align: center;
       cursor: pointer;
-      padding: 0px 13px;
+      padding: 0 13px;
 
       .iconfont {
         text-align: center;
@@ -540,7 +528,7 @@ const logout = () => {
         background: #fb7299;
         border-color: #fb7299;
         border-radius: 8px;
-        padding: 0px 20px;
+        padding: 0 20px;
 
         .iconfont {
           &::before {
@@ -576,12 +564,12 @@ const logout = () => {
       border-right: none;
     }
 
-    padding: 0px 10px;
+    padding: 0 10px;
     border-right: 1px solid #ddd;
 
     .nav-item {
       display: flex;
-      padding: 0px 10px;
+      padding: 0 10px;
       height: 35px;
       border-radius: 3px;
       cursor: pointer;

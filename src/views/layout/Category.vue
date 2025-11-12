@@ -141,7 +141,7 @@ const route = useRoute();
 // 每行分类数量（来自全局配置），用于模板中的类型安全引用
 const rowCategoryCount: number = proxy.rowCategoryCount as number
 
-const props = defineProps({
+defineProps({
   showType: {
     type: Number,
     default: 0,
