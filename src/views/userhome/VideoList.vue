@@ -52,7 +52,13 @@ loadVideoList()
 watch(
   () => route.query.videoName,
   (newVal, _) => {
-    videoName.value = newVal
+    if (typeof newVal === 'string') {
+      videoName.value = newVal
+    } else if (Array.isArray(newVal)) {
+      videoName.value = (newVal[0] as string) || undefined
+    } else {
+      videoName.value = undefined
+    }
     loadVideoList()
   },
   { immediate: true, deep: true }
