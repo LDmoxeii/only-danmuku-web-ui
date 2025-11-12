@@ -21,11 +21,7 @@
         </div>
       </template>
       <template #error>
-        <img
-          :src="proxy.Utils.getLocalImage(img404)"
-          class="el-image__inner"
-          :style="{ objectFit: fit }"
-        />
+        <img :src="errorImgSrc" class="el-image__inner" :style="errorImgStyle" />
       </template>
     </el-image>
     <div v-else class="no-image">请选择图片</div>
@@ -44,7 +40,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, getCurrentInstance, computed, onMounted } from "vue";
+import { ref, getCurrentInstance, computed, onMounted, type CSSProperties } from "vue";
 const { proxy } = getCurrentInstance() as any;
 import { sourcePath } from '@/api/file'
 
@@ -126,6 +122,10 @@ const imageList = computed(() => {
   const sourceImg = sourcePath + (props.source as string).replace(proxy.imageThumbnailSuffix, "");
   return [sourceImg];
 });
+
+// 强类型化错误占位图属性
+const errorImgStyle = computed<CSSProperties>(() => ({ objectFit: props.fit as CSSProperties['objectFit'] }))
+const errorImgSrc = computed<string>(() => String(proxy?.Utils?.getLocalImage(props.img404) ?? ''))
 
 const showViewer = ref(false);
 const showViewerHandler = () => {
