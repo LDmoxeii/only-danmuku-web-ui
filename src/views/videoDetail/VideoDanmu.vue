@@ -4,25 +4,47 @@
       <template #title>
         <div class="danmu-panel-title">
           <div>弹幕列表</div>
-          <div class="iconfont icon-more"></div>
+          <div class="iconfont icon-more" />
         </div>
       </template>
       <div class="danmu-list">
         <div class="danmu-title danmu-item">
-          <div class="time">时间</div>
-          <div class="content">弹幕内容</div>
-          <div class="send-time">发送时间</div>
+          <div class="time">
+            时间
+          </div>
+          <div class="content">
+            弹幕内容
+          </div>
+          <div class="send-time">
+            发送时间
+          </div>
         </div>
-        <el-scrollbar height="400px" :max-height="playerHeight - 60">
-          <div :class="['danmu-item', item.danmuId == selectDanmu.danmuId ? 'active' : '']" v-for="item in danmuList"
-            @click="danmuSelect(item)">
-            <div class="time">{{ proxy.Utils.convertSecondsToHMS(Math.round(item.time)) }}</div>
-            <div class="content" :title="item.text">
+        <el-scrollbar
+          height="400px"
+          :max-height="playerHeight - 60"
+        >
+          <div
+            v-for="item in danmuList"
+            :class="['danmu-item', item.danmuId == selectDanmu.danmuId ? 'active' : '']"
+            @click="danmuSelect(item)"
+          >
+            <div class="time">
+              {{ proxy.Utils.convertSecondsToHMS(Math.round(item.time)) }}
+            </div>
+            <div
+              class="content"
+              :title="item.text"
+            >
               {{ item.text }}
             </div>
-            <div class="send-time">{{ item.postTime }}</div>
+            <div class="send-time">
+              {{ item.postTime }}
+            </div>
           </div>
-          <NoData msg="暂无弹幕" v-if="danmuList.length==0"></NoData>
+          <NoData
+            v-if="danmuList.length==0"
+            msg="暂无弹幕"
+          />
         </el-scrollbar>
       </div>
     </Collapse>
@@ -33,16 +55,11 @@
 import { mitter } from '@/eventbus/eventBus'
 import {
   ref,
-  reactive,
   getCurrentInstance,
-  nextTick,
   onMounted,
   onUnmounted,
 } from 'vue'
 const { proxy } = getCurrentInstance() as any
-import { useRoute, useRouter } from 'vue-router'
-const route = useRoute()
-const router = useRouter()
 const playerHeight: number = proxy.playerHeight
 
 type DanmuItem = { danmuId: any; time: number; text: string; postTime: string }
@@ -79,7 +96,7 @@ const danmuSelect = (item: DanmuItem) => {
   .danmu-list {
     .danmu-item,
     .danmu-title {
-      padding: 0px 10px;
+      padding: 0 10px;
       cursor: pointer;
       color: var(--text2);
       display: flex;

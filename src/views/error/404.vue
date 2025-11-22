@@ -1,8 +1,15 @@
 <template>
   <div class="content-404">
-    <div class="bg"></div>
-    <router-link class="gohome" to="/">返回首页</router-link>
-    <div class="jump-auto">{{ leftSeconds }} 秒后自动跳转</div>
+    <div class="bg" />
+    <router-link
+      class="gohome"
+      to="/"
+    >
+      返回首页
+    </router-link>
+    <div class="jump-auto">
+      {{ leftSeconds }} 秒后自动跳转
+    </div>
   </div>
 </template>
 
@@ -28,7 +35,7 @@ init();
 .content-404 {
   text-align: center;
   .bg {
-    margin: 0px auto;
+    margin: 0 auto;
     width: 800px;
     height: 500px;
     background-image: url("../../assets/404.png");

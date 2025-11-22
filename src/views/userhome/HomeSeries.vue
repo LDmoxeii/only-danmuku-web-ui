@@ -1,39 +1,54 @@
 <template>
-  <div class="my-video-list-title" v-if="seriesList.length > 0">
-    <router-link class="title" :to="`/user/${route.params.userId}/series`"
-      >我的视频列表</router-link
+  <div
+    v-if="seriesList.length > 0"
+    class="my-video-list-title"
+  >
+    <router-link
+      class="title"
+      :to="`/user/${route.params.userId}/series`"
     >
+      我的视频列表
+    </router-link>
     <span
+      v-if="myself"
       class="iconfont icon-add op-btn new-btn"
       @click="showVieoSeries"
-      v-if="myself"
-      >新建</span
-    >
+    >新建</span>
   </div>
-  <div class="part-item" v-for="item in seriesList">
+  <div
+    v-for="item in seriesList"
+    class="part-item"
+  >
     <div class="part-title">
       <div class="title-panel">
         <router-link
           class="title"
           :to="`/user/${route.params.userId}/series/${item.seriesId}`"
-          >{{ item.seriesName }}
+        >
+          {{ item.seriesName }}
         </router-link>
-        <div class="count-info">{{ item.videoInfoList.length }}</div>
+        <div class="count-info">
+          {{ item.videoInfoList.length }}
+        </div>
       </div>
       <router-link
         class="op-btn"
         :to="`/user/${route.params.userId}/series/${item.seriesId}`"
-        >更多&gt;</router-link
       >
+        更多&gt;
+      </router-link>
     </div>
     <div class="video-list5">
-      <VideoItem :data="video" v-for="video in item.videoInfoList"> </VideoItem>
+      <VideoItem
+        v-for="video in item.videoInfoList"
+        :data="video"
+      />
     </div>
   </div>
   <VideoSeriesEdit
     ref="videoSeriesEditRef"
     @reload="loadSeriesList"
-  ></VideoSeriesEdit>
+  />
 </template>
 
 <script setup lang="ts">

@@ -1,21 +1,35 @@
 <template>
   <div v-if="dataSource.list && dataSource.list.length == 0">
-    <NoData msg="空间主人还没有投过视频哦~~"></NoData>
+    <NoData msg="空间主人还没有投过视频哦~~" />
   </div>
-  <div class="part-item" v-else>
+  <div
+    v-else
+    class="part-item"
+  >
     <div class="part-title">
       <div class="title-panel">
-        <router-link class="title" :to="`/user/${route.params.userId}/video`"
-          >TA的视频
+        <router-link
+          class="title"
+          :to="`/user/${route.params.userId}/video`"
+        >
+          TA的视频
         </router-link>
-        <div class="count-info">{{ dataSource.totalCount }}</div>
+        <div class="count-info">
+          {{ dataSource.totalCount }}
+        </div>
       </div>
-      <router-link class="op-btn" :to="`/user/${route.params.userId}/video`"
-        >更多&gt;</router-link
+      <router-link
+        class="op-btn"
+        :to="`/user/${route.params.userId}/video`"
       >
+        更多&gt;
+      </router-link>
     </div>
     <div class="video-list5">
-      <VideoItem :data="item" v-for="item in dataSource.list"> </VideoItem>
+      <VideoItem
+        v-for="item in dataSource.list"
+        :data="item"
+      />
     </div>
   </div>
 </template>

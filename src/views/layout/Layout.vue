@@ -1,49 +1,81 @@
 <template>
-  <div class="main-container" :style="{
+  <div
+    class="main-container"
+    :style="{
       'max-width': proxy.bodyMaxWidth + 'px',
       'min-width': proxy.bodyMinWidth + 'px',
-    }">
-    <div class="header" v-show="navActionStore.showHeader" :style="{
+    }"
+  >
+    <div
+      v-show="navActionStore.showHeader"
+      class="header"
+      :style="{
         'background-image': `url(${
           backgroundImage
             ? backgroundImage
             : proxy.Utils.getLocalImage('banner_bg.png')
         })`,
-      }">
-      <LayoutHeader theme="light" :hotSearchList="hotSearchList"></LayoutHeader>
+      }"
+    >
+      <LayoutHeader
+        theme="light"
+        :hot-search-list="hotSearchList"
+      />
     </div>
     <!--固定在顶部的-->
-    <div class="header-fixed" v-show="
+    <div
+      v-show="
         (navActionStore.fixedHeader && showFixedHeader) ||
-        navActionStore.forceFixedHeader
-      " :style="{
+          navActionStore.forceFixedHeader
+      "
+      class="header-fixed"
+      :style="{
         'max-width': proxy.bodyMaxWidth + 'px',
         'min-width': proxy.bodyMinWidth + 'px',
-      }">
-      <LayoutHeader theme="dark" :hotSearchList="hotSearchList"></LayoutHeader>
+      }"
+    >
+      <LayoutHeader
+        theme="dark"
+        :hot-search-list="hotSearchList"
+      />
     </div>
     <!--显示fixed分类-->
-    <div class="category-fixed" v-show="navActionStore.fixedCategory && showFixedCategory" :style="{
+    <div
+      v-show="navActionStore.fixedCategory && showFixedCategory"
+      class="category-fixed"
+      :style="{
         'max-width': proxy.bodyMaxWidth + 'px',
         'min-width': proxy.bodyMinWidth + 'px',
-      }" @mouseover="lineCategoryMouseHandler(1)" @mouseout="lineCategoryMouseHandler(0)">
+      }"
+      @mouseover="lineCategoryMouseHandler(1)"
+      @mouseout="lineCategoryMouseHandler(0)"
+    >
       <div class="category-fixed-inner">
-        <Category :showType="1" :mouseOver="mouseOver"></Category>
+        <Category
+          :show-type="1"
+          :mouse-over="mouseOver"
+        />
       </div>
     </div>
-    <div class="body-container" :style="{
+    <div
+      class="body-container"
+      :style="{
         'max-width': proxy.bodyMaxWidth + 'px',
         'min-width': proxy.bodyMinWidth + 'px',
-      }">
-      <div class="category" v-show="navActionStore.showCategory">
-        <Category :showType="0"></Category>
+      }"
+    >
+      <div
+        v-show="navActionStore.showCategory"
+        class="category"
+      >
+        <Category :show-type="0" />
       </div>
       <div class="body-main">
-        <router-view></router-view>
+        <router-view />
       </div>
     </div>
   </div>
-  <Account></Account>
+  <Account />
 </template>
 
 <script setup lang="ts">

@@ -6,20 +6,30 @@
           {{ videoInfo.videoName }}
         </div>
         <div class="video-info">
-          <div class="iconfont icon-play2">{{ videoInfo.playCount }}</div>
-          <div class="iconfont icon-danmu">{{ videoInfo.danmuCount }}</div>
-          <div class="iconfont">{{ videoInfo.createTime }}</div>
+          <div class="iconfont icon-play2">
+            {{ videoInfo.playCount }}
+          </div>
+          <div class="iconfont icon-danmu">
+            {{ videoInfo.danmuCount }}
+          </div>
+          <div class="iconfont">
+            {{ videoInfo.createTime }}
+          </div>
         </div>
       </div>
       <div class="video-user-info">
-        <Avatar :userId="userInfo.userId" :avatar="userInfo.avatar"></Avatar>
+        <Avatar
+          :user-id="userInfo.userId"
+          :avatar="userInfo.avatar"
+        />
         <div class="user-info">
           <router-link
             class="nick-name"
             :to="`/user/${userInfo.userId}`"
             target="_blank"
-            >{{ userInfo.nickName }}</router-link
           >
+            {{ userInfo.nickName }}
+          </router-link>
           <div class="introduction">
             {{ userInfo.personIntroduction || "这个人没有填简介啊~~~" }}
           </div>
@@ -28,25 +38,35 @@
               class="btn-go-home"
               :to="`/user/${userInfo.userId}`"
               target="_blank"
-              >访问主页</router-link
             >
+              访问主页
+            </router-link>
             <div class="focus-btn">
               <el-dropdown v-if="userInfo.haveFocus">
-                <el-button class="btn" type="info" :style="{ width: '100%' }"
-                  ><span class="iconfont icon-list"></span>已关注
-                  {{ userInfo.fansCount }}</el-button
+                <el-button
+                  class="btn"
+                  type="info"
+                  :style="{ width: '100%' }"
                 >
+                  <span class="iconfont icon-list" />已关注
+                  {{ userInfo.fansCount }}
+                </el-button>
                 <template #dropdown>
                   <el-dropdown-menu>
-                    <el-dropdown-item @click="focusUser(-1)"
-                      >取消关注</el-dropdown-item
-                    >
+                    <el-dropdown-item @click="focusUser(-1)">
+                      取消关注
+                    </el-dropdown-item>
                   </el-dropdown-menu>
                 </template>
               </el-dropdown>
-              <el-button class="btn" type="primary" @click="focusUser(1)" v-else
-                >关注 {{ userInfo.fansCount }}</el-button
+              <el-button
+                v-else
+                class="btn"
+                type="primary"
+                @click="focusUser(1)"
               >
+                关注 {{ userInfo.fansCount }}
+              </el-button>
             </div>
           </div>
         </div>
@@ -58,29 +78,30 @@
           class="video-panel"
           :style="{ position: wideScreen ? 'absolute' : 'static' }"
         >
-          <Player ref="playerRef" @changeWideScreen="changeWideScreenHandler">
-          </Player>
+          <Player
+            ref="playerRef"
+            @change-wide-screen="changeWideScreenHandler"
+          />
         </div>
         <div
           :style="{
             'margin-top': wideScreen ? playerHeight + 56 + 'px' : '0px',
           }"
         >
-          <VideoAction></VideoAction>
-          <VideoSummary v-if="Object.keys(videoInfo).length > 0"></VideoSummary>
-          <VideoComment v-if="Object.keys(videoInfo).length > 0">
-          </VideoComment>
+          <VideoAction />
+          <VideoSummary v-if="Object.keys(videoInfo).length > 0" />
+          <VideoComment v-if="Object.keys(videoInfo).length > 0" />
         </div>
       </div>
       <div
         class="video-right"
         :style="{ 'margin-top': wideScreen ? playerHeight + 70 + 'px' : '0px' }"
       >
-        <VideoDanmu> </VideoDanmu>
-        <VideoPList></VideoPList>
+        <VideoDanmu />
+        <VideoPList />
         <VideoRecommend
           v-if="Object.keys(videoInfo).length > 0"
-        ></VideoRecommend>
+        />
       </div>
     </div>
   </div>

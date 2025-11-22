@@ -6,7 +6,7 @@
       'min-width': proxy.bodyMinWidth + 'px',
     }"
   >
-    <LayoutHeader theme="dark"></LayoutHeader>
+    <LayoutHeader theme="dark" />
   </div>
   <div
     class="user-home-body-container"
@@ -27,38 +27,45 @@
           <Avatar
             :width="90"
             :avatar="userInfo.avatar"
-            :userId="userInfo.userId"
-          ></Avatar>
+            :user-id="userInfo.userId"
+          />
         </div>
         <div class="user-info">
           <div class="user-name">
             <div>{{ userInfo.nickName }}</div>
             <div
+              v-if="userInfo.sex == 1 || userInfo.sex == 2"
               :class="[
                 'iconfont',
                 userInfo.sex == 1 ? 'icon-sexw' : 'icon-sexm',
               ]"
-              v-if="userInfo.sex == 1 || userInfo.sex == 2"
-            ></div>
+            />
             <div
+              v-if="myself"
               class="iconfont icon-edit"
               @click="updateUserInfo"
-              v-if="myself"
-            ></div>
+            />
           </div>
           <div class="introduction">
             {{ userInfo.personIntroduction }}
           </div>
         </div>
-        <div class="focus-panel" v-if="!myself">
+        <div
+          v-if="!myself"
+          class="focus-panel"
+        >
           <div
+            v-if="userInfo.haveFocus"
             class="btn-focus btn-cancel-focus"
             @click="cancelFocusUser(currentUserId)"
-            v-if="userInfo.haveFocus"
           >
             取消关注
           </div>
-          <div class="btn-focus" @click="focusUser(currentUserId)" v-else>
+          <div
+            v-else
+            class="btn-focus"
+            @click="focusUser(currentUserId)"
+          >
             关注
           </div>
         </div>
@@ -66,25 +73,26 @@
       <div class="home-nav">
         <div class="nav-panel">
           <router-link
+            v-for="item in navList"
             :class="[
               'nav-item iconfont',
               item.icon,
               item.pathNames.includes(route.name) ? 'active' : '',
             ]"
             :to="item.path"
-            v-for="item in navList"
-            >{{ item.name }}
+          >
+            {{ item.name }}
           </router-link>
         </div>
         <div class="search">
           <el-input
+            v-model="videoName"
             placeholder="搜视频"
             style="width: 200px"
-            v-model="videoName"
             @keyup.enter="searchVideo"
           >
             <template #suffix>
-              <span class="iconfont icon-search"></span>
+              <span class="iconfont icon-search" />
             </template>
           </el-input>
         </div>
@@ -94,12 +102,23 @@
             class="count-item"
             :to="`/user/${currentUserId}/focus`"
           >
-            <div class="title-info">关注数</div>
-            <div class="count-value">{{ userInfo.focusCount }}</div>
+            <div class="title-info">
+              关注数
+            </div>
+            <div class="count-value">
+              {{ userInfo.focusCount }}
+            </div>
           </router-link>
-          <div class="count-item" v-else>
-            <div class="title-info">关注数</div>
-            <div class="count-value">{{ userInfo.focusCount }}</div>
+          <div
+            v-else
+            class="count-item"
+          >
+            <div class="title-info">
+              关注数
+            </div>
+            <div class="count-value">
+              {{ userInfo.focusCount }}
+            </div>
           </div>
 
           <router-link
@@ -107,41 +126,63 @@
             class="count-item"
             :to="`/user/${currentUserId}/fans`"
           >
-            <div class="title-info">粉丝数</div>
-            <div class="count-value">{{ userInfo.fansCount }}</div>
+            <div class="title-info">
+              粉丝数
+            </div>
+            <div class="count-value">
+              {{ userInfo.fansCount }}
+            </div>
           </router-link>
-          <div class="count-item" v-else>
-            <div class="title-info">粉丝数</div>
-            <div class="count-value">{{ userInfo.fansCount }}</div>
+          <div
+            v-else
+            class="count-item"
+          >
+            <div class="title-info">
+              粉丝数
+            </div>
+            <div class="count-value">
+              {{ userInfo.fansCount }}
+            </div>
           </div>
           <div class="count-item">
-            <div class="title-info">获赞数</div>
-            <div class="count-value">{{ userInfo.likeCount }}</div>
+            <div class="title-info">
+              获赞数
+            </div>
+            <div class="count-value">
+              {{ userInfo.likeCount }}
+            </div>
           </div>
           <div class="count-item">
-            <div class="title-info">播放数</div>
-            <div class="count-value">{{ userInfo.playCount }}</div>
+            <div class="title-info">
+              播放数
+            </div>
+            <div class="count-value">
+              {{ userInfo.playCount }}
+            </div>
           </div>
         </div>
       </div>
       <div class="user-home-content">
-        <router-view></router-view>
+        <router-view />
       </div>
     </div>
     <div
-      class="change-them-btn"
-      @click="selectTheme"
       v-if="
         loginStore.userInfo && userInfo.userId == loginStore.userInfo.userId
       "
-    ></div>
+      class="change-them-btn"
+      @click="selectTheme"
+    />
   </div>
-  <Account></Account>
-  <UserInfoEdit ref="userInfoEditRef" @reload="loadUserInfo"></UserInfoEdit>
+  <Account />
+  <UserInfoEdit
+    ref="userInfoEditRef"
+    @reload="loadUserInfo"
+  />
   <UserHomeTheme
     ref="userHomeThemeRef"
-    @changeTheme="changeTheme"
-  ></UserHomeTheme>
+    @change-theme="changeTheme"
+  />
 </template>
 
 <script setup lang="ts">

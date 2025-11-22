@@ -7,19 +7,22 @@
     :style="{ 'grid-template-columns': `repeat(${gridCount}, 1fr)` }"
   >
     <template v-for="item in dataSource.list">
-      <slot :data="item"></slot>
+      <slot :data="item" />
     </template>
   </div>
-  <div class="pagination" v-if="showPagination && dataSource.pageTotal > 1">
+  <div
+    v-if="showPagination && dataSource.pageTotal > 1"
+    class="pagination"
+  >
     <el-pagination
       v-if="dataSource.pageTotal > 1"
       background
       :total="dataSource.totalCount"
       :current-page="dataSource.pageNum"
       layout="prev, pager, next"
-      @current-change="handlepageNumChange"
       :page-size="dataSource.pageSize"
-    ></el-pagination>
+      @current-change="handlepageNumChange"
+    />
   </div>
 </template>
 
@@ -48,7 +51,7 @@ const handlepageNumChange = (_pageNum: number) => {
 }
 .pagination {
   margin-top: 20px;
-  padding: 10px 0px 5px 0px;
+  padding: 10px 0 5px 0;
   text-align: center;
   overflow: hidden;
   height: 50px;

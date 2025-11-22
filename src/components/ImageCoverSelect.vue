@@ -1,18 +1,35 @@
 <template>
-  <div class="cover" :style="{width:coverWidth+'px', height: coverWidth * props.scale + 'px' }">
-    <el-image :src="coverFile" fit="scale-down" :width="cutWidth" v-if="coverFile">
+  <div
+    class="cover"
+    :style="{width:coverWidth+'px', height: coverWidth * props.scale + 'px' }"
+  >
+    <el-image
+      v-if="coverFile"
+      :src="coverFile"
+      fit="scale-down"
+      :width="cutWidth"
+    >
       <template #error>
-        <div class="iconfont icon-image-error"></div>
+        <div class="iconfont icon-image-error" />
       </template>
     </el-image>
-    <div class="mask" @click="selectImage">{{props.coverImage?"重新上传":"上传"}}</div>
+    <div
+      class="mask"
+      @click="selectImage"
+    >
+      {{ props.coverImage?"重新上传":"上传" }}
+    </div>
   </div>
-  <ImageCoverCut ref="imageCoverCutRef" :cutWidth="props.cutWidth" :scale="props.scale"></ImageCoverCut>
+  <ImageCoverCut
+    ref="imageCoverCutRef"
+    :cut-width="props.cutWidth"
+    :scale="props.scale"
+  />
 </template>
 <script setup lang="ts">
 import ImageCoverCut from './ImageCoverCut.vue'
-import { ref, getCurrentInstance } from 'vue'
-import { asyncComputed } from '@vueuse/core'
+import {ref} from 'vue'
+import {asyncComputed} from '@vueuse/core'
 
 const props = defineProps({
   coverImage: {
@@ -41,8 +58,7 @@ const coverFile = asyncComputed(async () => {
     const { sourcePath } = await import('@/api/file')
     return sourcePath + props.coverImage
   } else if (props.coverImage instanceof File) {
-    const base64 = await convertFile2Base64(props.coverImage)
-    return base64
+    return await convertFile2Base64(props.coverImage)
   }
 })
 
@@ -69,8 +85,8 @@ const selectImage = async () => {
   .mask {
     width: 100%;
     position: absolute;
-    left: 0px;
-    bottom: 0px;
+    left: 0;
+    bottom: 0;
     height: 30px;
     background: rgba(0, 0, 0, 0.7);
     opacity: 0.8;

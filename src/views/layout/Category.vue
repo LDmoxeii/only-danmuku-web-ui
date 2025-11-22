@@ -1,8 +1,17 @@
 <template>
-  <div class="category" v-show="showType == 0">
-    <router-link class="hot" to="/hot" target="_blank">
-      <div class="iconfont icon-hot"></div>
-      <div class="info">热门</div>
+  <div
+    v-show="showType == 0"
+    class="category"
+  >
+    <router-link
+      class="hot"
+      to="/hot"
+      target="_blank"
+    >
+      <div class="iconfont icon-hot" />
+      <div class="info">
+        热门
+      </div>
     </router-link>
     <div
       class="category-list"
@@ -10,25 +19,28 @@
         'grid-template-columns': `repeat(${rowCategoryCount}, 1fr)`,
       }"
     >
-      <template v-for="index in showItemCount" :key="index">
+      <template
+        v-for="index in showItemCount"
+        :key="index"
+      >
         <!-- 行数大于等于分类数-->
         <el-popover
+          v-if="
+            categoryStore.categoryList[index - 1].children &&
+              categoryStore.categoryList[index - 1].children.length > 0
+          "
           :width="187"
           trigger="hover"
           :show-arrow="false"
           :offset="5"
           :placement="index <= rowCategoryCount ? 'top' : 'bottom'"
-          v-if="
-            categoryStore.categoryList[index - 1].children &&
-            categoryStore.categoryList[index - 1].children.length > 0
-          "
         >
           <template #reference>
             <router-link
               :class="[
                 'category-item',
                 categoryStore.categoryList[index - 1].categoryCode ==
-                route.params.pCategoryCode
+                  route.params.pCategoryCode
                   ? 'active'
                   : '',
               ]"
@@ -39,9 +51,9 @@
           </template>
           <div class="child-list">
             <router-link
-              class="child"
               v-for="sub in categoryStore.categoryList[index - 1].children"
               :key="sub.categoryCode"
+              class="child"
               :title="sub.categoryName"
               :to="`/v/${categoryStore.categoryList[index - 1].categoryCode}/${
                 sub.categoryCode
@@ -52,14 +64,14 @@
           </div>
         </el-popover>
         <router-link
+          v-else
           :class="[
             'category-item',
             categoryStore.categoryList[index - 1].categoryCode ==
-            route.params.pCategoryCode
+              route.params.pCategoryCode
               ? 'active'
               : '',
           ]"
-          v-else
           :to="`/v/${categoryStore.categoryList[index - 1].categoryCode}`"
         >
           {{ categoryStore.categoryList[index - 1].categoryName }}
@@ -77,17 +89,17 @@
           <template #reference>
             <div class="category-item btn-category-more">
               更多
-              <span class="iconfont icon-more"></span>
+              <span class="iconfont icon-more" />
             </div>
           </template>
           <div class="child-list">
             <router-link
-              class="child"
               v-for="item in categoryStore.categoryList.slice(
                 rowCategoryCount * 2 - 1,
                 categoryStore.categoryList.length
               )"
               :key="item.categoryCode"
+              class="child"
               :to="`/v/${item.categoryCode}`"
               target="_blank"
             >
@@ -100,12 +112,18 @@
   </div>
   <!--滚动固定在顶部-->
   <div
-    :class="['category', mouseOver ? '' : 'category-out']"
     v-show="showType == 1"
+    :class="['category', mouseOver ? '' : 'category-out']"
   >
-    <router-link class="hot hot-out" to="/hot" target="_blank">
-      <div class="iconfont icon-hot"></div>
-      <div class="info">热门</div>
+    <router-link
+      class="hot hot-out"
+      to="/hot"
+      target="_blank"
+    >
+      <div class="iconfont icon-hot" />
+      <div class="info">
+        热门
+      </div>
     </router-link>
     <div
       class="category-list"
@@ -113,14 +131,22 @@
         'grid-template-columns': `repeat(${rowCategoryCount}, 1fr)`,
       }"
     >
-      <template v-for="item in categoryStore.categoryList" :key="item.categoryCode">
-        <router-link class="category-item" :to="`/v/${item.categoryCode}`">
+      <template
+        v-for="item in categoryStore.categoryList"
+        :key="item.categoryCode"
+      >
+        <router-link
+          class="category-item"
+          :to="`/v/${item.categoryCode}`"
+        >
           {{ item.categoryName }}
         </router-link>
       </template>
     </div>
-    <div :class="['category-op iconfont', mouseOver ? 'icon-up' : 'icon-down']"
-      v-show="categoryStore.categoryList.length > rowCategoryCount"></div>
+    <div
+      v-show="categoryStore.categoryList.length > rowCategoryCount"
+      :class="['category-op iconfont', mouseOver ? 'icon-up' : 'icon-down']"
+    />
   </div>
 </template>
 

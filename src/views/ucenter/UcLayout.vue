@@ -1,27 +1,54 @@
 <template>
   <div class="header">
-    <router-link to="/" class="logo">主站</router-link>
+    <router-link
+      to="/"
+      class="logo"
+    >
+      主站
+    </router-link>
     <div class="user-info">
-      <Avatar class="avatar" :avatar="loginStore.userInfo.avatar" :userId="loginStore.userInfo.userId" :width="35">
-      </Avatar>
+      <Avatar
+        class="avatar"
+        :avatar="loginStore.userInfo.avatar"
+        :user-id="loginStore.userInfo.userId"
+        :width="35"
+      />
     </div>
   </div>
   <div class="ucenter-body">
     <div class="left-side">
-      <router-link class="upload-btn iconfont icon-upload" to="/ucenter/postVideo">投稿</router-link>
+      <router-link
+        class="upload-btn iconfont icon-upload"
+        to="/ucenter/postVideo"
+      >
+        投稿
+      </router-link>
       <div class="menu-list">
-        <el-menu :router="true" :default-active="defaultActive" :default-openeds="defaultOpeneds">
+        <el-menu
+          :router="true"
+          :default-active="defaultActive"
+          :default-openeds="defaultOpeneds"
+        >
           <template v-for="item in menuList">
-            <el-menu-item :index="item.path" v-if="!item.children">
-              <span :class="['iconfont', 'icon-' + item.icon]"></span>
+            <el-menu-item
+              v-if="!item.children"
+              :index="item.path"
+            >
+              <span :class="['iconfont', 'icon-' + item.icon]" />
               <span class="title">{{ item.name }}</span>
             </el-menu-item>
-            <el-sub-menu v-else :index="item.path">
+            <el-sub-menu
+              v-else
+              :index="item.path"
+            >
               <template #title>
-                <span :class="['iconfont', 'icon-' + item.icon]"></span>
+                <span :class="['iconfont', 'icon-' + item.icon]" />
                 <span class="title">{{ item.name }}</span>
               </template>
-              <el-menu-item :index="sub.path" v-for="sub in item.children">
+              <el-menu-item
+                v-for="sub in item.children"
+                :index="sub.path"
+              >
                 <span class="sub-menu">{{ sub.name }}</span>
               </el-menu-item>
             </el-sub-menu>
@@ -31,11 +58,11 @@
     </div>
     <div class="right-content">
       <div class="right-content-inner">
-        <router-view></router-view>
+        <router-view />
       </div>
     </div>
   </div>
-  <Account></Account>
+  <Account />
 </template>
 
 <script setup lang="ts">
@@ -108,7 +135,7 @@ watch(
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 0px 20px;
+  padding: 0 20px;
   z-index: 100;
   .logo {
     text-decoration: none;
@@ -147,11 +174,9 @@ watch(
         border-right: none;
       }
       .iconfont {
-        font-size: 13px;
         display: flex;
         align-items: center;
         width: 20px;
-        font-size: 18px;
         margin-right: 15px;
       }
       .sub-menu {

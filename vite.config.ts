@@ -8,7 +8,8 @@ export default defineConfig({
   plugins: [
     vue(),
     checker({
-      vueTsc: true,
+      // 使用普通 TypeScript 检查，避免 vueTsc 与最新 @vue/language-core 不兼容的问题
+      typescript: true,
       eslint: {
         lintCommand: 'eslint "./src/**/*.{ts,vue}"'
       }

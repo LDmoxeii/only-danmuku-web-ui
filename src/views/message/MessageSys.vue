@@ -1,27 +1,47 @@
 <template>
   <div class="message-item">
     <div class="sys-info">
-      <div :class="[
+      <div
+        :class="[
           'video-name iconfont',
           data.extendDto.auditStatus == 4 ? 'icon-success' : 'icon-error',
-        ]">
+        ]"
+      >
         视频 【{{ data.videoName }}】审核
         {{ data.extendDto.auditStatus == 4 ? "成功" : "失败" }}
       </div>
-      <div class="resean" v-if="data.extendDto.auditStatus != 4 ">
+      <div
+        v-if="data.extendDto.auditStatus != 4 "
+        class="resean"
+      >
         失败原因：{{ data.extendDto.messageContent }}
       </div>
-      <div class="success" v-if="data.extendDto.auditStatus == 4">
-        <router-link class="a-link" :to="`/video/${data.videoId}`" target="_blank">点击查看</router-link>
+      <div
+        v-if="data.extendDto.auditStatus == 4"
+        class="success"
+      >
+        <router-link
+          class="a-link"
+          :to="`/video/${data.videoId}`"
+          target="_blank"
+        >
+          点击查看
+        </router-link>
       </div>
       <div class="send-time">
         {{ proxy.Utils.formatDate(data.createTime) }}
-        <span class="iconfont icon-delete" @click="delMessage(data.messageId)"></span>
+        <span
+          class="iconfont icon-delete"
+          @click="delMessage(data.messageId)"
+        />
       </div>
     </div>
     <div class="video-cover">
-      <router-link :to="`/video/${data.videoId}`" target="_blank">
-        <Cover :source="data.videoCover"></Cover>
+      <router-link
+        :to="`/video/${data.videoId}`"
+        target="_blank"
+      >
+        <Cover :source="data.videoCover" />
       </router-link>
     </div>
   </div>

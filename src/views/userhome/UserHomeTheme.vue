@@ -1,8 +1,8 @@
 <template>
   <div class="theme-body">
     <el-drawer
-      lock-scroll
       v-model="showDrawer"
+      lock-scroll
       title="选择背景"
       direction="btt"
       size="45%"
@@ -10,17 +10,17 @@
       <el-scrollbar height="100%">
         <div class="theme-gird-list">
           <div
-            class="grid-item"
             v-for="item in themeCount"
+            class="grid-item"
             @click="selectTheme(item)"
           >
             <img
               :src="proxy.Utils.getLocalImage('uhome-bg/' + item + '.png')"
-            />
+             alt="">
             <div
-              class="checked iconfont icon-checked"
               v-if="currentTheme == item"
-            ></div>
+              class="checked iconfont icon-checked"
+            />
           </div>
         </div>
       </el-scrollbar>
@@ -60,13 +60,13 @@ defineExpose({
 <style lang="scss" scoped>
 .theme-body {
   :deep(.el-drawer__body) {
-    padding: 0px;
+    padding: 0;
   }
   :deep(.el-drawer__header) {
-    margin-bottom: 0px;
+    margin-bottom: 0;
   }
   .theme-gird-list {
-    margin: 0px auto;
+    margin: 0 auto;
     width: 1400px;
     display: grid;
     grid-gap: 20px;
@@ -76,8 +76,8 @@ defineExpose({
       cursor: pointer;
       .checked {
         position: absolute;
-        top: 0px;
-        right: 0px;
+        top: 0;
+        right: 0;
         color: var(--blue);
         font-size: 30px;
       }

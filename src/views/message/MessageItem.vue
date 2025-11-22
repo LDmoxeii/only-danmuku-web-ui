@@ -1,6 +1,9 @@
 <template>
   <div class="message-item">
-    <Avatar :avatar="data.sendUserAvatar" :userId="data.sendUserId"></Avatar>
+    <Avatar
+      :avatar="data.sendUserAvatar"
+      :user-id="data.sendUserId"
+    />
     <div class="user-info-panel">
       <div class="user-info">
         <router-link
@@ -13,8 +16,13 @@
         <span class="title-info">{{ convertTitle() }}</span>
       </div>
       <template v-if="data.messageType == 4">
-        <div class="comment">{{ data.extendDto.messageContent }}</div>
-        <div class="reply" v-if="data.extendDto.messageContentReply">
+        <div class="comment">
+          {{ data.extendDto.messageContent }}
+        </div>
+        <div
+          v-if="data.extendDto.messageContentReply"
+          class="reply"
+        >
           {{ data.extendDto.messageContentReply }}
         </div>
       </template>
@@ -23,12 +31,15 @@
         <span
           class="iconfont icon-delete"
           @click="delMessage(data.messageId)"
-        ></span>
+        />
       </div>
     </div>
     <div class="video-cover">
-      <router-link :to="`/video/${data.videoId}`" target="_blank">
-        <Cover :source="data.videoCover"></Cover>
+      <router-link
+        :to="`/video/${data.videoId}`"
+        target="_blank"
+      >
+        <Cover :source="data.videoCover" />
       </router-link>
     </div>
   </div>

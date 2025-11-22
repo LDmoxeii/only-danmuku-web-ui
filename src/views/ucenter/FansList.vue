@@ -1,13 +1,25 @@
 <template>
   <div class="body-container">
-    <div class="body-title">我的粉丝</div>
-    <DataList :dataSource="dataSource" @loadData="loadDataList">
+    <div class="body-title">
+      我的粉丝
+    </div>
+    <DataList
+      :data-source="dataSource"
+      @load-data="loadDataList"
+    >
       <template #default="{ data }">
         <div class="data-item">
-          <Avatar :avatar="data.otherAvatar" :userId="data.otherUserId"></Avatar>
+          <Avatar
+            :avatar="data.otherAvatar"
+            :user-id="data.otherUserId"
+          />
           <div class="user-info">
             <div class="nick-name">
-              <router-link :to="`/user/${data.otherUserId}`" target="_blank" class="a-link">
+              <router-link
+                :to="`/user/${data.otherUserId}`"
+                target="_blank"
+                class="a-link"
+              >
                 {{ data.otherNickName }}
               </router-link>
             </div>
@@ -16,9 +28,27 @@
             </div>
           </div>
           <div class="op-btns">
-            <div v-if="data.focusType == 1" class="focus-eachother">已互粉</div>
-            <el-button link type="primary" v-if="data.focusType == 1" @click="cancelFocus(data.otherUserId)">取消关注</el-button>
-            <el-button type="primary" v-if="data.focusType == 0" @click="focus(data.otherUserId)">关注</el-button>
+            <div
+              v-if="data.focusType == 1"
+              class="focus-eachother"
+            >
+              已互粉
+            </div>
+            <el-button
+              v-if="data.focusType == 1"
+              link
+              type="primary"
+              @click="cancelFocus(data.otherUserId)"
+            >
+              取消关注
+            </el-button>
+            <el-button
+              v-if="data.focusType == 0"
+              type="primary"
+              @click="focus(data.otherUserId)"
+            >
+              关注
+            </el-button>
           </div>
         </div>
       </template>

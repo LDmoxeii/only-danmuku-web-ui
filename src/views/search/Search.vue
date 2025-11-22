@@ -1,24 +1,42 @@
 <template>
   <div class="search-body">
     <div class="search-panel">
-      <el-input placeholder="请输入关键字" v-model="keyword" size="large" @keyup.enter="search">
+      <el-input
+        v-model="keyword"
+        placeholder="请输入关键字"
+        size="large"
+        @keyup.enter="search"
+      >
         <template #prefix>
-          <span class="iconfont icon-search"></span>
+          <span class="iconfont icon-search" />
         </template>
         <template #suffix>
-          <el-button type="primary" @click="search" class="search-btn">搜索</el-button>
+          <el-button
+            type="primary"
+            class="search-btn"
+            @click="search"
+          >
+            搜索
+          </el-button>
         </template>
       </el-input>
     </div>
     <div class="order-btns">
-      <div :class="['btn', order == item.order ? 'active' : '']" v-for="item in orderBtns" @click="changeOrder(item)">
+      <div
+        v-for="item in orderBtns"
+        :class="['btn', order == item.order ? 'active' : '']"
+        @click="changeOrder(item)"
+      >
         {{ item.name }}
       </div>
     </div>
     <div class="data-list">
-      <DataGridList :gridCount="6" :dataSource="dataSource">
+      <DataGridList
+        :grid-count="6"
+        :data-source="dataSource"
+      >
         <template #default="{ data }">
-          <VideoItem :data="data"> </VideoItem>
+          <VideoItem :data="data" />
         </template>
       </DataGridList>
     </div>

@@ -4,13 +4,22 @@
   </div>
   <div class="data-list-panel">
     <template v-for="item in dataSource.list">
-      <slot :data="item"></slot>
+      <slot :data="item" />
     </template>
   </div>
-  <div class="pagination" v-if="showPagination && dataSource.pageTotal > 1">
-    <el-pagination v-if="dataSource.pageTotal > 1" background :total="dataSource.totalCount"
-      :current-page="dataSource.pageNum" layout="prev, pager, next" @current-change="handlepageNumChange"
-      :page-size="dataSource.pageSize"></el-pagination>
+  <div
+    v-if="showPagination && dataSource.pageTotal > 1"
+    class="pagination"
+  >
+    <el-pagination
+      v-if="dataSource.pageTotal > 1"
+      background
+      :total="dataSource.totalCount"
+      :current-page="dataSource.pageNum"
+      layout="prev, pager, next"
+      :page-size="dataSource.pageSize"
+      @current-change="handlepageNumChange"
+    />
   </div>
 </template>
 
@@ -36,7 +45,7 @@ const handlepageNumChange = (_: number) => {
   overflow: auto;
 }
 .pagination {
-  padding: 10px 0px 5px 0px;
+  padding: 10px 0 5px 0;
   text-align: right;
   overflow: hidden;
   height: 50px;

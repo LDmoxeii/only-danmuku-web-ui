@@ -1,21 +1,42 @@
 <template>
-  <div v-show="!startUpload" class="uploader-start-panel">
-    <VideoUploadStart @addFile="addFile"></VideoUploadStart>
+  <div
+    v-show="!startUpload"
+    class="uploader-start-panel"
+  >
+    <VideoUploadStart @add-file="addFile" />
   </div>
   <div v-if="startUpload">
-    <div class="file-list" v-draggable="[fileList, { animation: 150, handle: '.video-p' }]">
-      <div class="file-item" v-for="(item, index) in fileList" :key="index">
+    <div
+      v-draggable="[fileList, { animation: 150, handle: '.video-p' }]"
+      class="file-list"
+    >
+      <div
+        v-for="(item, index) in fileList"
+        :key="index"
+        class="file-item"
+      >
         <div class="video-p">
-          <div class="iconfont icon-video"></div>
-          <div class="video-p-info">P{{ index + 1 }}</div>
+          <div class="iconfont icon-video" />
+          <div class="video-p-info">
+            P{{ index + 1 }}
+          </div>
         </div>
         <div class="video-info">
           <div class="video-title">
             <div class="upload-info">
               <div class="title">
-                <el-input v-show="item.edit" :id="'file-input' + item.uid" v-model="item.fileName" size="small"
-                  @blur="endEdit(index)"></el-input>
-                <div v-show="!item.edit" class="title-show" @click="editFileName(index)">
+                <el-input
+                  v-show="item.edit"
+                  :id="'file-input' + item.uid"
+                  v-model="item.fileName"
+                  size="small"
+                  @blur="endEdit(index)"
+                />
+                <div
+                  v-show="!item.edit"
+                  class="title-show"
+                  @click="editFileName(index)"
+                >
                   {{ item.fileName }}
                 </div>
               </div>
@@ -25,33 +46,66 @@
                     proxy.Utils.size2Str(item.totalSize)
                   }}
                 </span>
-                <span v-else :class="['iconfont', 'icon-' + STATUS[item.status].icon]"
-                  :style="{ color: STATUS[item.status].color }">
+                <span
+                  v-else
+                  :class="['iconfont', 'icon-' + STATUS[item.status].icon]"
+                  :style="{ color: STATUS[item.status].color }"
+                >
                   {{ STATUS[item.status].desc }}</span>
               </div>
             </div>
             <div class="op">
-              <div class="item percent" v-if="item.status == 'uploading'">
+              <div
+                v-if="item.status == 'uploading'"
+                class="item percent"
+              >
                 {{ item.uploadPercent }}%
               </div>
               <template v-if="item.status == 'uploading'">
-                <div v-if="item.pause" class="item iconfont icon-play3" @click="restartUpload(item.uid)"></div>
-                <div v-else class="item iconfont icon-pause" @click="pauseUpload(item.uid)"></div>
+                <div
+                  v-if="item.pause"
+                  class="item iconfont icon-play3"
+                  @click="restartUpload(item.uid)"
+                />
+                <div
+                  v-else
+                  class="item iconfont icon-pause"
+                  @click="pauseUpload(item.uid)"
+                />
               </template>
-              <div class="item iconfont icon-del" @click="delFile(index)"></div>
+              <div
+                class="item iconfont icon-del"
+                @click="delFile(index)"
+              />
             </div>
           </div>
-          <div class="video-progress" v-if="item.status == 'uploading' || item.status == 'success'">
-            <el-progress :percentage="item.uploadPercent" :show-text="false" :stroke-width="3"
-              :status="item.status == 'uploading' ? '' : 'success'">
-            </el-progress>
+          <div
+            v-if="item.status == 'uploading' || item.status == 'success'"
+            class="video-progress"
+          >
+            <el-progress
+              :percentage="item.uploadPercent"
+              :show-text="false"
+              :stroke-width="3"
+              :status="item.status == 'uploading' ? '' : 'success'"
+            />
           </div>
         </div>
       </div>
     </div>
-    <div class="add-video-btn" v-if="fileList.length < sysSettingStore.sysSetting.videoPCount">
-      <el-upload multiple :show-file-list="false" :http-request="addFile" :accept="proxy.videoAccept">
-        <el-button type="primary">添加分P</el-button>
+    <div
+      v-if="fileList.length < sysSettingStore.sysSetting.videoPCount"
+      class="add-video-btn"
+    >
+      <el-upload
+        multiple
+        :show-file-list="false"
+        :http-request="addFile"
+        :accept="proxy.videoAccept"
+      >
+        <el-button type="primary">
+          添加分P
+        </el-button>
       </el-upload>
     </div>
   </div>

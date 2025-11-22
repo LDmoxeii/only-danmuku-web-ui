@@ -1,5 +1,9 @@
 <template>
-  <div class="tag" :style="{'border':`1px solid ${TYPE[props.type].color}`,'color':`${TYPE[props.type].color}`}">{{ TYPE[props.type].text }}
+  <div
+    class="tag"
+    :style="{'border':`1px solid ${TYPE[props.type].color}`,'color':`${TYPE[props.type].color}`}"
+  >
+    {{ TYPE[props.type].text }}
   </div>
 </template>
 

@@ -1,8 +1,17 @@
 <template>
   <div class="search-panel">
     <!-- 下拉框 -->
-    <el-select clearable placeholder="选择视频搜索" v-model="searchForm.videoId" @change="loadData">
-      <el-option :value="item.videoId" :label="item.videoName" v-for="item in allVideoList"></el-option>
+    <el-select
+      v-model="searchForm.videoId"
+      clearable
+      placeholder="选择视频搜索"
+      @change="loadData"
+    >
+      <el-option
+        v-for="item in allVideoList"
+        :value="item.videoId"
+        :label="item.videoName"
+      />
     </el-select>
   </div>
 </template>

@@ -1,30 +1,38 @@
 <template>
   <div class="summary-panel">
-    <div class="summary" :style="{ height: expandType ? 'auto' : '90px' }">
+    <div
+      class="summary"
+      :style="{ height: expandType ? 'auto' : '90px' }"
+    >
       <div
-        class="summary-inner"
         id="summary-inner"
+        class="summary-inner"
         v-html="videoInfo.introduction"
-      ></div>
+      />
     </div>
-    <div class="expand-btn" @click="expand" v-show="showExpandBtn">
+    <div
+      v-show="showExpandBtn"
+      class="expand-btn"
+      @click="expand"
+    >
       {{ expandType ? "收起" : "展开更多" }}
     </div>
     <div class="tag-list">
       <router-link
+        v-for="item in videoInfo.tags"
+        :key="item"
         :to="`/search?keyword=${item}`"
         class="tag-item"
         target="_blank"
-        v-for="item in videoInfo.tags"
-        >{{ item }}</router-link
       >
+        {{ item }}
+      </router-link>
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, getCurrentInstance, onMounted, inject } from "vue";
-const { proxy } = getCurrentInstance() as any;
+import { ref, onMounted, inject } from "vue";
 
 const videoInfo = inject<any>("videoInfo");
 
@@ -50,7 +58,7 @@ onMounted(() => {
 
 <style lang="scss" scoped>
 .summary-panel {
-  padding: 20px 0px;
+  padding: 20px 0;
   border-bottom: 1px solid #ddd;
   .summary {
     overflow: hidden;
@@ -75,7 +83,7 @@ onMounted(() => {
       border-radius: 16px;
       height: 32px;
       line-height: 32px;
-      padding: 0px 12px;
+      padding: 0 12px;
       margin: 0 12px 8px 0;
     }
   }

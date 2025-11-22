@@ -1,7 +1,7 @@
 <template>
   <div
-    class="image-panel"
     ref="coverRef"
+    class="image-panel"
     :style="{
       'border-radius': borderRadius,
       width: width ? width + 'px' : '100%',
@@ -9,32 +9,48 @@
     }"
   >
     <el-image
+      v-if="fileSource || fileImage"
       :lazy="lazy"
       :src="fileSource || fileImage"
       :fit="fit"
-      v-if="fileSource || fileImage"
       @click="showViewerHandler"
     >
       <template #placeholder>
-        <div class="loading" :style="{ height: loadingHeight + 'px' }">
-          <img :src="proxy.Utils.getLocalImage('playing.gif')"  alt=""/>
+        <div
+          class="loading"
+          :style="{ height: loadingHeight + 'px' }"
+        >
+          <img
+            :src="proxy.Utils.getLocalImage('playing.gif')"
+            alt=""
+          >
         </div>
       </template>
       <template #error>
-        <img :src="errorImgSrc" class="el-image__inner" :style="errorImgStyle"  alt=""/>
+        <img
+          :src="errorImgSrc"
+          class="el-image__inner"
+          :style="errorImgStyle"
+          alt=""
+        >
       </template>
     </el-image>
-    <div v-else class="no-image">请选择图片</div>
+    <div
+      v-else
+      class="no-image"
+    >
+      请选择图片
+    </div>
     <el-image-viewer
+      v-if="showViewer"
       :hide-on-click-modal="true"
+      :url-list="imageList"
+      :teleported="true"
       @close="
         () => {
           showViewer = false;
         }
       "
-      v-if="showViewer"
-      :url-list="imageList"
-      :teleported="true"
     />
   </div>
 </template>

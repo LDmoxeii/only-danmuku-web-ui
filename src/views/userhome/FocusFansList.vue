@@ -3,13 +3,16 @@
     <div class="body-title">
       {{ route.name == "uhomeFocus" ? "我的关注" : "我的粉丝" }}
     </div>
-    <DataList :dataSource="dataSource" @loadData="loadDataList">
+    <DataList
+      :data-source="dataSource"
+      @load-data="loadDataList"
+    >
       <template #default="{ data }">
         <div class="data-item">
           <Avatar
             :avatar="data.otherAvatar"
-            :userId="data.otherUserId"
-          ></Avatar>
+            :user-id="data.otherUserId"
+          />
           <div class="user-info">
             <div class="nick-name">
               <router-link
@@ -25,21 +28,28 @@
             </div>
           </div>
           <div class="op-btns">
-            <div v-if="data.focusType == 1" class="focus-eachother">已互粉</div>
+            <div
+              v-if="data.focusType == 1"
+              class="focus-eachother"
+            >
+              已互粉
+            </div>
             <el-button
+              v-if="route.name == 'uhomeFocus' || data.focusType == 1"
               link
               type="primary"
               @click="cancelFocus(data.otherUserId)"
-              v-if="route.name == 'uhomeFocus' || data.focusType == 1"
-              >取消关注</el-button
             >
+              取消关注
+            </el-button>
 
             <el-button
-              type="primary"
               v-if="route.name == 'uhomeFans' && data.focusType == 0"
+              type="primary"
               @click="focus(data.otherUserId)"
-              >关注</el-button
             >
+              关注
+            </el-button>
           </div>
         </div>
       </template>
@@ -105,7 +115,7 @@ watch(
     font-size: 18px;
     color: #6d757a;
     border-bottom: 1px solid #e5e9ef;
-    padding: 0px 0px 10px 0px;
+    padding: 0 0 10px 0;
   }
   .data-item {
     display: flex;
@@ -113,7 +123,7 @@ watch(
     padding: 10px;
     .user-info {
       flex: 1;
-      margin: 0px 10px;
+      margin: 0 10px;
       .introduction {
         margin-top: 10px;
         font-size: 13px;

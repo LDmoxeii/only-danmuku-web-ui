@@ -4,23 +4,26 @@
     :style="{ 'grid-template-columns': `repeat(${gridCount}, 1fr)` }"
   >
     <template v-for="item in dataSource.list">
-      <slot :data="item"></slot>
+      <slot :data="item" />
     </template>
   </div>
-  <div class="bottom-loading" v-if="loading">
-    <img :src="proxy.Utils.getLocalImage('playing.gif')" />数据加载中....
+  <div
+    v-if="loading"
+    class="bottom-loading"
+  >
+    <img :src="proxy.Utils.getLocalImage('playing.gif')" alt="">数据加载中....
   </div>
   <div
     v-if="
       dataSource.pageNum >= (dataSource.pageTotal || 0) &&
-      !loading &&
-      dataSource.list.length > 0
+        !loading &&
+        dataSource.list.length > 0
     "
     class="reach-bottom"
   >
     {{ loadEndMsg }}
   </div>
-  <NoData v-if="dataSource.list && dataSource.list.length == 0"> </NoData>
+  <NoData v-if="dataSource.list && dataSource.list.length == 0" />
 </template>
 
 <script setup lang="ts">

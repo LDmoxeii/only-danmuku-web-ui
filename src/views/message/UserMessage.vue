@@ -1,27 +1,54 @@
 <template>
   <div class="message-panel">
     <div class="left-panel">
-      <div class="message-title">消息中心</div>
-      <div :class="[
-            'message-part',
-            route.params.messageType == item.messageTypeCode ? 'active' : '',
-          ]" v-for="item in messageNav" @click="selectMessageType(item)">
-        <div :class="['iconfont', item.icon]">{{ item.name }}</div>
-        <div class="message-count" v-if="item.noReadCount > 0">
+      <div class="message-title">
+        消息中心
+      </div>
+      <div
+        v-for="item in messageNav"
+        :class="[
+          'message-part',
+          route.params.messageType == item.messageTypeCode ? 'active' : '',
+        ]"
+        @click="selectMessageType(item)"
+      >
+        <div :class="['iconfont', item.icon]">
+          {{ item.name }}
+        </div>
+        <div
+          v-if="item.noReadCount > 0"
+          class="message-count"
+        >
           {{ item.noReadCount > 99 ? "99+" : item.noReadCount }}
         </div>
       </div>
     </div>
     <div class="right-panel">
-      <div class="home" v-if="!route.params.messageType">
-        <div class="iconfont icon-message"></div>
+      <div
+        v-if="!route.params.messageType"
+        class="home"
+      >
+        <div class="iconfont icon-message" />
       </div>
-      <div class="message-list" v-else>
-        <DataList :dataSource="dataSource" @loadData="loadDataList">
+      <div
+        v-else
+        class="message-list"
+      >
+        <DataList
+          :data-source="dataSource"
+          @load-data="loadDataList"
+        >
           <template #default="{ data }">
-            <MessageSys :data="data" v-if="data.messageType == 1" @delMessage="delMessage"></MessageSys>
-            <MessageItem :data="data" v-else @delMessage="delMessage">
-            </MessageItem>
+            <MessageSys
+              v-if="data.messageType == 1"
+              :data="data"
+              @del-message="delMessage"
+            />
+            <MessageItem
+              v-else
+              :data="data"
+              @del-message="delMessage"
+            />
           </template>
         </DataList>
       </div>
@@ -107,7 +134,7 @@ const delMessage = (messageId: string | number) => {
     message: '确定要删除消息吗？',
     okfun: async () => {
       try { await apiDelMessage(messageId) } catch (e) { return }
-      loadDataList()
+      await loadDataList()
     },
   })
 }
@@ -147,7 +174,7 @@ onMounted(() => {
   display: flex;
   height: calc(100vh - 180px);
   width: 1200px;
-  margin: 0px auto;
+  margin: 0 auto;
   .left-panel {
     background-image: url(../../assets/creation_bg.png);
     background-repeat: no-repeat;
@@ -157,7 +184,7 @@ onMounted(() => {
     border-radius: 5px;
     padding: 20px 10px;
     border: 1px solid #ddd;
-    margin: 10px 0px;
+    margin: 10px 0;
     .message-title {
       font-size: 20px;
       line-height: 45px;
@@ -169,10 +196,9 @@ onMounted(() => {
       cursor: pointer;
       line-height: 50px;
       border-radius: 5px;
-      padding: 0px 10px;
+      padding: 0 10px;
       align-items: center;
       display: flex;
-      align-items: center;
       font-size: 14px;
       &:hover {
         background: #f8f8f8;
@@ -187,7 +213,7 @@ onMounted(() => {
       .message-count {
         background: #f56c6c;
         color: #fff;
-        padding: 0px 4px;
+        padding: 0 4px;
         height: 20px;
         min-width: 20px;
         line-height: 20px;
@@ -206,12 +232,10 @@ onMounted(() => {
   }
   .right-panel {
     flex: 1;
-    margin-left: 10px;
     background: #fff;
     border-radius: 5px;
     border: 1px solid #ddd;
-    margin: 10px 0px;
-    margin-left: 10px;
+    margin: 10px 0 10px 10px;
     .home {
       height: 100%;
       display: flex;

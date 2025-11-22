@@ -1,33 +1,71 @@
 <template>
-  <Dialog :show="dialogConfig.show" :title="dialogConfig.title" :buttons="dialogConfig.buttons" width="500px"
-    :showCancel="false" @close="dialogConfig.show = false">
-    <el-form :model="formData" :rules="rules" ref="formDataRef" label-width="80px" @submit.prevent>
+  <Dialog
+    :show="dialogConfig.show"
+    :title="dialogConfig.title"
+    :buttons="dialogConfig.buttons"
+    width="500px"
+    :show-cancel="false"
+    @close="dialogConfig.show = false"
+  >
+    <el-form
+      ref="formDataRef"
+      :model="formData"
+      :rules="rules"
+      label-width="80px"
+      @submit.prevent
+    >
       <!--input输入-->
       <template v-if="step == 1">
-        <el-form-item label="列表名称" prop="seriesName">
-          <el-input clearable placeholder="请填写名称" v-model="formData.seriesName" :maxlength="100"
-            show-word-limit></el-input>
+        <el-form-item
+          label="列表名称"
+          prop="seriesName"
+        >
+          <el-input
+            v-model="formData.seriesName"
+            clearable
+            placeholder="请填写名称"
+            :maxlength="100"
+            show-word-limit
+          />
         </el-form-item>
         <!--textarea输入-->
-        <el-form-item label="列表简介" prop="">
-          <el-input clearable placeholder="请填写简介（选填）" type="textarea" :rows="5" :maxlength="200" show-word-limit
-            resize="none" v-model="formData.seriesDescription"></el-input>
+        <el-form-item
+          label="列表简介"
+          prop=""
+        >
+          <el-input
+            v-model="formData.seriesDescription"
+            clearable
+            placeholder="请填写简介（选填）"
+            type="textarea"
+            :rows="5"
+            :maxlength="200"
+            show-word-limit
+            resize="none"
+          />
         </el-form-item>
       </template>
       <template v-if="step == 2">
         <el-scrollbar max-height="400px">
           <el-checkbox-group v-model="formData.videoIds">
-            <div class="video-item" v-for="item in videoList">
+            <div
+              v-for="item in videoList"
+              class="video-item"
+            >
               <div class="check">
                 <el-checkbox :value="item.videoId" />
               </div>
               <div class="cover">
-                <Cover :source="item.videoCover"></Cover>
+                <Cover :source="item.videoCover" />
               </div>
               <div class="video-info">
-                <div class="video-name">{{ item.videoName }}</div>
+                <div class="video-name">
+                  {{ item.videoName }}
+                </div>
                 <div class="play-info">
-                  <div class="iconfont icon-play2">{{ item.playCount }}</div>
+                  <div class="iconfont icon-play2">
+                    {{ item.playCount }}
+                  </div>
                   <div class="create-time">
                     {{ proxy.Utils.formatDate(item.createTime) }}
                   </div>
@@ -38,16 +76,32 @@
         </el-scrollbar>
       </template>
       <div class="op-btns">
-        <el-button link @click="cancel" v-if="step == 1 || opType == 2">
+        <el-button
+          v-if="step == 1 || opType == 2"
+          link
+          @click="cancel"
+        >
           取消
         </el-button>
-        <el-button type="primary" @click="nextStep" v-if="step == 1 && opType != 1">
+        <el-button
+          v-if="step == 1 && opType != 1"
+          type="primary"
+          @click="nextStep"
+        >
           下一步
         </el-button>
-        <el-button type="primary" @click="preStep" v-if="step == 2 && opType != 2">
+        <el-button
+          v-if="step == 2 && opType != 2"
+          type="primary"
+          @click="preStep"
+        >
           上一步
         </el-button>
-        <el-button type="primary" @click="submit" v-if="step == 2 || opType == 1">
+        <el-button
+          v-if="step == 2 || opType == 1"
+          type="primary"
+          @click="submit"
+        >
           确定
         </el-button>
       </div>
@@ -59,6 +113,7 @@
 import { ref, getCurrentInstance, nextTick } from 'vue'
 const { proxy } = getCurrentInstance() as any
 import { useRoute } from 'vue-router'
+import Dialog from "@/components/Dialog.vue";
 const route = useRoute()
 
 const dialogConfig = ref<any>({

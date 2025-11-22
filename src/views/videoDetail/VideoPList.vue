@@ -1,21 +1,34 @@
 <template>
-  <div class="video-panel" v-if="videoList.length > 1">
+  <div
+    v-if="videoList.length > 1"
+    class="video-panel"
+  >
     <div class="video-panel-title">
       <div class="title">
-        视频选集<span class="video-count"
-          >({{ currentP }}/{{ videoList.length }})</span
-        ><span class="iconfont icon-list"></span>
+        视频选集<span class="video-count">({{ currentP }}/{{ videoList.length }})</span><span class="iconfont icon-list" />
       </div>
-      <el-switch v-model="autoPlay" inactive-text="自动连播" />
+      <el-switch
+        v-model="autoPlay"
+        inactive-text="自动连播"
+      />
     </div>
-    <el-scrollbar :max-height="600" class="video-list">
+    <el-scrollbar
+      :max-height="600"
+      class="video-list"
+    >
       <div
-        :class="['video-item', index == currentP - 1 ? 'active' : '']"
         v-for="(item, index) in videoList"
+        :class="['video-item', index == currentP - 1 ? 'active' : '']"
         @click="selectVideo(index + 1)"
       >
-        <div class="playing" v-if="index == currentP - 1"></div>
-        <div class="title" :title="item.title">
+        <div
+          v-if="index == currentP - 1"
+          class="playing"
+        />
+        <div
+          class="title"
+          :title="item.title"
+        >
           P{{ index + 1 }} {{ item.fileName }}
         </div>
         <div class="duration">
@@ -29,14 +42,14 @@
 <script setup lang="ts">
 import { mitter } from "@/eventbus/eventBus";
 
-import { ref, getCurrentInstance, nextTick, inject, onMounted, onUnmounted, computed } from "vue";
+import { ref, getCurrentInstance, onMounted, onUnmounted } from "vue";
 const { proxy } = getCurrentInstance() as any;
 import { useRoute, useRouter } from "vue-router";
 const route = useRoute();
 const router = useRouter();
 const autoPlay = ref<boolean>(true);
 const currentP = ref<number>(route.query.p ? Number.parseInt(route.query.p as string) : 1);
-const emit = defineEmits<{ (e: 'selectVideoFile', fileId: string | number): void }>();
+defineEmits<{ (e: 'selectVideoFile', fileId: string | number): void }>();
 const videoList = ref<any[]>([]);
 import { loadVideoPList as apiLoadVideoPList } from '@/api/video'
 const loadVideoPList = async () => {

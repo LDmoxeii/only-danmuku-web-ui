@@ -1,19 +1,44 @@
 <template>
   <div :class="['header-bar', 'header-bar-' + theme]">
     <div class="menu">
-      <el-popover :width="categoryPartCount * (150 + 21) + 24" trigger="hover" :show-arrow="false" :offset="22"
-        placement="bottom-start">
+      <el-popover
+        :width="categoryPartCount * (150 + 21) + 24"
+        trigger="hover"
+        :show-arrow="false"
+        :offset="22"
+        placement="bottom-start"
+      >
         <template #reference>
-          <router-link class="iconfont icon-logo menu-item" to="/">首页</router-link>
+          <router-link
+            class="iconfont icon-logo menu-item"
+            to="/"
+          >
+            首页
+          </router-link>
         </template>
         <div class="nav-list">
-          <div class="nav-part" v-for="index in categoryPartCount" :key="index">
-            <router-link class="nav-item" v-for="item in categoryStore.categoryList.slice(
-              (index - 1) * partCount,
-              (index - 1) * partCount + partCount
-            )" :key="item.categoryCode" :to="`/v/${item.categoryCode}`">
-              <span class="icon" v-if="item.icon">
-                <img :src="`${sourcePath}${item.icon}`"  alt=""/>
+          <div
+            v-for="index in categoryPartCount"
+            :key="index"
+            class="nav-part"
+          >
+            <router-link
+              v-for="item in categoryStore.categoryList.slice(
+                (index - 1) * partCount,
+                (index - 1) * partCount + partCount
+              )"
+              :key="item.categoryCode"
+              class="nav-item"
+              :to="`/v/${item.categoryCode}`"
+            >
+              <span
+                v-if="item.icon"
+                class="icon"
+              >
+                <img
+                  :src="`${sourcePath}${item.icon}`"
+                  alt=""
+                >
               </span>
               <span class="category-name">{{ item.categoryName }}</span>
             </router-link>
@@ -22,28 +47,63 @@
       </el-popover>
     </div>
     <div class="search-body">
-      <div class="search-panel" @click.stop v-if="route.path != '/search'">
+      <div
+        v-if="route.path != '/search'"
+        class="search-panel"
+        @click.stop
+      >
         <div class="search-panel-inner">
           <div :class="['input-panel', showHistory ? 'focus-input' : '']">
-            <input @focus="onSearchFocus" v-model="keyword" ref="searchInputRef" :placeholder="placeholder"
-              @keyup.enter="search" />
-            <div class="iconfont icon-search" @click="search"></div>
+            <input
+              ref="searchInputRef"
+              v-model="keyword"
+              :placeholder="placeholder"
+              @focus="onSearchFocus"
+              @keyup.enter="search"
+            >
+            <div
+              class="iconfont icon-search"
+              @click="search"
+            />
           </div>
-          <div class="history-panel" v-if="showHistory">
+          <div
+            v-if="showHistory"
+            class="history-panel"
+          >
             <div class="search-title">
-              <div class="title">搜索历史</div>
-              <div class="btn-clean" @click="searchHistoryStore.cleanHistory()">
+              <div class="title">
+                搜索历史
+              </div>
+              <div
+                class="btn-clean"
+                @click="searchHistoryStore.cleanHistory()"
+              >
                 清空
               </div>
             </div>
             <div class="search-tag-list">
-              <el-tag v-for="tag in searchHistoryStore.searchHistory" :key="tag" closable type="info"
-                class="search-tag" @click="searchKeyword(tag as string)" @close="searchHistoryStore.delHistory(tag as string)">{{ tag
-                }}</el-tag>
+              <el-tag
+                v-for="tag in searchHistoryStore.searchHistory"
+                :key="tag"
+                closable
+                type="info"
+                class="search-tag"
+                @click="searchKeyword(tag as string)"
+                @close="searchHistoryStore.delHistory(tag as string)"
+              >
+                {{ tag
+                }}
+              </el-tag>
             </div>
-            <div class="hot-search-title">热搜</div>
+            <div class="hot-search-title">
+              热搜
+            </div>
             <div class="hot-search-list">
-              <div class="search-item" v-for="(item, index) in hotSearchList" @click="searchKeyword(item)">
+              <div
+                v-for="(item, index) in hotSearchList"
+                class="search-item"
+                @click="searchKeyword(item)"
+              >
                 {{ index + 1 }} {{ item }}
               </div>
             </div>
@@ -54,69 +114,114 @@
     <div class="user-panel">
       <div class="user-avatar">
         <template v-if="Object.keys(loginStore.userInfo).length > 0">
-          <Avatar class="avatar" :avatar="loginStore.userInfo.avatar" :userId="loginStore.userInfo.userId" :width="35"
-            :lazy="false" @mouseover="getCountInfo">
-          </Avatar>
+          <Avatar
+            class="avatar"
+            :avatar="loginStore.userInfo.avatar"
+            :user-id="loginStore.userInfo.userId"
+            :width="35"
+            :lazy="false"
+            @mouseover="getCountInfo"
+          />
           <div class="user-info-panel">
-            <div class="nick-name">{{ loginStore.userInfo.nickName }}</div>
+            <div class="nick-name">
+              {{ loginStore.userInfo.nickName }}
+            </div>
             <div class="count-info">
               <div class="count-info-item">
                 <div class="count-value">
                   {{ userCountInfo.focusCount }}
                 </div>
-                <div class="count-title">关注</div>
+                <div class="count-title">
+                  关注
+                </div>
               </div>
               <div class="count-info-item">
                 <div class="count-value">
                   {{ userCountInfo.fansCount }}
                 </div>
-                <div class="count-title">粉丝</div>
+                <div class="count-title">
+                  粉丝
+                </div>
               </div>
               <div class="count-info-item">
                 <div class="count-value">
                   {{ userCountInfo.currentCoinCount }}
                 </div>
-                <div class="count-title">硬币</div>
+                <div class="count-title">
+                  硬币
+                </div>
               </div>
             </div>
-            <router-link :to="`/user/${loginStore.userInfo.userId}`" class="item iconfont icon-user">
+            <router-link
+              :to="`/user/${loginStore.userInfo.userId}`"
+              class="item iconfont icon-user"
+            >
               <span class="item-name">个人中心</span>
-              <span class="iconfont icon-left"></span>
+              <span class="iconfont icon-left" />
             </router-link>
-            <router-link to="/ucenter/video" class="item iconfont icon-play">
+            <router-link
+              to="/ucenter/video"
+              class="item iconfont icon-play"
+            >
               <span class="item-name">投稿管理</span>
-              <span class="iconfont icon-left"></span>
+              <span class="iconfont icon-left" />
             </router-link>
-            <div class="logout item iconfont icon-logout" @click="logout">
+            <div
+              class="logout item iconfont icon-logout"
+              @click="logout"
+            >
               退出登录
             </div>
           </div>
         </template>
-        <Avatar v-if="Object.keys(loginStore.userInfo).length == 0" @click="loginHandler" :width="35" :lazy="false">
-        </Avatar>
+        <Avatar
+          v-if="Object.keys(loginStore.userInfo).length == 0"
+          :width="35"
+          :lazy="false"
+          @click="loginHandler"
+        />
       </div>
-      <div class="user-panel-item" @click="navJump('/message')">
-        <el-badge :value="loginStore.messageNoReadCount" :hidden="loginStore.messageNoReadCount == 0">
-          <div class="iconfont icon-message"></div>
+      <div
+        class="user-panel-item"
+        @click="navJump('/message')"
+      >
+        <el-badge
+          :value="loginStore.messageNoReadCount"
+          :hidden="loginStore.messageNoReadCount == 0"
+        >
+          <div class="iconfont icon-message" />
         </el-badge>
         <div>消息</div>
       </div>
 
-      <div class="user-panel-item" @click="navJump(`/user/${loginStore.userInfo.userId}/collection`)">
-        <div class="iconfont icon-collection"></div>
+      <div
+        class="user-panel-item"
+        @click="navJump(`/user/${loginStore.userInfo.userId}/collection`)"
+      >
+        <div class="iconfont icon-collection" />
         <div>收藏</div>
       </div>
-      <div class="user-panel-item" @click="navJump('/history')">
-        <div class="iconfont icon-history"></div>
+      <div
+        class="user-panel-item"
+        @click="navJump('/history')"
+      >
+        <div class="iconfont icon-history" />
         <div>历史</div>
       </div>
-      <div class="user-panel-item" @click="navJump('/ucenter/home')">
-        <div class="iconfont icon-light"></div>
+      <div
+        class="user-panel-item"
+        @click="navJump('/ucenter/home')"
+      >
+        <div class="iconfont icon-light" />
         <div>创作中心</div>
       </div>
       <div class="btn-upload">
-        <el-button type="primary" @click="navJump('/ucenter/postVideo')" size="large">
-          <span class="iconfont icon-upload"></span>
+        <el-button
+          type="primary"
+          size="large"
+          @click="navJump('/ucenter/postVideo')"
+        >
+          <span class="iconfont icon-upload" />
           <span>投稿</span>
         </el-button>
       </div>

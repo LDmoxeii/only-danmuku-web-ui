@@ -18,7 +18,7 @@
         :selectable="selectedHandler"
         width="50"
         align="center"
-      ></el-table-column>
+      />
       <!--序号-->
       <el-table-column
         v-if="options.showIndex"
@@ -26,7 +26,7 @@
         type="index"
         width="60"
         align="center"
-      ></el-table-column>
+      />
       <!--数据列-->
       <template v-for="(column, index) in columns">
         <template v-if="column.scopedSlots">
@@ -42,8 +42,7 @@
                 :name="column.scopedSlots"
                 :index="scope.$index"
                 :row="scope.row"
-              >
-              </slot>
+              />
             </template>
           </el-table-column>
         </template>
@@ -55,25 +54,27 @@
             :align="column.align || 'left'"
             :width="column.width"
             :fixed="column.fixed"
-          >
-          </el-table-column>
+          />
         </template>
       </template>
     </el-table>
     <!-- 分页 -->
-    <div class="pagination" v-if="showPagination">
+    <div
+      v-if="showPagination"
+      class="pagination"
+    >
       <el-pagination
         v-if="dataSource.totalCount"
+        v-model:current-page="dataSource.pageNum"
         background
         :total="dataSource.totalCount"
         :page-sizes="[15, 30, 50, 100]"
         :page-size="dataSource.pageSize"
-        v-model:current-page="dataSource.pageNum"
         layout="total, sizes, prev, pager, next, jumper"
+        style="text-align: right"
         @size-change="handlePageSizeChange"
         @current-change="handlepageNumChange"
-        style="text-align: right"
-      ></el-pagination>
+      />
     </div>
   </div>
 </template>

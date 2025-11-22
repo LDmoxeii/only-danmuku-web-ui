@@ -28,7 +28,7 @@
       {{ videoInfo.collectCount }}
     </div>
   </div>
-  <VideoCoin ref="videoCoinRef"></VideoCoin>
+  <VideoCoin ref="videoCoinRef" />
 </template>
 
 <script setup lang="ts">
@@ -41,9 +41,8 @@ const loginStore = useLoginStore();
 
 import { ref, getCurrentInstance, inject } from "vue";
 const { proxy } = getCurrentInstance() as any;
-import { useRoute, useRouter } from "vue-router";
+import { useRoute } from "vue-router";
 const route = useRoute();
-const router = useRouter();
 
 const videoInfo = inject<any>("videoInfo");
 
@@ -92,7 +91,7 @@ const userActionCoin = () => {
   display: flex;
   align-items: center;
   border-bottom: 1px solid #e3e5e7;
-  padding: 20px 0px;
+  padding: 20px 0;
   .iconfont {
     cursor: pointer;
     color: #61666d;

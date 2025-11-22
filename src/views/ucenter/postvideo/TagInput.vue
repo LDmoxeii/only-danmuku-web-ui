@@ -2,9 +2,9 @@
   <div class="tag-input-panel">
     <div class="tag-list">
       <el-tag
-        class="tag-item"
         v-for="tag in modelValue"
         :key="tag"
+        class="tag-item"
         closable
         :disable-transitions="false"
         @close="handleClose(tag)"
@@ -14,15 +14,17 @@
     </div>
     <div class="tag-input">
       <el-input
-        placeholder="按回车键Enter创建标签"
         v-model="inputValue"
+        placeholder="按回车键Enter创建标签"
         :maxlength="15"
         resize="none"
         show-word-limit
         @keyup.enter="inputChange"
-      ></el-input>
+      />
     </div>
-    <div class="info">最多还可以输入{{ 10 - modelValue.length }}个标签</div>
+    <div class="info">
+      最多还可以输入{{ 10 - modelValue.length }}个标签
+    </div>
   </div>
 </template>
 
@@ -63,7 +65,7 @@ const inputChange = () => {
   display: flex;
   flex-wrap: wrap;
   border-radius: 5px;
-  padding: 0px 10px;
+  padding: 0 10px;
   .tag-list {
     .tag-item {
       margin-right: 10px;
@@ -75,7 +77,7 @@ const inputChange = () => {
     margin-right: 10px;
     :deep(.el-input__wrapper) {
       box-shadow: none;
-      padding: 0px;
+      padding: 0;
     }
   }
   .info {

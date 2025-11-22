@@ -1,14 +1,28 @@
 <template>
   <div class="player-panel">
-    <div ref="playerRef" class="player-style" :style="{ height: playerHeight + 'px' }"></div>
+    <div
+      ref="playerRef"
+      class="player-style"
+      :style="{ height: playerHeight + 'px' }"
+    />
     <div class="danmu-panel">
       <div class="watcher">
         {{ onLineCount }} 人正在看，已装填 {{ danmuCount }} 条弹幕
       </div>
-      <div id="danmu" v-show="showDanmu"></div>
-      <div v-show="!showDanmu" class="close-danmu">已关闭弹幕</div>
+      <div
+        v-show="showDanmu"
+        id="danmu"
+      />
+      <div
+        v-show="!showDanmu"
+        class="close-danmu"
+      >
+        已关闭弹幕
+      </div>
     </div>
-    <div id="play"><img :src="proxy.Utils.getLocalImage('play.png')" /></div>
+    <div id="play">
+      <img :src="proxy.Utils.getLocalImage('play.png')" alt="">
+    </div>
   </div>
 </template>
 <script setup lang="ts">
@@ -134,7 +148,7 @@ const initPlayer = () => {
         beforeEmit: async (danmu) => {
           try { await postDanmu(danmu) } catch (e) { return false }
           //重新获取一下弹幕列表
-          loadDanmuList()
+          await loadDanmuList()
           mitter.emit('danmSend')
           proxy.Message.success('发布成功')
           return true
@@ -292,7 +306,7 @@ const showDanmu = computed(() => {
       }
       //截屏
       .art-control-screenshot {
-        left: 0px;
+        left: 0;
       }
       //设置按钮
       .art-control-setting {
@@ -327,7 +341,7 @@ const showDanmu = computed(() => {
     background: #fff;
     display: flex;
     align-items: center;
-    padding: 0px 15px;
+    padding: 0 15px;
     .watcher {
       width: 250px;
       color: var(--text2);
@@ -344,7 +358,7 @@ const showDanmu = computed(() => {
 
   :deep(.danmu-setting) {
     background: none !important;
-    padding: 0px;
+    padding: 0;
     border: none;
     .inner-panel {
       width: 300px;
@@ -352,17 +366,17 @@ const showDanmu = computed(() => {
       position: relative;
       .inner {
         position: absolute;
-        left: 0px;
-        top: 0px;
+        left: 0;
+        top: 0;
         z-index: 99999;
         color: #fff;
       }
       .mask {
         position: absolute;
-        top: 0px;
-        right: 0px;
-        left: 0px;
-        bottom: 0px;
+        top: 0;
+        right: 0;
+        left: 0;
+        bottom: 0;
         background: #000;
         opacity: 0.6;
       }

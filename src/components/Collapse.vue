@@ -1,10 +1,16 @@
 <template>
-  <div class="title" @click="change">
-    <slot name="title"></slot>
-    <span :class="['iconfont', show ? 'icon-up' : 'icon-down']"></span>
+  <div
+    class="title"
+    @click="change"
+  >
+    <slot name="title" />
+    <span :class="['iconfont', show ? 'icon-up' : 'icon-down']" />
   </div>
-  <div class="content" v-show="show">
-    <slot></slot>
+  <div
+    v-show="show"
+    class="content"
+  >
+    <slot />
   </div>
 </template>
 

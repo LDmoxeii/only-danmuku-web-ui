@@ -1,28 +1,41 @@
 <template>
   <el-card class="box-card">
-    <div slot="header">
-      <div class="part-title">视频数据</div>
-    </div>
+    <template #header>
+      <div>
+        <div class="part-title">
+          视频数据
+        </div>
+      </div>
+    </template>
     <div class="video-data-list">
       <div
+        v-for="item in dataPartList"
         :class="[
           'video-data-item',
           item.preDataType == currentDataPart.preDataType ? 'active' : '',
         ]"
-        v-for="item in dataPartList"
         @click="loadWeekDataHandler(item)"
       >
         <div class="video-data-title">
-          <div :class="['name iconfont', item.icon]">{{ item.name }}</div>
-          <div class="pre-count">{{ item.preCount }}</div>
+          <div :class="['name iconfont', item.icon]">
+            {{ item.name }}
+          </div>
+          <div class="pre-count">
+            {{ item.preCount }}
+          </div>
         </div>
-        <div class="total-count">{{ item.totalCount }}</div>
+        <div class="total-count">
+          {{ item.totalCount }}
+        </div>
       </div>
     </div>
   </el-card>
 
   <el-card class="week-data-panel">
-    <div ref="chartRef" class="data-chart"></div>
+    <div
+      ref="chartRef"
+      class="data-chart"
+    />
   </el-card>
 </template>
 

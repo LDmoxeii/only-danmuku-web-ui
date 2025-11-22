@@ -1,66 +1,81 @@
 <template>
   <div class="send-panel">
     <Avatar
-        :avatar="
+      :avatar="
         Object.keys(loginStore.userInfo).length == 0
           ? ''
           : loginStore.userInfo.avatar
       "
-    ></Avatar>
+    />
     <div class="input-panel">
       <template v-if="showSend">
         <el-form
-            :model="formData"
-            :rules="rules"
-            ref="formDataRef"
-            @submit.prevent
+          ref="formDataRef"
+          :model="formData"
+          :rules="rules"
+          @submit.prevent
         >
           <!--input输入-->
-          <el-form-item label="" class="input-area">
+          <el-form-item
+            label=""
+            class="input-area"
+          >
             <el-input
-                id="inputPanel"
-                ref="inputRef"
-                clearable
-                :placeholder="formData.nickName ? '@' + formData.nickName : ''"
-                v-model="formData.content"
-                :rows="1"
-                type="textarea"
-                resize="none"
-                :show-word-limit="true"
-                :maxlength="500"
-                :autosize="{ minRows: 1, maxRows: 5 }"
-            ></el-input>
-            <div class="comment-image" v-if="formData.imgPath">
-              <Cover fit="cover" :source="formData.imgPath"></Cover>
-              <span class="del iconfont icon-close" @click="delImage"></span>
+              id="inputPanel"
+              ref="inputRef"
+              v-model="formData.content"
+              clearable
+              :placeholder="formData.nickName ? '@' + formData.nickName : ''"
+              :rows="1"
+              type="textarea"
+              resize="none"
+              :show-word-limit="true"
+              :maxlength="500"
+              :autosize="{ minRows: 1, maxRows: 5 }"
+            />
+            <div
+              v-if="formData.imgPath"
+              class="comment-image"
+            >
+              <Cover
+                fit="cover"
+                :source="formData.imgPath"
+              />
+              <span
+                class="del iconfont icon-close"
+                @click="delImage"
+              />
             </div>
           </el-form-item>
         </el-form>
         <div class="op-panel">
           <div class="op-btns">
             <el-popover
-                ref="elPopoverRef"
-                :width="500"
-                trigger="click"
-                :show-arrow="false"
-                :offset="5"
-                placement="bottom-start"
+              ref="elPopoverRef"
+              :width="500"
+              trigger="click"
+              :show-arrow="false"
+              :offset="5"
+              placement="bottom-start"
             >
               <template #reference>
-                <div class="iconfont icon-emoji"></div>
+                <div class="iconfont icon-emoji" />
               </template>
               <template #default>
-                <el-tabs v-model="activeEmoji" @click.stop>
+                <el-tabs
+                  v-model="activeEmoji"
+                  @click.stop
+                >
                   <el-tab-pane
-                      :label="emoji.name"
-                      :name="emoji.name"
-                      v-for="emoji in emojiList"
+                    v-for="emoji in emojiList"
+                    :label="emoji.name"
+                    :name="emoji.name"
                   >
                     <div class="emoji-list">
                       <div
-                          class="emoji-item"
-                          v-for="item in emoji.emojiList"
-                          @click="sendEmoji(item)"
+                        v-for="item in emoji.emojiList"
+                        class="emoji-item"
+                        @click="sendEmoji(item)"
                       >
                         {{ item }}
                       </div>
@@ -70,24 +85,31 @@
               </template>
             </el-popover>
             <el-upload
-                ref="uploaderRef"
-                :multiple="false"
-                :show-file-list="false"
-                :http-request="selectFile"
-                :accept="proxy.imageAccept"
+              ref="uploaderRef"
+              :multiple="false"
+              :show-file-list="false"
+              :http-request="selectFile"
+              :accept="proxy.imageAccept"
             >
-              <div class="iconfont icon-image"></div>
+              <div class="iconfont icon-image" />
             </el-upload>
           </div>
           <div class="send-btn">
-            <el-button type="primary" @mousedown="submitComment"
-            >发布
-            </el-button
+            <el-button
+              type="primary"
+              @mousedown="submitComment"
             >
+              发布
+            </el-button>
           </div>
         </div>
       </template>
-      <div v-else class="no-send">UP主已关闭评论区</div>
+      <div
+        v-else
+        class="no-send"
+      >
+        UP主已关闭评论区
+      </div>
     </div>
   </div>
 </template>

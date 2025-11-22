@@ -1,20 +1,31 @@
 <template>
   <div class="category-video-body">
-    <div :class="['category-list', categoryFxied ? 'category-fxied' : '']" id="category-list">
+    <div
+      id="category-list"
+      :class="['category-list', categoryFxied ? 'category-fxied' : '']"
+    >
       <div class="category-title">
         {{ categoryStore.cureentPCategory.categoryName }}
       </div>
-      <div :class="['category-item', !route.params.categoryCode ? 'active' : '']" @click="jump()">
+      <div
+        :class="['category-item', !route.params.categoryCode ? 'active' : '']"
+        @click="jump()"
+      >
         首页
       </div>
-      <div :class="[
+      <div
+        v-for="item in categoryStore.cureentPCategory.children"
+        :key="item.categoryCode"
+        :class="[
           'category-item',
           route.params.categoryCode == item.categoryCode ? 'active' : '',
-        ]" v-for="item in categoryStore.cureentPCategory.children" @click="jump(item)">
+        ]"
+        @click="jump(item)"
+      >
         {{ item.categoryName }}
       </div>
     </div>
-    <VideoList></VideoList>
+    <VideoList />
   </div>
 </template>
 
@@ -24,18 +35,7 @@ import VideoList from '@/views/videoList/VideoList.vue'
 import { useNavAction } from '@/stores/navActionStore'
 const navActionStore = useNavAction()
 
-import {
-  ref,
-  reactive,
-  getCurrentInstance,
-  nextTick,
-  onMounted,
-  onUnmounted,
-  provide,
-  inject,
-  watch,
-} from 'vue'
-const { proxy } = getCurrentInstance() as any
+import { ref, onMounted, onUnmounted } from 'vue'
 import { useRoute, useRouter } from 'vue-router'
 const route = useRoute()
 const router = useRouter()
@@ -45,57 +45,45 @@ const categoryStore = useCategoryStore()
 
 const jump = (item: { categoryCode?: string } = { categoryCode: '' }) => {
   if (!item.categoryCode) {
-    router.push({
-      name: 'categoryVideo',
-    })
+    router.push({ name: 'categoryVideo' })
     return
   }
   router.push({
     name: 'subCategoryVideo',
-    params: {
-      categoryCode: item.categoryCode,
-    },
+    params: { categoryCode: item.categoryCode },
   })
 }
 
-//分类距离顶部距离
+// 分类栏距离顶部距离
 const categoryTopDistance = ref<number>(200)
-//分类是否固定
+// 分类栏是否固定
 const categoryFxied = ref<boolean>(false)
 
-//初始化距离顶部距离
-let initScrollTop: number = 0
-//是否向下关东
-let scrollDown: boolean = true
+// 上一次滚动位置
+let initScrollTop = 0
+// 是否向下滚动
+let scrollDown = true
 const scrollHandler = (curScrollTop: number) => {
-  if (curScrollTop - initScrollTop > 0) {
-    scrollDown = true
-  } else {
-    scrollDown = false
-  }
+  scrollDown = curScrollTop - initScrollTop > 0
   initScrollTop = curScrollTop
 
   if (curScrollTop >= categoryTopDistance.value) {
     categoryFxied.value = true
-    //超过分类固定向上滚动就展示顶部导航否则不展示
-    if (scrollDown) {
-      navActionStore.setFixedHeader(false)
-    } else {
-      navActionStore.setFixedHeader(true)
-    }
+    // 当分类栏固定在顶部时，如果向下滚动则隐藏 header，向上滚动则显示
+    navActionStore.setFixedHeader(!scrollDown)
   } else {
     categoryFxied.value = false
-    //如果低于分类固定高度 顶部导航不展示
+    // 未到固定高度时始终显示 header
     navActionStore.setFixedHeader(false)
   }
 }
 
 onMounted(() => {
-  //获取分类距离顶部的距离
-  categoryTopDistance.value = document
-    .querySelector('#category-list')
-    .getBoundingClientRect().top
-  //初始化store
+  // 获取分类栏距离顶部的初始距离
+  const categoryEl = document.querySelector<HTMLElement>('#category-list')
+  categoryTopDistance.value = categoryEl?.getBoundingClientRect().top ?? 0
+
+  // 初始化导航 store
   navActionStore.setShowHeader(true)
   navActionStore.setFixedHeader(false)
   navActionStore.setFixedCategory(false)
@@ -103,7 +91,7 @@ onMounted(() => {
   navActionStore.setForceFixedHeader(false)
 
   mitter.on('windowScroll', (curScrollTop) => {
-    scrollHandler(curScrollTop)
+    scrollHandler(curScrollTop as number)
   })
 })
 
@@ -120,7 +108,7 @@ onUnmounted(() => {
     align-items: center;
     line-height: 30px;
     position: sticky;
-    top: 0px;
+    top: 0;
     height: 60px;
     background: #fff;
     z-index: 2;

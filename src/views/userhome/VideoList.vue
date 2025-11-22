@@ -1,19 +1,29 @@
 <template>
   <div class="video-panel">
     <div class="video-title-panel">
-      <div class="video-title">我的视频</div>
-      <MyTab v-model="activeTab" @clickHandler="loadVideoList" :tags="[
+      <div class="video-title">
+        我的视频
+      </div>
+      <MyTab
+        v-model="activeTab"
+        :tags="[
           { name: '最新发布' },
           { name: '最多播放' },
           { name: '最多收藏' },
-        ]"></MyTab>
+        ]"
+        @click-handler="loadVideoList"
+      />
     </div>
     <div v-if="dataSource.list && dataSource.list.length == 0">
-      <NoData msg="空间主人还没有投过视频哦~~"></NoData>
+      <NoData msg="空间主人还没有投过视频哦~~" />
     </div>
-    <DataGridList :dataSource="dataSource" v-else @loadData="loadVideoList">
+    <DataGridList
+      v-else
+      :data-source="dataSource"
+      @load-data="loadVideoList"
+    >
       <template #default="{ data }">
-        <VideoItem :data="data"> </VideoItem>
+        <VideoItem :data="data" />
       </template>
     </DataGridList>
   </div>

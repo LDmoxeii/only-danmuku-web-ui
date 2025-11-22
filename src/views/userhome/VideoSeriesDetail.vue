@@ -1,7 +1,12 @@
 <template>
   <div class="video-list-panel">
     <div class="video-title">
-      <router-link :to="`/user/${route.params.userId}/series`" class="a-link">视频列表</router-link>
+      <router-link
+        :to="`/user/${route.params.userId}/series`"
+        class="a-link"
+      >
+        视频列表
+      </router-link>
       &gt;
       {{ seriesInfo.seriesName }}
     </div>
@@ -17,24 +22,62 @@
         </div>
       </div>
       <template v-if="myself">
-        <el-button type="primary" @click="editSeries">编辑</el-button>
-        <el-button type="danger" @click="delSeries">删除</el-button>
+        <el-button
+          type="primary"
+          @click="editSeries"
+        >
+          编辑
+        </el-button>
+        <el-button
+          type="danger"
+          @click="delSeries"
+        >
+          删除
+        </el-button>
       </template>
     </div>
 
-    <VueDraggable v-model="videoList" @Update="changeSort" handle=".move-handler" class="video-list"
-      draggable=".list-item">
-      <template v-for="(item) in videoList" :key="item.seriesId">
-        <div class="video-item-add" @click="addVideo" v-if="item.seriesId == 'add'">
-          <div class="iconfont icon-add"></div>
-          <div class="add-info">添加视频</div>
-        </div>
-        <div class="list-item" v-else>
-          <div class="cover" @click="jump(item)">
-            <div class="move-handler iconfont icon-move" v-if="myself"></div>
-            <Cover :source="item.videoCover"></Cover>
+    <VueDraggable
+      v-model="videoList"
+      handle=".move-handler"
+      class="video-list"
+      draggable=".list-item"
+      @update="changeSort"
+    >
+      <template
+        v-for="(item) in videoList"
+        :key="item.seriesId"
+      >
+        <div
+          v-if="item.seriesId == 'add'"
+          class="video-item-add"
+          @click="addVideo"
+        >
+          <div class="iconfont icon-add" />
+          <div class="add-info">
+            添加视频
           </div>
-          <div class="list-name" @click="jump(item)">{{ item.videoName }}</div>
+        </div>
+        <div
+          v-else
+          class="list-item"
+        >
+          <div
+            class="cover"
+            @click="jump(item)"
+          >
+            <div
+              v-if="myself"
+              class="move-handler iconfont icon-move"
+            />
+            <Cover :source="item.videoCover" />
+          </div>
+          <div
+            class="list-name"
+            @click="jump(item)"
+          >
+            {{ item.videoName }}
+          </div>
           <div class="play-count-info">
             <div class="play-count iconfont icon-play2">
               {{ item.playCount }}
@@ -43,10 +86,16 @@
               {{ proxy.Utils.formatDate(item.createTime) }}
             </div>
             <el-dropdown>
-              <div class="iconfont icon-more" @click.stop v-show="myself"></div>
+              <div
+                v-show="myself"
+                class="iconfont icon-more"
+                @click.stop
+              />
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item @click.stop="delVideo(item)">删除</el-dropdown-item>
+                  <el-dropdown-item @click.stop="delVideo(item)">
+                    删除
+                  </el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
@@ -54,9 +103,15 @@
         </div>
       </template>
     </VueDraggable>
-    <NoData v-if="videoList.length == 0" msg="暂无视频"></NoData>
+    <NoData
+      v-if="videoList.length == 0"
+      msg="暂无视频"
+    />
 
-    <VideoSeriesEdit ref="videoSeriesEditRef" @reload="getSeriesDetail"></VideoSeriesEdit>
+    <VideoSeriesEdit
+      ref="videoSeriesEditRef"
+      @reload="getSeriesDetail"
+    />
   </div>
 </template>
 
@@ -191,10 +246,8 @@ const addVideo = () => {
           z-index: 100;
           border-radius: 5px 5px 0px 0px;
           border: 1px solid #ddd;
-          display: flex;
           align-items: center;
           justify-content: center;
-          display: none;
         }
         &:hover {
           .move-handler {
@@ -205,7 +258,6 @@ const addVideo = () => {
       .list-name {
         cursor: pointer;
         font-size: 13px;
-        margin-top: 5px;
         height: 35px;
         color: var(--text2);
         margin-top: 10px;
@@ -214,7 +266,6 @@ const addVideo = () => {
         -webkit-box-orient: vertical;
         text-overflow: -o-ellipsis-lastline;
         text-overflow: ellipsis;
-        word-break: break-word !important;
         word-break: break-all;
         line-break: anywhere;
         -webkit-line-clamp: 2;

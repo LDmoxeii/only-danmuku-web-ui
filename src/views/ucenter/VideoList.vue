@@ -1,16 +1,18 @@
 <template>
   <div class="video-tab">
-    <div class="tab">视频管理</div>
+    <div class="tab">
+      视频管理
+    </div>
     <div class="search">
       <el-input
+        v-model="videoNameFuzzy"
         clearable
         placeholder="搜索稿件"
         size="small"
-        v-model="videoNameFuzzy"
         @keyup.enter="loadVideoList"
       >
         <template #suffix>
-          <span class="iconfont icon-search"></span>
+          <span class="iconfont icon-search" />
         </template>
       </el-input>
     </div>
@@ -18,11 +20,14 @@
   <div class="video-manage">
     <div class="top-info">
       <div class="all-video-panel">
-        <div class="all-video" @click="cleanStatusLoad">
+        <div
+          class="all-video"
+          @click="cleanStatusLoad"
+        >
           全部稿件<span class="count-info">{{
             countInfo.inProgress +
-            countInfo.auditPassCount +
-            countInfo.auditFailCount
+              countInfo.auditPassCount +
+              countInfo.auditFailCount
           }}</span>
         </div>
       </div>
@@ -30,32 +35,35 @@
         <span
           :class="['item', status == -1 ? 'active' : '']"
           @click="statusLoad(-1)"
-          >进行中<span class="count-info">{{
-            countInfo.inProgress
-          }}</span></span
-        >
+        >进行中<span class="count-info">{{
+          countInfo.inProgress
+        }}</span></span>
         <el-divider direction="vertical" />
         <span
           :class="['item', status == 4 ? 'active' : '']"
           @click="statusLoad(4)"
-          >已通过<span class="count-info">{{
-            countInfo.auditPassCount
-          }}</span></span
-        >
+        >已通过<span class="count-info">{{
+          countInfo.auditPassCount
+        }}</span></span>
         <el-divider direction="vertical" />
         <span
           :class="['item', status == 5 ? 'active' : '']"
           @click="statusLoad(5)"
-          >未通过<span class="count-info">{{
-            countInfo.auditFailCount
-          }}</span></span
-        >
+        >未通过<span class="count-info">{{
+          countInfo.auditFailCount
+        }}</span></span>
       </div>
     </div>
     <div class="video-list">
-      <DataList :dataSource="dataSource" @loadData="loadVideoList">
+      <DataList
+        :data-source="dataSource"
+        @load-data="loadVideoList"
+      >
         <template #default="{ data }">
-          <VideoItem :data="data" @reload="loadVideoList"></VideoItem>
+          <VideoItem
+            :data="data"
+            @reload="loadVideoList"
+          />
         </template>
       </DataList>
     </div>
@@ -132,7 +140,7 @@ onUnmounted(() => {
 .video-tab {
   border-bottom: 1px solid #ddd;
   display: flex;
-  padding: 0px 40px;
+  padding: 0 40px;
   justify-content: space-between;
   .tab {
     cursor: pointer;
@@ -148,10 +156,10 @@ onUnmounted(() => {
 }
 .video-manage {
   margin-top: 10px;
-  padding: 0px 40px 10px 40px;
+  padding: 0 40px 10px 40px;
   .top-info {
     .count-info {
-      padding: 0px 5px;
+      padding: 0 5px;
     }
     .all-video-panel {
       display: flex;
@@ -168,7 +176,7 @@ onUnmounted(() => {
       .item {
         cursor: pointer;
         font-size: 13px;
-        margin-right: 0px;
+        margin-right: 0;
         color: var(--text2);
         &:hover {
           color: var(--blue);

@@ -1,99 +1,114 @@
 <template>
   <div>
     <Dialog
-        :show="loginStore.showLogin"
-        :buttons="dialogConfig.buttons"
-        width="1000px"
-        :showCancel="false"
-        @close="closeDialog"
-        :padding="0"
-        :draggable="false"
-        :top="100"
+      :show="loginStore.showLogin"
+      :buttons="dialogConfig.buttons"
+      width="1000px"
+      :show-cancel="false"
+      :padding="0"
+      :draggable="false"
+      :top="100"
+      @close="closeDialog"
     >
       <div class="dialog-panel">
         <div class="bg">
-          <img :src="proxy.Utils.getLocalImage('login_bg.png')" alt=""/>
+          <img
+            :src="proxy.Utils.getLocalImage('login_bg.png')"
+            alt=""
+          >
         </div>
         <el-form
-            class="login-register"
-            :model="formData"
-            :rules="rules"
-            ref="formDataRef"
+          ref="formDataRef"
+          class="login-register"
+          :model="formData"
+          :rules="rules"
         >
           <div class="tab-panel">
-            <div :class="[opType == 0 ? '' : 'active']" @click="showPanel(1)">
+            <div
+              :class="[opType == 0 ? '' : 'active']"
+              @click="showPanel(1)"
+            >
               登录
             </div>
-            <el-divider direction="vertical"/>
-            <div :class="[opType == 1 ? '' : 'active']" @click="showPanel(0)">
+            <el-divider direction="vertical" />
+            <div
+              :class="[opType == 1 ? '' : 'active']"
+              @click="showPanel(0)"
+            >
               注册
             </div>
           </div>
           <!--input输入-->
           <el-form-item prop="email">
             <el-input
-                size="large"
-                clearable
-                placeholder="请输入邮箱"
-                v-model="formData.email"
-                maxLength="150"
+              v-model="formData.email"
+              size="large"
+              clearable
+              placeholder="请输入邮箱"
+              max-length="150"
             >
               <template #prefix>
-                <span class="iconfont icon-account"></span>
+                <span class="iconfont icon-account" />
               </template>
             </el-input>
           </el-form-item>
           <!--登录密码-->
-          <el-form-item prop="password" v-if="opType == 1">
+          <el-form-item
+            v-if="opType == 1"
+            prop="password"
+          >
             <el-input
-                show-password
-                size="large"
-                placeholder="请输入密码"
-                v-model="formData.password"
+              v-model="formData.password"
+              show-password
+              size="large"
+              placeholder="请输入密码"
             >
               <template #prefix>
-                <span class="iconfont icon-password"></span>
+                <span class="iconfont icon-password" />
               </template>
             </el-input>
           </el-form-item>
           <!--注册-->
           <div v-if="opType == 0">
-            <el-form-item prop="nickName" v-if="opType == 0">
+            <el-form-item
+              v-if="opType == 0"
+              prop="nickName"
+            >
               <el-input
-                  size="large"
-                  clearable
-                  placeholder="请输入昵称"
-                  v-model="formData.nickName"
-                  maxLength="20"
+                v-model="formData.nickName"
+                size="large"
+                clearable
+                placeholder="请输入昵称"
+                max-length="20"
               >
                 <template #prefix>
-                  <span class="iconfont icon-account"></span>
+                  <span class="iconfont icon-account" />
                 </template>
               </el-input>
             </el-form-item>
             <el-form-item prop="registerPassword">
               <el-input
-                  show-password
-                  type="password"
-                  size="large"
-                  placeholder="请输入密码"
-                  v-model="formData.registerPassword"
+                v-model="formData.registerPassword"
+                show-password
+                type="password"
+                size="large"
+                placeholder="请输入密码"
               >
                 <template #prefix>
-                  <span class="iconfont icon-password"></span>
+                  <span class="iconfont icon-password" />
                 </template>
               </el-input>
             </el-form-item>
             <el-form-item prop="reRegisterPassword">
               <el-input
-                  show-password
-                  type="password"
-                  size="large"
-                  placeholder="请再次输入密码"
-                  v-model="formData.reRegisterPassword"
+                v-model="formData.reRegisterPassword"
+                show-password
+                type="password"
+                size="large"
+                placeholder="请再次输入密码"
               >
                 <template #prefix>
-                  <span class="iconfont icon-password"></span>
+                  <span class="iconfont icon-password" />
                 </template>
               </el-input>
             </el-form-item>
@@ -101,28 +116,29 @@
           <el-form-item prop="checkCode">
             <div class="check-code-panel">
               <el-input
-                  size="large"
-                  placeholder="请输入验证码"
-                  v-model="formData.checkCode"
-                  @keyup.enter="doSubmit"
+                v-model="formData.checkCode"
+                size="large"
+                placeholder="请输入验证码"
+                @keyup.enter="doSubmit"
               >
                 <template #prefix>
-                  <span class="iconfont icon-checkcode"></span>
+                  <span class="iconfont icon-checkcode" />
                 </template>
               </el-input>
               <img
-                  :src="checkCodeInfo.checkCode"
-                  class="check-code"
-                  @click="changeCheckCode()"
-               alt=""/>
+                :src="checkCodeInfo.checkCode"
+                class="check-code"
+                alt=""
+                @click="changeCheckCode()"
+              >
             </div>
           </el-form-item>
           <el-form-item class="bottom-btn">
             <el-button
-                type="primary"
-                size="large"
-                class="login-btn"
-                @click="doSubmit"
+              type="primary"
+              size="large"
+              class="login-btn"
+              @click="doSubmit"
             >
               <span v-if="opType == 0">注册</span>
               <span v-if="opType == 1">登录</span>
@@ -135,7 +151,7 @@
 </template>
 
 
-<SCRIPT_REPLACEMENT_MARK/>
+<SCRIPT_REPLACEMENT_MARK />
 <script setup lang="ts">
 import {ref, getCurrentInstance, nextTick, onMounted, onUpdated,} from "vue";
 import type {FormInstance, FormItemRule} from 'element-plus'

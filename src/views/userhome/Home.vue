@@ -1,32 +1,54 @@
 <template>
   <div class="home-body">
     <div class="left-content">
-      <HomeVideoList> </HomeVideoList>
-      <HomeSeries> </HomeSeries>
+      <HomeVideoList />
+      <HomeSeries />
     </div>
     <div class="right-content">
       <div class="part-item">
-        <div class="part-title">公告</div>
+        <div class="part-title">
+          公告
+        </div>
         <div
           class="part-content"
           v-html="userInfo.noticeInfo || '暂无公告'"
-        ></div>
+        />
       </div>
       <div class="part-item part-item2">
-        <div class="part-title">个人资料</div>
+        <div class="part-title">
+          个人资料
+        </div>
         <div class="part-content">
           <div class="user-info-panel">
             <div class="user-info-item">
-              <div class="label">UID</div>
-              <div class="value">{{ userInfo.userId }}</div>
+              <div class="label">
+                UID
+              </div>
+              <div class="value">
+                {{ userInfo.userId }}
+              </div>
             </div>
-            <div v-if="userInfo.birthday" class="user-info-item">
-              <div class="label">生日</div>
-              <div class="value">{{ userInfo.birthday }}</div>
+            <div
+              v-if="userInfo.birthday"
+              class="user-info-item"
+            >
+              <div class="label">
+                生日
+              </div>
+              <div class="value">
+                {{ userInfo.birthday }}
+              </div>
             </div>
-            <div v-if="userInfo.birthday" class="user-info-item">
-              <div class="label">学校</div>
-              <div class="value">{{ userInfo.school }}</div>
+            <div
+              v-if="userInfo.birthday"
+              class="user-info-item"
+            >
+              <div class="label">
+                学校
+              </div>
+              <div class="value">
+                {{ userInfo.school }}
+              </div>
             </div>
           </div>
         </div>
@@ -38,11 +60,7 @@
 <script setup lang="ts">
 import HomeVideoList from './HomeVideoList.vue'
 import HomeSeries from './HomeSeries.vue'
-import { getCurrentInstance, inject } from 'vue'
-const { proxy } = getCurrentInstance() as any
-import { useRoute, useRouter } from 'vue-router'
-const route = useRoute()
-const router = useRouter()
+import { inject } from 'vue'
 
 const userInfo = inject<any>('userInfo')
 </script>

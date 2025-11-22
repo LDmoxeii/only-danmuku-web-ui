@@ -2,14 +2,23 @@
   <div class="hot-container">
     <div class="hot-part-title-panel">
       <div class="hot-24">
-        <div class="iconfont icon-hot"></div>
+        <div class="iconfont icon-hot" />
         <div>24小时热榜</div>
       </div>
     </div>
     <div class="data-list">
-      <DataLoadMoreList :dataSource="dataSource" :loading="loadingData" @loadData="loadDataList" :gridCount="2">
+      <DataLoadMoreList
+        :data-source="dataSource"
+        :loading="loadingData"
+        :grid-count="2"
+        @load-data="loadDataList"
+      >
         <template #default="{ data }">
-          <VideoItem :data="data" :marginTop="20" :layoutType="1"></VideoItem>
+          <VideoItem
+            :data="data"
+            :margin-top="20"
+            :layout-type="1"
+          />
         </template>
       </DataLoadMoreList>
     </div>

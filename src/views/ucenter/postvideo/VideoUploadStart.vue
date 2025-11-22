@@ -1,30 +1,52 @@
 <template>
   <div class="uploader-start-panel">
-    <el-upload class="uploader-start" drag :show-file-list="false" :http-request="addFile" :before-upload="startUpload"
-      :accept="proxy.videoAccept">
+    <el-upload
+      class="uploader-start"
+      drag
+      :show-file-list="false"
+      :http-request="addFile"
+      :before-upload="startUpload"
+      :accept="proxy.videoAccept"
+    >
       <div class="upload-handler">
-        <div class="iconfont icon-upload"></div>
-        <div class="info">拖拽到此处也可上传</div>
-        <div class="upload-btn">上传视频</div>
+        <div class="iconfont icon-upload" />
+        <div class="info">
+          拖拽到此处也可上传
+        </div>
+        <div class="upload-btn">
+          上传视频
+        </div>
       </div>
     </el-upload>
   </div>
 
   <div class="upload-explain">
-    <el-popover placement="top-end" :width="400" trigger="hover">
+    <el-popover
+      placement="top-end"
+      :width="400"
+      trigger="hover"
+    >
       <template #reference>
-        <div class="item">视频大小</div>
+        <div class="item">
+          视频大小
+        </div>
       </template>
       <div>
-        <p>网页端上传的文件大小上限为{{sysSettingStore.sysSetting.videoSize}}MB</p>
+        <p>网页端上传的文件大小上限为{{ sysSettingStore.sysSetting.videoSize }}MB</p>
         <p>视频内容时长最大3小时</p>
         <p>过长或过大视频建议拆分后使用分p或合集功能进行投稿～</p>
       </div>
     </el-popover>
 
-    <el-popover placement="top-end" :width="420" trigger="hover">
+    <el-popover
+      placement="top-end"
+      :width="420"
+      trigger="hover"
+    >
       <template #reference>
-        <div class="item">视频格式</div>
+        <div class="item">
+          视频格式
+        </div>
       </template>
       <div>
         <p>推荐上传的格式为：mp4</p>
@@ -33,9 +55,15 @@
       </div>
     </el-popover>
 
-    <el-popover placement="top-end" :width="350" trigger="hover">
+    <el-popover
+      placement="top-end"
+      :width="350"
+      trigger="hover"
+    >
       <template #reference>
-        <div class="item">视频码率</div>
+        <div class="item">
+          视频码率
+        </div>
       </template>
       <div>
         <p>分辨率最大支持 8192*4320</p>
@@ -79,12 +107,12 @@ const startUpload = (file: any) => {
     }
     .upload-handler {
       color: #999;
-      padding: 50px 0px;
+      padding: 50px 0;
       .icon-upload {
         font-size: 30px;
       }
       .info {
-        margin: 20px 0px;
+        margin: 20px 0;
       }
       .upload-btn {
         color: #fff;
@@ -109,7 +137,7 @@ const startUpload = (file: any) => {
     justify-content: center;
     .item {
       color: var(--text3);
-      padding: 0px 20px;
+      padding: 0 20px;
       cursor: pointer;
     }
   }

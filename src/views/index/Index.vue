@@ -1,39 +1,82 @@
 <template>
-  <div class="commend-panel" ref="commendPanelRef">
-    <div class="carousel-panel" :style="{
+  <div
+    ref="commendPanelRef"
+    class="commend-panel"
+  >
+    <div
+      class="carousel-panel"
+      :style="{
         width: carouselWidth + 'px',
         height: carouselWidth * 0.6 + 'px',
-      }">
-      <el-carousel :height="carouselWidth * 0.6 + 'px'" indicator-position="none" arrow="never" ref="elCarouselRef"
-        @change="carouselChange">
-        <el-carousel-item v-for="(item, index) in carouselVideoList" :key="item.videoId || index" :name="index + ''">
+      }"
+    >
+      <el-carousel
+        ref="elCarouselRef"
+        :height="carouselWidth * 0.6 + 'px'"
+        indicator-position="none"
+        arrow="never"
+        @change="carouselChange"
+      >
+        <el-carousel-item
+          v-for="(item, index) in carouselVideoList"
+          :key="item.videoId || index"
+          :name="index + ''"
+        >
           <div class="roll-image">
-            <router-link :to="`/video/${carouselVideoList[carouselIndex].videoId}`" target="_blank">
-              <img :src="`${sourcePath}${item.videoCover}`"  alt=""/>
+            <router-link
+              :to="`/video/${carouselVideoList[carouselIndex].videoId}`"
+              target="_blank"
+            >
+              <img
+                :src="`${sourcePath}${item.videoCover}`"
+                alt=""
+              >
             </router-link>
           </div>
         </el-carousel-item>
       </el-carousel>
-      <div class="carousel-bottom" v-if="carouselVideoList.length > 0">
+      <div
+        v-if="carouselVideoList.length > 0"
+        class="carousel-bottom"
+      >
         <div class="name-op">
-          <router-link class="video-name" :to="`/video/${carouselVideoList[carouselIndex].videoId}`"
-            target="_blank">{{ carouselVideoList[carouselIndex].videoName }}</router-link>
+          <router-link
+            class="video-name"
+            :to="`/video/${carouselVideoList[carouselIndex].videoId}`"
+            target="_blank"
+          >
+            {{ carouselVideoList[carouselIndex].videoName }}
+          </router-link>
           <div class="change-btn">
-            <span class="iconfont icon-right" @click="preCarousel"></span>
-            <span class="iconfont icon-left" @click="nextCarousel"></span>
+            <span
+              class="iconfont icon-right"
+              @click="preCarousel"
+            />
+            <span
+              class="iconfont icon-left"
+              @click="nextCarousel"
+            />
           </div>
         </div>
         <div class="dtos">
-          <div :class="['dto-item', carouselIndex == item - 1 ? 'active' : '']" v-for="item in carouselVideoList.length" :key="item"
-            @click="setCarousel(item)"></div>
+          <div
+            v-for="item in carouselVideoList.length"
+            :key="item"
+            :class="['dto-item', carouselIndex == item - 1 ? 'active' : '']"
+            @click="setCarousel(item)"
+          />
         </div>
       </div>
     </div>
     <div class="video-list">
-      <VideoItem v-for="item in commendVideoList" :key="item.videoId" :data="item"></VideoItem>
+      <VideoItem
+        v-for="item in commendVideoList"
+        :key="item.videoId"
+        :data="item"
+      />
     </div>
   </div>
-  <VideoList></VideoList>
+  <VideoList />
 </template>
 
 <script setup lang="ts">

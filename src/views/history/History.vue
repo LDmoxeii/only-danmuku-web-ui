@@ -1,19 +1,37 @@
 <template>
   <div class="history-list">
     <div class="top-info">
-      <div class="iconfont icon-wating">历史记录</div>
+      <div class="iconfont icon-wating">
+        历史记录
+      </div>
       <div>
-        <el-button type="primary" @click="cleanAll">清空历史</el-button>
+        <el-button
+          type="primary"
+          @click="cleanAll"
+        >
+          清空历史
+        </el-button>
       </div>
     </div>
     <el-timeline>
       <div class="data-list">
-        <DataLoadMoreList :dataSource="dataSource" :loading="loadingData" @loadData="loadDataList" layoutType="line">
+        <DataLoadMoreList
+          :data-source="dataSource"
+          :loading="loadingData"
+          layout-type="line"
+          @load-data="loadDataList"
+        >
           <template #default="{ data }">
-            <el-timeline-item :timestamp="proxy.Utils.formatDate(data.lastUpdateTime)" placement="top">
+            <el-timeline-item
+              :timestamp="proxy.Utils.formatDate(data.lastUpdateTime)"
+              placement="top"
+            >
               <div class="history-item">
-                <div class="cover" @click="goDetail(data.videoId)">
-                  <Cover :source="data.videoCover"></Cover>
+                <div
+                  class="cover"
+                  @click="goDetail(data.videoId)"
+                >
+                  <Cover :source="data.videoCover" />
                 </div>
                 <div class="video-info">
                   <div @click="goDetail(data.videoId)">
@@ -21,7 +39,10 @@
                   </div>
                 </div>
                 <div class="op-btns">
-                  <div class="iconfont icon-delete" @click="delHisotry(data.videoId)"></div>
+                  <div
+                    class="iconfont icon-delete"
+                    @click="delHisotry(data.videoId)"
+                  />
                 </div>
               </div>
             </el-timeline-item>

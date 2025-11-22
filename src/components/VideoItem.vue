@@ -1,28 +1,63 @@
 <template>
-  <div ref="videoItemRef" :class="['video-item', layoutType == 1 ? 'video-item2' : '']"
-    :style="{ 'margin-top': marginTop + 'px' }">
-    <router-link :to="`/video/${data.videoId}`" target="_blank">
-      <div class="cover" @click="showDetail">
-        <Cover :source="data.videoCover"></Cover>
+  <div
+    ref="videoItemRef"
+    :class="['video-item', layoutType == 1 ? 'video-item2' : '']"
+    :style="{ 'margin-top': marginTop + 'px' }"
+  >
+    <router-link
+      :to="`/video/${data.videoId}`"
+      target="_blank"
+    >
+      <div
+        class="cover"
+        @click="showDetail"
+      >
+        <Cover :source="data.videoCover" />
         <div class="shade">
-          <div class="play-count" v-show="layoutType == 0">
-            <div class="iconfont icon-play2">{{ data.playCount }}</div>
-            <div class="iconfont icon-danmu">{{ data.danmuCount }}</div>
+          <div
+            v-show="layoutType == 0"
+            class="play-count"
+          >
+            <div class="iconfont icon-play2">
+              {{ data.playCount }}
+            </div>
+            <div class="iconfont icon-danmu">
+              {{ data.danmuCount }}
+            </div>
           </div>
-          <div class="play-time">{{ data.playTime }}</div>
+          <div class="play-time">
+            {{ data.playTime }}
+          </div>
         </div>
       </div>
     </router-link>
     <div class="video-info">
       <!--高亮html展示-->
-      <router-link class="title" :to="`/video/${data.videoId}`" target="_blank">{{ data.videoName }}</router-link>
-      <router-link class="user-name" :to="`/user/${data.userId}`" target="_blank">
+      <router-link
+        class="title"
+        :to="`/video/${data.videoId}`"
+        target="_blank"
+      >
+        {{ data.videoName }}
+      </router-link>
+      <router-link
+        class="user-name"
+        :to="`/user/${data.userId}`"
+        target="_blank"
+      >
         <span class="iconfont icon-upzhu">{{ data.nickName }} · </span>
         <span>{{ proxy.Utils.formatDate(data.createTime) }}</span>
       </router-link>
-      <div class="play-count" v-show="layoutType == 1">
-        <div class="iconfont icon-play2">{{ data.playCount }}</div>
-        <div class="iconfont icon-danmu">{{ data.danmuCount }}</div>
+      <div
+        v-show="layoutType == 1"
+        class="play-count"
+      >
+        <div class="iconfont icon-play2">
+          {{ data.playCount }}
+        </div>
+        <div class="iconfont icon-danmu">
+          {{ data.danmuCount }}
+        </div>
       </div>
     </div>
   </div>
@@ -162,7 +197,7 @@ const showDetail = () => {}
     flex: 1;
     margin-left: 15px;
     .title {
-      margin-top: 0px;
+      margin-top: 0;
     }
     .play-count {
       display: flex;

@@ -1,24 +1,28 @@
 <template>
   <div class="comment-panel">
-    <VideoSearchSelect @loadData="loadData4VideoSelect"></VideoSearchSelect>
+    <VideoSearchSelect @load-data="loadData4VideoSelect" />
     <Table
       ref="tableInfoRef"
       :columns="columns"
       :fetch="loadDataList"
-      :dataSource="tableData"
+      :data-source="tableData"
       :options="tableOptions"
-      :extHeight="tableOptions.extHeight"
+      :ext-height="tableOptions.extHeight"
     >
       <template #slotComment="{ row }">
         <div class="comment-info">
-          <Avatar :avatar="row.avatar" :userId="row.userId"></Avatar>
+          <Avatar
+            :avatar="row.avatar"
+            :user-id="row.userId"
+          />
           <div class="comment">
             <div>
               <router-link
                 target="_blank"
                 class="a-link nick-name"
                 :to="`/user/${row.userId}`"
-                >{{ row.nickName }}
+              >
+                {{ row.nickName }}
               </router-link>
               <template v-if="row.replyUserId">
                 回复@
@@ -26,25 +30,33 @@
                   target="_blank"
                   class="a-link nick-name"
                   :to="`/user/${row.replyUserId}`"
-                  >{{ row.replyNickName }} </router-link
-                >的评论
+                >
+                  {{ row.replyNickName }}
+                </router-link>的评论
               </template>
             </div>
 
-            <div class="content">{{ row.content }}</div>
-            <div v-if="row.imgPath" class="image-show">
+            <div class="content">
+              {{ row.content }}
+            </div>
+            <div
+              v-if="row.imgPath"
+              class="image-show"
+            >
               <Cover
                 :source="row.imgPath + proxy.imageThumbnailSuffix"
                 :preview="true"
                 fit="cover"
-              ></Cover>
+              />
             </div>
             <div class="time-info">
-              <div class="time">{{ row.postTime }}</div>
+              <div class="time">
+                {{ row.postTime }}
+              </div>
               <div
                 class="iconfont icon-delete"
                 @click="delComment(row.commentId)"
-              ></div>
+              />
             </div>
           </div>
         </div>
@@ -56,8 +68,10 @@
           target="_blank"
           class="a-link"
         >
-          <Cover :source="row.videoCover"></Cover>
-          <div class="video-name">{{ row.videoName }}</div>
+          <Cover :source="row.videoCover" />
+          <div class="video-name">
+            {{ row.videoName }}
+          </div>
         </router-link>
       </template>
     </Table>

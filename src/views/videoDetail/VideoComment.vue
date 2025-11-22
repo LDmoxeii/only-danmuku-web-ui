@@ -5,34 +5,34 @@
         评论<span class="comment-count">{{ dataSource.totalCount }}</span>
       </div>
       <div
-          :class="['order-type-item', orderType == 0 ? 'active' : '']"
-          @click="changeOrder(0)"
+        :class="['order-type-item', orderType == 0 ? 'active' : '']"
+        @click="changeOrder(0)"
       >
         最热
       </div>
-      <el-divider direction="vertical"/>
+      <el-divider direction="vertical" />
       <div
-          :class="['order-type-item', orderType == 1 ? 'active' : '']"
-          @click="changeOrder(1)"
+        :class="['order-type-item', orderType == 1 ? 'active' : '']"
+        @click="changeOrder(1)"
       >
         最新
       </div>
     </div>
     <div class="comment-content-panel">
       <VideoCommentSend
-          :sendType="0"
-          :showSend="showComment"
-      ></VideoCommentSend>
+        :send-type="0"
+        :show-send="showComment"
+      />
       <div class="comment-list">
         <DataLoadMoreList
-            :dataSource="dataSource"
-            :loading="loadingData"
-            @loadData="loadCommentList"
-            layoutType="list"
-            loadEndMsg="没有更多评论"
+          :data-source="dataSource"
+          :loading="loadingData"
+          layout-type="list"
+          load-end-msg="没有更多评论"
+          @load-data="loadCommentList"
         >
           <template #default="{ data }">
-            <VideoCommentItem :data="data"></VideoCommentItem>
+            <VideoCommentItem :data="data" />
           </template>
         </DataLoadMoreList>
       </div>
@@ -45,14 +45,10 @@ import { mitter } from "@/eventbus/eventBus";
 import { ACTION_TYPE } from "@/utils/Constants";
 import VideoCommentItem from "./VideoCommentItem.vue";
 import VideoCommentSend from "./VideoCommentSend.vue";
-import { computed, getCurrentInstance, inject, onMounted, onUnmounted, provide, ref } from "vue";
-import {useRoute, useRouter} from "vue-router";
-import {useLoginStore} from "@/stores/loginStore";
+import { computed, inject, onMounted, onUnmounted, provide, ref } from "vue";
+import {useRoute} from "vue-router";
 
-const { proxy } = getCurrentInstance() as any;
 const route = useRoute();
-const router = useRouter();
-const loginStore = useLoginStore();
 
 //判断是否显示弹幕
 const videoInfo = inject<any>("videoInfo");

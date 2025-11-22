@@ -1,15 +1,28 @@
 <template>
-  <div class="video-item" :style="{ 'margin-top': marginTop + 'px' }">
+  <div
+    class="video-item"
+    :style="{ 'margin-top': marginTop + 'px' }"
+  >
     <div class="cover">
-      <router-link :to="`/video/${data.videoId}`" target="_blank">
-        <Cover :source="data.videoCover"></Cover>
+      <router-link
+        :to="`/video/${data.videoId}`"
+        target="_blank"
+      >
+        <Cover :source="data.videoCover" />
       </router-link>
     </div>
     <div class="video-info">
-      <router-link class="title" :to="`/video/${data.videoId}`" target="_blank">{{ data.videoName }}
+      <router-link
+        class="title"
+        :to="`/video/${data.videoId}`"
+        target="_blank"
+      >
+        {{ data.videoName }}
       </router-link>
       <div class="play-count">
-        <div class="iconfont icon-play2">{{ data.playCount }}</div>
+        <div class="iconfont icon-play2">
+          {{ data.playCount }}
+        </div>
         <div class="create-time">
           {{ proxy.Utils.formatDate(data.createTime) }}
         </div>
@@ -22,7 +35,7 @@
 import { getCurrentInstance } from 'vue'
 const { proxy } = getCurrentInstance() as any
 
-const props = defineProps({
+defineProps({
   data: {
     type: Object,
     default: {},
@@ -55,7 +68,6 @@ const props = defineProps({
       -webkit-box-orient: vertical;
       text-overflow: -o-ellipsis-lastline;
       text-overflow: ellipsis;
-      word-break: break-word !important;
       word-break: break-all;
       line-break: anywhere;
       -webkit-line-clamp: 2;

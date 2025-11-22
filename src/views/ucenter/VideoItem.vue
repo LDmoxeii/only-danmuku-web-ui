@@ -1,7 +1,10 @@
 <template>
-  <div class="video-item" ref="videoItemRef">
+  <div
+    ref="videoItemRef"
+    class="video-item"
+  >
     <div class="video-cover">
-      <Cover :source="data.videoCover"></Cover>
+      <Cover :source="data.videoCover" />
       <div class="duration">
         {{ proxy.Utils.convertSecondsToHMS(data.duration) }}
       </div>
@@ -14,18 +17,23 @@
           :to="`/video/${data.videoId}`"
           class="a-link"
           target="_blank"
-          >{{ data.videoName }}</router-link
         >
+          {{ data.videoName }}
+        </router-link>
         <span
           v-if="data.status == 1 || data.status == 3"
           class="status waiting"
-          >{{ data.statusName }}</span
-        >
-        <span v-if="data.status == 2 || data.status == 5" class="status fail">{{
+        >{{ data.statusName }}</span>
+        <span
+          v-if="data.status == 2 || data.status == 5"
+          class="status fail"
+        >{{
           data.statusName
         }}</span>
       </div>
-      <div class="video-time">{{ data.createTime }}</div>
+      <div class="video-time">
+        {{ data.createTime }}
+      </div>
       <div class="video-count">
         <span class="iconfont icon-play-solid">{{ data.playCount || 0 }}</span>
         <span class="iconfont icon-like-solid">{{ data.likeCount || 0 }}</span>
@@ -46,7 +54,7 @@
         :class="['btn edit-btn', [1, 3].includes(data.status) ? 'disable' : '']"
         @click="jump('editVideo')"
       >
-        <span class="iconfont icon-edit"></span>编辑
+        <span class="iconfont icon-edit" />编辑
       </div>
       <el-popover
         class="cust-popover"
@@ -57,7 +65,7 @@
       >
         <template #reference>
           <div class="btn more-btn">
-            <span class="iconfont icon-more"></span>
+            <span class="iconfont icon-more" />
           </div>
         </template>
         <div class="more-edit-panel">
@@ -69,31 +77,48 @@
               ]"
               @click="jump('editVideo')"
             >
-              <div class="iconfont icon-edit"></div>
-              <div class="title">编辑稿件</div>
+              <div class="iconfont icon-edit" />
+              <div class="title">
+                编辑稿件
+              </div>
             </div>
-            <div class="more-edit-item" @click="jump('danmu')">
-              <div class="iconfont icon-danmu"></div>
-              <div class="title">弹幕管理</div>
+            <div
+              class="more-edit-item"
+              @click="jump('danmu')"
+            >
+              <div class="iconfont icon-danmu" />
+              <div class="title">
+                弹幕管理
+              </div>
             </div>
-            <div class="more-edit-item" @click="jump('comment')">
-              <div class="iconfont icon-hudong"></div>
-              <div class="title">评论管理</div>
+            <div
+              class="more-edit-item"
+              @click="jump('comment')"
+            >
+              <div class="iconfont icon-hudong" />
+              <div class="title">
+                评论管理
+              </div>
             </div>
             <div class="interaction-op">
               <el-checkbox-group
                 v-model="interactionInfo"
                 @change="saveInteractionInfo"
               >
-                <el-checkbox value="0">关闭弹幕</el-checkbox>
-                <el-checkbox value="1">关闭评论</el-checkbox>
+                <el-checkbox value="0">
+                  关闭弹幕
+                </el-checkbox>
+                <el-checkbox value="1">
+                  关闭评论
+                </el-checkbox>
               </el-checkbox-group>
             </div>
           </div>
           <div class="del-btn">
-            <span class="iconfont icon-delete2" @click="deleteVideo"
-              >删除稿件</span
-            >
+            <span
+              class="iconfont icon-delete2"
+              @click="deleteVideo"
+            >删除稿件</span>
           </div>
         </div>
       </el-popover>

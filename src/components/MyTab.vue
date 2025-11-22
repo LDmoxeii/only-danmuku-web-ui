@@ -1,9 +1,9 @@
 <template>
   <div class="tab-list">
     <div
-      :class="['tab-item', index == modelValue ? 'active' : '']"
       v-for="(item, index) in tags"
       :key="index"
+      :class="['tab-item', index == modelValue ? 'active' : '']"
       @click="selectTab(index)"
     >
       {{ item.name }}
@@ -41,7 +41,7 @@ const selectTab = (index: number) => {
     cursor: pointer;
     font-size: 13px;
     &:last-child {
-      margin-right: 0px;
+      margin-right: 0;
     }
   }
   .active {
@@ -52,7 +52,7 @@ const selectTab = (index: number) => {
       position: absolute;
       content: "";
       left: 50%;
-      bottom: 0px;
+      bottom: 0;
       transform: translateX(-50%);
       margin-left: -3px;
       border-bottom: 3px solid var(--blue3);

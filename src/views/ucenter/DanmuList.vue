@@ -1,23 +1,43 @@
 <template>
   <div class="danmu-panel">
-    <VideoSearchSelect @loadData="loadData4VideoSelect"></VideoSearchSelect>
-    <Table ref="tableInfoRef" :columns="columns" :fetch="loadDataList" :dataSource="tableData" :options="tableOptions"
-           :extHeight="tableOptions.extHeight">
-
+    <VideoSearchSelect @load-data="loadData4VideoSelect" />
+    <Table
+      ref="tableInfoRef"
+      :columns="columns"
+      :fetch="loadDataList"
+      :data-source="tableData"
+      :options="tableOptions"
+      :ext-height="tableOptions.extHeight"
+    >
       <template #slotNickName="{row}">
-        <router-link target="_blank" class="nick-name" :to="`/user/${row.userId}`">{{ row.nickName }}</router-link>
+        <router-link
+          target="_blank"
+          class="nick-name"
+          :to="`/user/${row.userId}`"
+        >
+          {{ row.nickName }}
+        </router-link>
       </template>
       <template #time="{ row }">
         {{ proxy.Utils.convertSecondsToHMS(Math.round(row.time)) }}
       </template>
 
       <template #slotOperation="{ row }">
-        <a href="javascript:void(0)" class="a-link" @click="delDanmu(row.danmuId)">删除</a>
+        <a
+          href="javascript:void(0)"
+          class="a-link"
+          @click="delDanmu(row.danmuId)"
+        >删除</a>
       </template>
 
       <template #slotText="{row}">
         <div>{{ row.text }}</div>
-        <router-link target="_blank" class="video-info" :to="`/video/${row.videoId}`">视频：{{ row.videoName }}
+        <router-link
+          target="_blank"
+          class="video-info"
+          :to="`/video/${row.videoId}`"
+        >
+          视频：{{ row.videoName }}
         </router-link>
       </template>
     </Table>

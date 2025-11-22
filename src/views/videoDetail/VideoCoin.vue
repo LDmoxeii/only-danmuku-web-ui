@@ -1,23 +1,45 @@
 <template>
-  <Dialog :show="dialogConfig.show" :buttons="dialogConfig.buttons" width="400px" :showCancel="false" :top="200"
-    @close="dialogConfig.show = false">
+  <Dialog
+    :show="dialogConfig.show"
+    :buttons="dialogConfig.buttons"
+    width="400px"
+    :show-cancel="false"
+    :top="200"
+    @close="dialogConfig.show = false"
+  >
     <div class="cion-panel">
-      <div class="title-info">给UP主投上 <span class="coin-count">{{coinCount}}</span> 枚硬币</div>
+      <div class="title-info">
+        给UP主投上 <span class="coin-count">{{ coinCount }}</span> 枚硬币
+      </div>
       <div class="coin-list">
-        <div :class="['coin-item',coinCount==1?'acitve':'']" @click="setCoinCount(1)">
-          <img :src="proxy.Utils.getLocalImage('coin1.png')">
-          <div class="coin-count-inner">1硬币</div>
+        <div
+          :class="['coin-item',coinCount==1?'acitve':'']"
+          @click="setCoinCount(1)"
+        >
+          <img :src="proxy.Utils.getLocalImage('coin1.png')" alt="">
+          <div class="coin-count-inner">
+            1硬币
+          </div>
         </div>
-        <div :class="['coin-item',coinCount==2?'acitve':'']" @click="setCoinCount(2)">
-          <img :src="proxy.Utils.getLocalImage('coin2.png')">
-          <div class="coin-count-inner">2硬币</div>
+        <div
+          :class="['coin-item',coinCount==2?'acitve':'']"
+          @click="setCoinCount(2)"
+        >
+          <img :src="proxy.Utils.getLocalImage('coin2.png')" alt="">
+          <div class="coin-count-inner">
+            2硬币
+          </div>
         </div>
       </div>
       <div class="sub-btn">
-        <el-button type="primary" @click="submitCoin">确定</el-button>
+        <el-button
+          type="primary"
+          @click="submitCoin"
+        >
+          确定
+        </el-button>
       </div>
     </div>
-
   </Dialog>
 </template>
 
@@ -25,8 +47,9 @@
 import { ACTION_TYPE } from '@/utils/Constants'
 import { doAction as apiDoAction } from '@/api/userAction'
 
-import { ref, reactive, getCurrentInstance, nextTick, inject } from 'vue'
+import { ref, getCurrentInstance, inject } from 'vue'
 import { useRoute } from 'vue-router'
+import Dialog from "@/components/Dialog.vue";
 const { proxy } = getCurrentInstance() as any
 const route = useRoute()
 
@@ -67,7 +90,7 @@ defineExpose({
     font-size: 16px;
     .coin-count {
       font-size: 18px;
-      padding: 0px 3px;
+      padding: 0 3px;
       color: var(--blue2);
     }
   }
@@ -107,7 +130,7 @@ defineExpose({
   }
   .sub-btn {
     text-align: center;
-    margin: 30px 0px 5px 0px;
+    margin: 30px 0 5px 0;
   }
 }
 </style>

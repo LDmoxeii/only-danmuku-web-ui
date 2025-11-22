@@ -1,27 +1,47 @@
 <template>
   <div class="video-panel">
     <div class="video-title-panel">
-      <div class="video-title">我的收藏</div>
+      <div class="video-title">
+        我的收藏
+      </div>
     </div>
     <div v-if="dataSource.list && dataSource.list.length == 0">
-      <NoData msg="空间主人还没有收藏视频哦~~"></NoData>
+      <NoData msg="空间主人还没有收藏视频哦~~" />
     </div>
-    <DataGridList :dataSource="dataSource" v-else @loadData="loadVideoList">
+    <DataGridList
+      v-else
+      :data-source="dataSource"
+      @load-data="loadVideoList"
+    >
       <template #default="{ data }">
         <div class="data-item">
-          <div class="cover" @click="jump(data)">
-            <Cover :source="data.videoCover"></Cover>
+          <div
+            class="cover"
+            @click="jump(data)"
+          >
+            <Cover :source="data.videoCover" />
           </div>
-          <div class="video-name" @click="jump(data)">{{ data.videoName||"已失效视频" }}</div>
+          <div
+            class="video-name"
+            @click="jump(data)"
+          >
+            {{ data.videoName||"已失效视频" }}
+          </div>
           <div class="collection-info">
             <div class="collection-time">
               收藏于： {{ proxy.Utils.formatDate(data.actionTime) }}
             </div>
             <el-dropdown>
-              <div class="iconfont icon-more" @click.stop v-show="myself"></div>
+              <div
+                v-show="myself"
+                class="iconfont icon-more"
+                @click.stop
+              />
               <template #dropdown>
                 <el-dropdown-menu>
-                  <el-dropdown-item @click.stop="cancelCollection(data)">取消收藏</el-dropdown-item>
+                  <el-dropdown-item @click.stop="cancelCollection(data)">
+                    取消收藏
+                  </el-dropdown-item>
                 </el-dropdown-menu>
               </template>
             </el-dropdown>
@@ -96,15 +116,12 @@ const jump = (item: any) => {
     .video-name {
       height: 35px;
       font-size: 13px;
-      margin-top: 5px;
       color: var(--text2);
-      margin-top: 10px;
       display: -webkit-box;
       overflow: hidden;
       -webkit-box-orient: vertical;
       text-overflow: -o-ellipsis-lastline;
       text-overflow: ellipsis;
-      word-break: break-word !important;
       word-break: break-all;
       line-break: anywhere;
       -webkit-line-clamp: 2;

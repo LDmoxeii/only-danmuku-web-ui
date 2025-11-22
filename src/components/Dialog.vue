@@ -10,18 +10,32 @@
     @close="close"
   >
     <template #header>
-      <div v-if="title" class="title">{{ title }}</div>
-      <slot v-else name="header"></slot>
+      <div
+        v-if="title"
+        class="title"
+      >
+        {{ title }}
+      </div>
+      <slot
+        v-else
+        name="header"
+      />
     </template>
     <div
       class="dialog-body"
       :style="{ 'max-height': maxHeight + 'px', padding: padding + 'px' }"
     >
-      <slot></slot>
+      <slot />
     </div>
     <template v-if="(buttons && buttons.length > 0) || showCancel">
       <div class="dialog-footer">
-        <el-button link @click="close" v-if="showCancel"> 取消 </el-button>
+        <el-button
+          v-if="showCancel"
+          link
+          @click="close"
+        >
+          取消
+        </el-button>
         <el-button
           v-for="(btn, index) in buttons"
           :key="index"
@@ -92,7 +106,7 @@ const close = (): void => {
 
 <style lang="scss">
 .cust-dialog {
-  padding: 0px !important;
+  padding: 0 !important;
   margin-bottom: 5px !important;
   .el-dialog__header {
     padding: 16px;

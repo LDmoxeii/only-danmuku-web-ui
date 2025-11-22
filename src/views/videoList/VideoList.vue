@@ -1,8 +1,16 @@
 <template>
   <div class="data-list">
-    <DataLoadMoreList :dataSource="dataSource" :loading="loadingData" @loadData="loadDataList">
+    <DataLoadMoreList
+      :data-source="dataSource"
+      :loading="loadingData"
+      @load-data="loadDataList"
+    >
       <template #default="{ data }">
-        <VideoItem :data="data" :marginTop="20" ref="videoItemRef"></VideoItem>
+        <VideoItem
+          ref="videoItemRef"
+          :data="data"
+          :margin-top="20"
+        />
       </template>
     </DataLoadMoreList>
   </div>
@@ -12,21 +20,12 @@
 import { useCategoryStore } from '@/stores/categoryStore'
 const categoryStore = useCategoryStore()
 
-import { mitter } from '@/eventbus/eventBus'
 import {
   ref,
-  reactive,
-  getCurrentInstance,
-  nextTick,
   watch,
-  inject,
-  onMounted,
-  onUnmounted,
 } from 'vue'
-const { proxy } = getCurrentInstance() as any
-import { useRoute, useRouter } from 'vue-router'
+import { useRoute } from 'vue-router'
 const route = useRoute()
-const router = useRouter()
 import { loadVideo as apiLoadVideo } from '@/api/video'
 
 const categoryMap: any = categoryStore.categoryMap
@@ -78,7 +77,7 @@ const initData = () => {
 const categoryInit = ref<boolean>(false)
 watch(
   () => route.params,
-  (newVal, oldVal) => {
+  (newVal) => {
     if (newVal) {
       if (!categoryInit.value) {
         return
@@ -92,7 +91,7 @@ watch(
 
 watch(
   () => categoryStore.categoryMap,
-  (newVal, oldVal) => {
+  (newVal) => {
     if (!newVal || Object.keys(newVal).length == 0) {
       return
     }

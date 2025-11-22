@@ -1,50 +1,124 @@
 <template>
   <div class="upload-video-panel">
-    <VideoUploader ref="videoUploaderRef"> </VideoUploader>
-    <div v-if="startUpload" class="video-form">
-      <el-form :model="formData" :rules="rules" ref="formDataRef" label-width="70px" @submit.prevent>
-        <el-form-item label="封面" prop="videoCover">
-          <ImageCoverSelect :coverWidth="200" :cutWidth="680" :scale="0.6" :coverImage="formData.videoCover">
-          </ImageCoverSelect>
+    <VideoUploader ref="videoUploaderRef" />
+    <div
+      v-if="startUpload"
+      class="video-form"
+    >
+      <el-form
+        ref="formDataRef"
+        :model="formData"
+        :rules="rules"
+        label-width="70px"
+        @submit.prevent
+      >
+        <el-form-item
+          label="封面"
+          prop="videoCover"
+        >
+          <ImageCoverSelect
+            :cover-width="200"
+            :cut-width="680"
+            :scale="0.6"
+            :cover-image="formData.videoCover"
+          />
         </el-form-item>
         <!--input输入-->
-        <el-form-item label="标题" prop="videoName">
-          <el-input clearable placeholder="请输入标题" v-model="formData.videoName" maxlength="100"
-            show-word-limit></el-input>
+        <el-form-item
+          label="标题"
+          prop="videoName"
+        >
+          <el-input
+            v-model="formData.videoName"
+            clearable
+            placeholder="请输入标题"
+            maxlength="100"
+            show-word-limit
+          />
         </el-form-item>
         <!-- 单选 -->
-        <el-form-item label="类型" prop="postType">
+        <el-form-item
+          label="类型"
+          prop="postType"
+        >
           <el-radio-group v-model="formData.postType">
-            <el-radio :value="1">自制</el-radio>
-            <el-radio :value="2">转载</el-radio>
+            <el-radio :value="1">
+              自制
+            </el-radio>
+            <el-radio :value="2">
+              转载
+            </el-radio>
           </el-radio-group>
         </el-form-item>
-        <el-form-item label="" prop="originInfo" v-if="formData.postType == 2">
-          <el-input clearable placeholder="转载视频请注明来源、时间、地点(例：转自https://www.xxxx.com/yyyy)，注明来源会更快地通过审核哦"
-            v-model="formData.originInfo" maxlength="200" show-word-limit></el-input>
+        <el-form-item
+          v-if="formData.postType == 2"
+          label=""
+          prop="originInfo"
+        >
+          <el-input
+            v-model="formData.originInfo"
+            clearable
+            placeholder="转载视频请注明来源、时间、地点(例：转自https://www.xxxx.com/yyyy)，注明来源会更快地通过审核哦"
+            maxlength="200"
+            show-word-limit
+          />
         </el-form-item>
-        <el-form-item label="标签" prop="tags">
-          <TagInput v-model="formData.tags"></TagInput>
+        <el-form-item
+          label="标签"
+          prop="tags"
+        >
+          <TagInput v-model="formData.tags" />
         </el-form-item>
-        <el-form-item label="分区" prop="categoryArray">
-          <el-cascader v-model="formData.categoryArray" :options="categoryStore.categoryList"
-            :props="{ value: 'categoryId', label: 'categoryName' }" />
+        <el-form-item
+          label="分区"
+          prop="categoryArray"
+        >
+          <el-cascader
+            v-model="formData.categoryArray"
+            :options="categoryStore.categoryList"
+            :props="{ value: 'categoryId', label: 'categoryName' }"
+          />
         </el-form-item>
 
         <!--textarea输入-->
-        <el-form-item label="简介" prop="introduction">
-          <el-input clearable placeholder="填写更全面的相关信息，让更多的人能找到你的视频吧(: 	" type="textarea" :rows="5" :maxlength="2000"
-            resize="none" show-word-limit v-model="formData.introduction"></el-input>
+        <el-form-item
+          label="简介"
+          prop="introduction"
+        >
+          <el-input
+            v-model="formData.introduction"
+            clearable
+            placeholder="填写更全面的相关信息，让更多的人能找到你的视频吧(: 	"
+            type="textarea"
+            :rows="5"
+            :maxlength="2000"
+            resize="none"
+            show-word-limit
+          />
         </el-form-item>
-        <el-form-item label="互动设置" prop="introduction">
+        <el-form-item
+          label="互动设置"
+          prop="introduction"
+        >
           <el-checkbox-group v-model="formData.interactionArray">
-            <el-checkbox value="0">关闭弹幕</el-checkbox>
-            <el-checkbox value="1">关闭评论</el-checkbox>
+            <el-checkbox value="0">
+              关闭弹幕
+            </el-checkbox>
+            <el-checkbox value="1">
+              关闭评论
+            </el-checkbox>
           </el-checkbox-group>
         </el-form-item>
         <el-form-item label="">
-          <el-button type="primary" @click="submitForm">立即投稿</el-button>
-          <el-button @click="router.push('/ucenter/video')">取消</el-button>
+          <el-button
+            type="primary"
+            @click="submitForm"
+          >
+            立即投稿
+          </el-button>
+          <el-button @click="router.push('/ucenter/video')">
+            取消
+          </el-button>
         </el-form-item>
       </el-form>
     </div>

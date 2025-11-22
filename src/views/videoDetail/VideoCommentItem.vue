@@ -3,37 +3,52 @@
     <Avatar
       :width="replyLevel == 1 ? 50 : 30"
       :avatar="data.avatar"
-      :userId="data.userId"
-    ></Avatar>
+      :user-id="data.userId"
+    />
     <div class="comment-content-panel">
       <div class="nick-name-panel">
-        <router-link :to="`/user/${data.userId}`" class="nick-name">{{
-          data.nickName
-        }}</router-link>
+        <router-link
+          :to="`/user/${data.userId}`"
+          class="nick-name"
+        >
+          {{
+            data.nickName
+          }}
+        </router-link>
         <template v-if="data.replyUserId">
-          <div class="reply-title">回复</div>
+          <div class="reply-title">
+            回复
+          </div>
           <router-link
             :to="`/user/${data.replyUserId}`"
             class="reply-nick-name"
           >
-            @{{ data.replyNickName }}</router-link
-          >
+            @{{ data.replyNickName }}
+          </router-link>
         </template>
       </div>
       <div class="comment-message">
-        <Tag :type="0" v-if="data.topType == 1"></Tag>
-        <span v-html="proxy.Utils.resetHtmlContent(data.content)"></span>
+        <Tag
+          v-if="data.topType == 1"
+          :type="0"
+        />
+        <span v-html="proxy.Utils.resetHtmlContent(data.content)" />
       </div>
-      <div v-if="data.imgPath" class="image-show">
+      <div
+        v-if="data.imgPath"
+        class="image-show"
+      >
         <Cover
           :source="data.imgPath + proxy.imageThumbnailSuffix"
           :preview="true"
           fit="cover"
-        ></Cover>
+        />
       </div>
       <div class="comment-op">
         <div class="op-left">
-          <div class="comment-time">{{ data.postTime }}</div>
+          <div class="comment-time">
+            {{ data.postTime }}
+          </div>
           <div
             :class="[
               'iconfont icon-good',
@@ -52,35 +67,40 @@
           >
             {{ data.hateCount == 0 ? "" : data.hateCount }}
           </div>
-          <div class="reply-btn" @click="showReplyHandler(data, replyLevel)">
+          <div
+            class="reply-btn"
+            @click="showReplyHandler(data, replyLevel)"
+          >
             回复
           </div>
         </div>
         <el-dropdown
           v-if="
             data.userId == loginStore.userInfo.userId ||
-            videoInfo.userId == loginStore.userInfo.userId
+              videoInfo.userId == loginStore.userInfo.userId
           "
         >
-          <span class="op-right iconfont icon-more"> </span>
+          <span class="op-right iconfont icon-more" />
           <template #dropdown>
             <el-dropdown-menu>
               <el-dropdown-item
-                @click="topComment"
                 v-if="
                   videoInfo.userId == loginStore.userInfo.userId &&
-                  data.pCommentId == 0
+                    data.pCommentId == 0
                 "
-                >{{ data.topType == 1 ? "取消置顶" : "置顶" }}</el-dropdown-item
+                @click="topComment"
               >
+                {{ data.topType == 1 ? "取消置顶" : "置顶" }}
+              </el-dropdown-item>
               <el-dropdown-item
-                @click="delComment"
                 v-if="
                   videoInfo.userId == loginStore.userInfo.userId ||
-                  data.userId == loginStore.userInfo.userId
+                    data.userId == loginStore.userInfo.userId
                 "
-                >删除</el-dropdown-item
+                @click="delComment"
               >
+                删除
+              </el-dropdown-item>
             </el-dropdown-menu>
           </template>
         </el-dropdown>
@@ -89,13 +109,13 @@
         <VideoCommentItem
           v-for="item in data.children"
           :data="item"
-          :replyLevel="2"
+          :reply-level="2"
         />
       </div>
       <VideoCommentSend
         v-if="replyLevel == 1 && data.showReply"
-        :sendType="1"
-      ></VideoCommentSend>
+        :send-type="1"
+      />
     </div>
   </div>
 </template>

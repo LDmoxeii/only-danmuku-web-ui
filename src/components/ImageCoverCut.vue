@@ -1,17 +1,44 @@
 <template>
-  <Dialog :show="dialogConfig.show" :title="dialogConfig.title" :buttons="dialogConfig.buttons" width="1000px"
-    @close="dialogConfig.show = false">
+  <Dialog
+    :show="dialogConfig.show"
+    :title="dialogConfig.title"
+    :buttons="dialogConfig.buttons"
+    width="1000px"
+    @close="dialogConfig.show = false"
+  >
     <div class="cut-image-panel">
-      <VueCropper ref="cropperRef" class="cropper" :img="sourceImage" outputType="png" :autoCrop="true"
-        :autoCropWidth="props.cutWidth" :autoCropHeight="Math.round(props.cutWidth * props.scale)" :fixed="true"
-        :fixedNumber="[1, props.scale]" :centerBox="true" :full="false" :fixedBox="true" @realTime="prview" mode="100%">
-      </VueCropper>
+      <VueCropper
+        ref="cropperRef"
+        class="cropper"
+        :img="sourceImage"
+        output-type="png"
+        :auto-crop="true"
+        :auto-crop-width="props.cutWidth"
+        :auto-crop-height="Math.round(props.cutWidth * props.scale)"
+        :fixed="true"
+        :fixed-number="[1, props.scale]"
+        :center-box="true"
+        :full="false"
+        :fixed-box="true"
+        mode="100%"
+        @real-time="prview"
+      />
       <div class="preview-panel">
         <div class="preview-image">
-          <img :src="previewsImage" />
+          <img :src="previewsImage" alt="">
         </div>
-        <el-upload :multiple="false" :show-file-list="false" :http-request="selectFile" :accept="proxy.imageAccept">
-          <el-button class="select-btn" type="primary" >选择图片</el-button>
+        <el-upload
+          :multiple="false"
+          :show-file-list="false"
+          :http-request="selectFile"
+          :accept="proxy.imageAccept"
+        >
+          <el-button
+            class="select-btn"
+            type="primary"
+          >
+            选择图片
+          </el-button>
         </el-upload>
       </div>
     </div>
@@ -28,6 +55,7 @@ import 'vue-cropper/dist/index.css'
 import { VueCropper } from 'vue-cropper'
 
 import { ref, getCurrentInstance, nextTick, inject } from 'vue'
+import Dialog from "@/components/Dialog.vue";
 const { proxy } = getCurrentInstance() as any
 
 /**

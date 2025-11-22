@@ -1,40 +1,59 @@
 <template>
   <div class="video-list-panel">
-    <div class="video-title">视频列表</div>
+    <div class="video-title">
+      视频列表
+    </div>
     <VueDraggable
       v-model="videoSeriesList"
-      @Update="changeSort"
       handle=".move-handler"
       class="video-list"
       draggable=".list-item"
+      @update="changeSort"
     >
-      <template v-for="(item) in videoSeriesList" :key="item.seriesId">
+      <template
+        v-for="(item) in videoSeriesList"
+        :key="item.seriesId"
+      >
         <div
+          v-if="item.seriesId == 'add'"
           class="video-item-add"
           @click="showVieoSeries"
-          v-if="item.seriesId == 'add'"
         >
-          <div class="iconfont icon-add"></div>
-          <div class="add-info">新建视频列表</div>
-        </div>
-        <div class="list-item" v-else @click="jump(item)">
-          <div class="cover">
-            <div class="move-handler iconfont icon-move" v-if="myself"></div>
-            <Cover :source="item.cover"></Cover>
+          <div class="iconfont icon-add" />
+          <div class="add-info">
+            新建视频列表
           </div>
-          <div class="list-name">{{ item.seriesName }}</div>
+        </div>
+        <div
+          v-else
+          class="list-item"
+          @click="jump(item)"
+        >
+          <div class="cover">
+            <div
+              v-if="myself"
+              class="move-handler iconfont icon-move"
+            />
+            <Cover :source="item.cover" />
+          </div>
+          <div class="list-name">
+            {{ item.seriesName }}
+          </div>
           <div class="create-time">
             {{ proxy.Utils.formatDate(item.updateTime) }}
           </div>
         </div>
       </template>
     </VueDraggable>
-    <NoData v-if="videoSeriesList.length == 0" msg="暂无视频列表"></NoData>
+    <NoData
+      v-if="videoSeriesList.length == 0"
+      msg="暂无视频列表"
+    />
   </div>
   <VideoSeriesEdit
     ref="videoSeriesEditRef"
     @reload="loadVideoSeries"
-  ></VideoSeriesEdit>
+  />
 </template>
 
 <script setup lang="ts">
@@ -121,10 +140,8 @@ const jump = (item: any) => {
           z-index: 100;
           border-radius: 5px 5px 0px 0px;
           border: 1px solid #ddd;
-          display: flex;
           align-items: center;
           justify-content: center;
-          display: none;
         }
         &:hover {
           .move-handler {
