@@ -65,6 +65,7 @@ const props = defineProps({
   },
   title: {
     type: String,
+    default: "",
   },
   show: {
     type: Boolean,

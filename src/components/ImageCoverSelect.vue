@@ -34,6 +34,7 @@ import {asyncComputed} from '@vueuse/core'
 const props = defineProps({
   coverImage: {
     type: [String, File],
+    default: undefined,
   },
   coverWidth: {
     type: Number,

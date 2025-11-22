@@ -27,7 +27,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, withDefaults } from "vue";
+import { ref } from "vue";
 const defaultAvatar = ref("user.png");
 withDefaults(
   defineProps<{
@@ -36,7 +36,7 @@ withDefaults(
     userId?: string | number;
     lazy?: boolean;
   }>(),
-  { width: 50, lazy: true }
+  { width: 50, lazy: true, avatar: "", userId: "" }
 );
 </script>
 

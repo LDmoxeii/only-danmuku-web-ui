@@ -63,9 +63,11 @@ import { sourcePath } from '@/api/file'
 const props = defineProps({
   source: {
     type: [String, File],
+    default: undefined,
   },
   width: {
     type: Number,
+    default: undefined,
   },
   fit: {
     type: String,
@@ -77,6 +79,7 @@ const props = defineProps({
   },
   defaultImg: {
     type: String,
+    default: undefined,
   },
   img404: {
     type: String,
