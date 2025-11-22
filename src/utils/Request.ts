@@ -4,9 +4,6 @@ import {ElLoading} from 'element-plus'
 import Message from '../utils/Message'
 import {useLoginStore} from '@/stores/loginStore'
 
-// 全局默认头
-axios.defaults.headers['Content-Type'] = 'application/json;charset=utf-8'
-
 let loading: ReturnType<typeof ElLoading.service> | null = null
 const instance: AxiosInstance = axios.create({withCredentials: true, baseURL: '/api', timeout: 10 * 1000})
 instance.defaults.headers.post['Content-Type'] = 'application/json;charset=utf-8'
