@@ -16,7 +16,10 @@
           :class="['coin-item',coinCount==1?'acitve':'']"
           @click="setCoinCount(1)"
         >
-          <img :src="proxy.Utils.getLocalImage('coin1.png')" alt="">
+          <img
+            :src="proxy.Utils.getLocalImage('coin1.png')"
+            alt=""
+          >
           <div class="coin-count-inner">
             1硬币
           </div>
@@ -25,7 +28,10 @@
           :class="['coin-item',coinCount==2?'acitve':'']"
           @click="setCoinCount(2)"
         >
-          <img :src="proxy.Utils.getLocalImage('coin2.png')" alt="">
+          <img
+            :src="proxy.Utils.getLocalImage('coin2.png')"
+            alt=""
+          >
           <div class="coin-count-inner">
             2硬币
           </div>

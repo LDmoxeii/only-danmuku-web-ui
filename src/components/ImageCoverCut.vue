@@ -25,7 +25,10 @@
       />
       <div class="preview-panel">
         <div class="preview-image">
-          <img :src="previewsImage" alt="">
+          <img
+            :src="previewsImage"
+            alt=""
+          >
         </div>
         <el-upload
           :multiple="false"

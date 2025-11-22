@@ -16,7 +16,8 @@
           >
             <img
               :src="proxy.Utils.getLocalImage('uhome-bg/' + item + '.png')"
-             alt="">
+              alt=""
+            >
             <div
               v-if="currentTheme == item"
               class="checked iconfont icon-checked"

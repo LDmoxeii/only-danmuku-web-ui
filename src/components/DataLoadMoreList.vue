@@ -11,7 +11,10 @@
     v-if="loading"
     class="bottom-loading"
   >
-    <img :src="proxy.Utils.getLocalImage('playing.gif')" alt="">数据加载中....
+    <img
+      :src="proxy.Utils.getLocalImage('playing.gif')"
+      alt=""
+    >数据加载中....
   </div>
   <div
     v-if="

@@ -21,7 +21,10 @@
       </div>
     </div>
     <div id="play">
-      <img :src="proxy.Utils.getLocalImage('play.png')" alt="">
+      <img
+        :src="proxy.Utils.getLocalImage('play.png')"
+        alt=""
+      >
     </div>
   </div>
 </template>
