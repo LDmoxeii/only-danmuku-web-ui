@@ -38,7 +38,7 @@ const { proxy } = getCurrentInstance() as any
 defineProps({
   data: {
     type: Object,
-    default: {},
+    default: () => ({}),
   },
   marginTop: {
     type: Number,

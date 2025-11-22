@@ -7,16 +7,17 @@
     <div class="right-content">
       <div class="part-item">
         <div class="part-title">
-          公告
+          ����
         </div>
+        <!-- eslint-disable vue/no-v-html -->
         <div
           class="part-content"
-          v-html="userInfo.noticeInfo || '暂无公告'"
+          v-html="userInfo.noticeInfo || '���޹���'"
         />
       </div>
       <div class="part-item part-item2">
         <div class="part-title">
-          个人资料
+          ��������
         </div>
         <div class="part-content">
           <div class="user-info-panel">
@@ -33,7 +34,7 @@
               class="user-info-item"
             >
               <div class="label">
-                生日
+                ����
               </div>
               <div class="value">
                 {{ userInfo.birthday }}
@@ -44,7 +45,7 @@
               class="user-info-item"
             >
               <div class="label">
-                学校
+                ѧУ
               </div>
               <div class="value">
                 {{ userInfo.school }}
@@ -58,11 +59,11 @@
 </template>
 
 <script setup lang="ts">
-import HomeVideoList from './HomeVideoList.vue'
-import HomeSeries from './HomeSeries.vue'
-import { inject } from 'vue'
+import HomeVideoList from "./HomeVideoList.vue";
+import HomeSeries from "./HomeSeries.vue";
+import { inject } from "vue";
 
-const userInfo = inject<any>('userInfo')
+const userInfo = inject<any>("userInfo");
 </script>
 
 <style lang="scss" scoped>

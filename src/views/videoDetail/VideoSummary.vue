@@ -4,6 +4,7 @@
       class="summary"
       :style="{ height: expandType ? 'auto' : '90px' }"
     >
+      <!-- eslint-disable vue/no-v-html -->
       <div
         id="summary-inner"
         class="summary-inner"

@@ -6,6 +6,7 @@
       </div>
       <div
         v-for="item in messageNav"
+        :key="item.messageTypeCode"
         :class="[
           'message-part',
           route.params.messageType == item.messageTypeCode ? 'active' : '',

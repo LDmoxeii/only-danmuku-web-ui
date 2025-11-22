@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable vue/no-v-html, vue/singleline-html-element-content-newline, vue/max-attributes-per-line, vue/html-indent -->
   <div class="comment-item">
     <Avatar
       :width="replyLevel == 1 ? 50 : 30"

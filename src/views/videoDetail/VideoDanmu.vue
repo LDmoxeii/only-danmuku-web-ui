@@ -25,6 +25,7 @@
         >
           <div
             v-for="item in danmuList"
+            :key="item.danmuId"
             :class="['danmu-item', item.danmuId == selectDanmu.danmuId ? 'active' : '']"
             @click="danmuSelect(item)"
           >

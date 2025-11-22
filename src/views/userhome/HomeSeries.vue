@@ -17,6 +17,7 @@
   </div>
   <div
     v-for="item in seriesList"
+    :key="item.seriesId"
     class="part-item"
   >
     <div class="part-title">
@@ -41,6 +42,7 @@
     <div class="video-list5">
       <VideoItem
         v-for="video in item.videoInfoList"
+        :key="video.videoId"
         :data="video"
       />
     </div>

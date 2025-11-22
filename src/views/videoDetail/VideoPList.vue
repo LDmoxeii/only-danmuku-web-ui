@@ -18,6 +18,7 @@
     >
       <div
         v-for="(item, index) in videoList"
+        :key="item.fileId || index"
         :class="['video-item', index == currentP - 1 ? 'active' : '']"
         @click="selectVideo(index + 1)"
       >

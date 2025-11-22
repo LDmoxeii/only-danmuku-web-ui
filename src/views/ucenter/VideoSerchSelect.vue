@@ -9,6 +9,7 @@
     >
       <el-option
         v-for="item in allVideoList"
+        :key="item.videoId"
         :value="item.videoId"
         :label="item.videoName"
       />

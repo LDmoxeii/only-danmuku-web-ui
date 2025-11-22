@@ -28,6 +28,7 @@
     <div class="video-list5">
       <VideoItem
         v-for="item in dataSource.list"
+        :key="item.videoId"
         :data="item"
       />
     </div>

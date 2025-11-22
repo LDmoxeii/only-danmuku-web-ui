@@ -10,6 +10,7 @@
     <div class="video-data-list">
       <div
         v-for="item in dataPartList"
+        :key="item.preDataType"
         :class="[
           'video-data-item',
           item.preDataType == currentDataPart.preDataType ? 'active' : '',

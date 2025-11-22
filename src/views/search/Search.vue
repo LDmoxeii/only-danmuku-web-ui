@@ -24,6 +24,7 @@
     <div class="order-btns">
       <div
         v-for="item in orderBtns"
+        :key="item.order ?? item.name"
         :class="['btn', order == item.order ? 'active' : '']"
         @click="changeOrder(item)"
       >

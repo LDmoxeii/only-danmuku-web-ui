@@ -141,7 +141,7 @@ const router = useRouter();
 const props = defineProps({
   data: {
     type: Object,
-    default: {},
+    default: () => ({}),
   },
 });
 const interactionInfo = ref<string[]>(

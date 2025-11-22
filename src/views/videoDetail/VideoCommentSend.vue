@@ -1,4 +1,5 @@
 <template>
+  <!-- eslint-disable vue/valid-v-for, vue/require-v-for-key -->
   <div class="send-panel">
     <Avatar
       :avatar="
@@ -68,12 +69,14 @@
                 >
                   <el-tab-pane
                     v-for="emoji in emojiList"
+                    :key="emoji.name"
                     :label="emoji.name"
                     :name="emoji.name"
                   >
                     <div class="emoji-list">
                       <div
                         v-for="item in emoji.emojiList"
+                        :key="item"
                         class="emoji-item"
                         @click="sendEmoji(item)"
                       >
@@ -131,6 +134,7 @@ const loginStore = useLoginStore();
 const props = defineProps({
   sendType: {
     type: Number,
+    default: 0,
   },
   showSend: {
     type: Boolean,

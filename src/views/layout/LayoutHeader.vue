@@ -101,6 +101,7 @@
             <div class="hot-search-list">
               <div
                 v-for="(item, index) in hotSearchList"
+                :key="item"
                 class="search-item"
                 @click="searchKeyword(item)"
               >

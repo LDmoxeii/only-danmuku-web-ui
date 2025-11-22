@@ -32,6 +32,7 @@
           <template v-for="item in menuList">
             <el-menu-item
               v-if="!item.children"
+              :key="item.path"
               :index="item.path"
             >
               <span :class="['iconfont', 'icon-' + item.icon]" />
@@ -39,6 +40,7 @@
             </el-menu-item>
             <el-sub-menu
               v-else
+              :key="item.path"
               :index="item.path"
             >
               <template #title>
@@ -47,6 +49,7 @@
               </template>
               <el-menu-item
                 v-for="sub in item.children"
+                :key="sub.path"
                 :index="sub.path"
               >
                 <span class="sub-menu">{{ sub.name }}</span>

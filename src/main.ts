@@ -19,6 +19,7 @@ import Cover from '@/components/Cover.vue'
 import MyTab from '@/components/MyTab.vue'
 import DataLoadMoreList from '@/components/DataLoadMoreList.vue'
 import VideoItem from '@/components/VideoItem.vue'
+import Dialog from '@/components/Dialog.vue'
 
 // 全局工具
 import Request from '@/utils/Request'
@@ -35,7 +36,8 @@ app.use(router)
 app.component('Collapse', Collapse)
 app.component('Avatar', Avatar)
 app.component('Cover', Cover)
-// eslint-disable-next-line vue/no-reserved-component-names\napp.component('Dialog', Dialog)
+// eslint-disable-next-line vue/no-reserved-component-names
+app.component('Dialog', Dialog)
 app.component('ImageCoverSelect', ImageCoverSelect)
 app.component('DataList', DataList)
 app.component('NoData', NoData)

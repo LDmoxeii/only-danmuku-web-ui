@@ -11,6 +11,7 @@
         <div class="theme-gird-list">
           <div
             v-for="item in themeCount"
+            :key="item"
             class="grid-item"
             @click="selectTheme(item)"
           >

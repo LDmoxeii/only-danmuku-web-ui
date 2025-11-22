@@ -50,6 +50,7 @@
           <el-checkbox-group v-model="formData.videoIds">
             <div
               v-for="item in videoList"
+              :key="item.videoId"
               class="video-item"
             >
               <div class="check">

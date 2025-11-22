@@ -74,6 +74,7 @@
         <div class="nav-panel">
           <router-link
             v-for="item in navList"
+            :key="item.path"
             :class="[
               'nav-item iconfont',
               item.icon,
