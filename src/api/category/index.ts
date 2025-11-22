@@ -4,6 +4,6 @@ import type {CategoryNode} from './types'
 const base = '/category'
 
 export async function loadAllCategory(): Promise<CategoryNode[]> {
-  return await request<CategoryNode[]>({url: `${base}/loadAllCategory`})
+  return await request<CategoryNode[]>({url: `${base}/loadAllCategory`, method: 'post',})
 }
 

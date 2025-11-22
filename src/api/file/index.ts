@@ -7,7 +7,8 @@ export async function preUploadVideo(params: { fileName: string; chunks: number 
     url: `${base}/preUploadVideo`,
     params,
     errorCallback: opts?.onError,
-    showError: opts?.showError
+    showError: opts?.showError,
+    method: 'post',
   })
 }
 
@@ -21,19 +22,20 @@ export async function uploadVideo(params: { chunkFile: Blob; chunkIndex: number;
     data: form,
     uploadProgressCallback: opts?.onProgress,
     errorCallback: opts?.onError,
-    showError: opts?.showError
+    showError: opts?.showError,
+    method: 'post'
   })
 }
 
 export async function delUploadVideo(uploadId: number | string): Promise<any> {
-  return await request<any>({ url: `${base}/delUploadVideo`, params: { uploadId } })
+  return await request<any>({ url: `${base}/delUploadVideo`, params: { uploadId }, method: 'post',})
 }
 
 export async function uploadImage(file: File, createThumbnail: boolean): Promise<string> {
   const form = new FormData()
   form.append('file', file)
   form.append('createThumbnail', String(createThumbnail))
-  return await request<string>({ url: `${base}/uploadImage`, data: form })
+  return await request<string>({ url: `${base}/uploadImage`, data: form, method: 'post',})
 }
 
 export const getVideoResource = (fileId: string | number) => `/api/file/videoResource/${fileId}/`

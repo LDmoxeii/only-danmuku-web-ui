@@ -5,17 +5,17 @@ import type {MessageGroupItem} from './types'
 const base = '/message'
 
 export async function getNoReadCountGroup(): Promise<MessageGroupItem[]> {
-  return await request<MessageGroupItem[]>({url: `${base}/getNoReadCountGroup`})
+  return await request<MessageGroupItem[]>({url: `${base}/getNoReadCountGroup`, method: 'post',})
 }
 
 export async function readAll(messageType: number): Promise<void> {
-  return await request<void>({url: `${base}/readAll`, data: {messageType}})
+  return await request<void>({url: `${base}/readAll`, data: {messageType}, method: 'post',})
 }
 
 export async function loadMessage(params: { pageNum: number; pageSize?: number; messageType: number }): Promise<PageData<any>> {
-  return await request<PageData<any>>({url: `${base}/loadMessage`, data: params})
+  return await request<PageData<any>>({url: `${base}/loadMessage`, data: params, method: 'post',})
 }
 
 export async function delMessage(messageId: string | number): Promise<void> {
-  return await request<void>({url: `${base}/delMessage`, data: {messageId}})
+  return await request<void>({url: `${base}/delMessage`, data: {messageId}, method: 'post',})
 }

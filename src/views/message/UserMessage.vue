@@ -123,6 +123,7 @@ import { loadMessage as apiLoadMessage, delMessage as apiDelMessage, getNoReadCo
 const loadDataList = async () => {
   let params: any = {
     pageNum: dataSource.value.pageNum,
+    pageSize: dataSource.value.pageSize,
     messageType: curMessageNav.value.messageType,
   }
   let result = await apiLoadMessage(params)

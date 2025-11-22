@@ -7,17 +7,17 @@
     <div class="right-content">
       <div class="part-item">
         <div class="part-title">
-          ����
+          公告
         </div>
         <!-- eslint-disable vue/no-v-html -->
         <div
           class="part-content"
-          v-html="userInfo.noticeInfo || '���޹���'"
+          v-html="userInfo.noticeInfo || '暂无公告'"
         />
       </div>
       <div class="part-item part-item2">
         <div class="part-title">
-          ��������
+          个人资料
         </div>
         <div class="part-content">
           <div class="user-info-panel">
@@ -34,7 +34,7 @@
               class="user-info-item"
             >
               <div class="label">
-                ����
+                生日
               </div>
               <div class="value">
                 {{ userInfo.birthday }}
@@ -45,7 +45,7 @@
               class="user-info-item"
             >
               <div class="label">
-                ѧУ
+                学校
               </div>
               <div class="value">
                 {{ userInfo.school }}

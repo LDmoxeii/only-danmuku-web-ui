@@ -13,7 +13,7 @@ import { computed, withDefaults } from 'vue'
 type TagType = { text: string; color: string }
 
 const TYPE: Record<number, TagType> = {
-  0: { text: '标签', color: '#FF6699' },
+  0: { text: '置顶', color: '#FF6699' },
 }
 
 const props = withDefaults(defineProps<{ type?: number }>(), { type: 0 })

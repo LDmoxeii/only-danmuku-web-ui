@@ -3,6 +3,7 @@ import type {AxiosInstance, AxiosRequestConfig} from 'axios'
 import {ElLoading} from 'element-plus'
 import Message from '../utils/Message'
 import {useLoginStore} from '@/stores/loginStore'
+import VueCookies from 'vue-cookies'
 
 let loading: ReturnType<typeof ElLoading.service> | null = null
 const instance: AxiosInstance = axios.create({withCredentials: true, baseURL: '/api', timeout: 10 * 1000})
@@ -34,8 +35,7 @@ instance.interceptors.request.use(
         if (config.showLoading) {
             loading = ElLoading.service({lock: true, text: '加载中......', background: 'rgba(0, 0, 0, 0.7)'})
         }
-        const loginStore: any = useLoginStore()
-        const token = loginStore?.userInfo?.token
+        const token = (VueCookies as any).get('Authorization')
         const authHeader = token ? (String(token).startsWith('Bearer ') ? String(token) : `Bearer ${token}`) : ''
         config.headers = config.headers || {}
         if (authHeader) config.headers['Authorization'] = authHeader

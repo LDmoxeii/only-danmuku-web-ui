@@ -9,21 +9,33 @@
 </template>
 
 <script setup lang="ts">
-import {
-  ref,
-  inject,
-} from "vue";
+import { ref, inject, watch } from "vue";
+import type { Ref } from "vue";
 
 const dataList = ref<any[]>([]);
 
-const videoInfo = inject<any>("videoInfo");
+const videoInfo = inject<Ref<any>>("videoInfo");
 import { getVideoRecommend as apiGetVideoRecommend } from '@/api/video'
 const loadDataList = async () => {
-  const list = await apiGetVideoRecommend(videoInfo.value.videoName, videoInfo.value.videoId)
+  if (!videoInfo?.value || !videoInfo.value.videoId) {
+    return;
+  }
+  const list = await apiGetVideoRecommend(
+    videoInfo.value.videoName,
+    videoInfo.value.videoId
+  );
   if (!list) return
   dataList.value = list
 }
-loadDataList()
+
+watch(
+  () => videoInfo?.value?.videoId,
+  (videoId) => {
+    if (!videoId) return;
+    loadDataList();
+  },
+  { immediate: true }
+)
 </script>
 
 <style lang="scss" scoped>

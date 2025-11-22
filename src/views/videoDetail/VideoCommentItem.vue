@@ -30,7 +30,7 @@
       </div>
       <div v-if="data.imgPath" class="image-show">
         <Cover
-          :source="data.imgPath + proxy.imageThumbnailSuffix"
+          :source="proxy.Utils.getFileName(data.imgPath) + proxy.imageThumbnailSuffix"
           :preview="true"
           fit="cover"
         />
@@ -74,7 +74,7 @@
               <el-dropdown-item
                 v-if="
                   videoInfo.userId == loginStore.userInfo.userId &&
-                  data.pCommentId == 0
+                  data.pcommentId == 0
                 "
                 @click="topComment"
               >
@@ -128,10 +128,12 @@ const loginStore = useLoginStore()
 
 import { mitter } from '@/eventbus/eventBus'
 
-const props = defineProps<{
+const props = withDefaults(defineProps<{
   data: any
   replyLevel?: number
-}>()
+}>(), {
+  replyLevel: 1,
+})
 
 const videoInfo = inject<any>('videoInfo')
 const showReply = inject<(commentId: number | string) => void>('showReply')!
@@ -189,7 +191,7 @@ const doHate = (data: any) => {
 
 const delComment = () => {
   proxy.Confirm({
-    message: 'ȷ��Ҫɾ������',
+    message: '确定要删除评论',
     okfun: async () => {
       await apiUserDelComment(props.data.commentId)
       mitter.emit('delCommentCallback', {
@@ -202,7 +204,7 @@ const delComment = () => {
 
 const topComment = () => {
   proxy.Confirm({
-    message: `ȷ��Ҫ${props.data.topType == 1 ? 'ȡ���ö�' : '�ö�'}��`,
+    message: `确定要${props.data.topType == 1 ? '取消置顶' : '置顶'}吗？`,
     okfun: async () => {
       if (props.data.topType == 1) {
         await apiUserCancelTopComment(props.data.commentId)

@@ -114,7 +114,7 @@
     </div>
     <div class="user-panel">
       <div class="user-avatar">
-        <template v-if="Object.keys(loginStore.userInfo).length > 0">
+        <template v-if="Object.keys(loginStore.userInfo || {}).length > 0">
           <Avatar
             class="avatar"
             :avatar="loginStore.userInfo.avatar"
@@ -176,7 +176,7 @@
           </div>
         </template>
         <Avatar
-          v-if="Object.keys(loginStore.userInfo).length == 0"
+          v-if="Object.keys(loginStore.userInfo || {}).length == 0"
           :width="35"
           :lazy="false"
           @click="loginHandler"
@@ -267,7 +267,7 @@ const categoryPartCount = computed(() => {
 });
 
 const loginHandler = () => {
-  if (Object.keys(loginStore.userInfo).length == 0) {
+  if (Object.keys(loginStore.userInfo || {}).length == 0) {
     loginStore.setLogin(true);
     return;
   }
@@ -322,7 +322,7 @@ onUnmounted(() => {
 });
 
 const navJump = (url: string) => {
-  if (Object.keys(loginStore.userInfo).length == 0) {
+  if (Object.keys(loginStore.userInfo || {}).length == 0) {
     loginStore.setLogin(true);
     return;
   }

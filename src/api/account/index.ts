@@ -4,23 +4,23 @@ import type {CheckCode, LoginResponse} from './types'
 const base = '/account'
 
 export async function checkCode(): Promise<CheckCode> {
-  return await request<CheckCode>({url: `${base}/checkCode`})
+  return await request<CheckCode>({url: `${base}/checkCode`, method: 'post',})
 }
 
 export async function register(params: { email: string; nickName: string; registerPassword: string; checkCodeKey: string; checkCode: string }): Promise<void> {
-  return await request<void>({url: `${base}/register`, params})
+  return await request<void>({url: `${base}/register`, params, method: 'post',})
 }
 
 export async function login(params: { email: string; password: string; checkCodeKey: string; checkCode: string }): Promise<LoginResponse> {
-  return await request<LoginResponse>({url: `${base}/login`, params})
+  return await request<LoginResponse>({url: `${base}/login`, params, method: 'post',})
 }
 
 export async function autoLogin(): Promise<LoginResponse> {
-  return await request<LoginResponse>({url: `${base}/autoLogin`})
+  return await request<LoginResponse>({url: `${base}/autoLogin`, method: 'post',})
 }
 
 export async function logout(): Promise<void> {
-  return await request<void>({url: `${base}/logout`})
+  return await request<void>({url: `${base}/logout`, method: 'post',})
 }
 
 export async function getUserCountInfo(): Promise<{ focusCount: number; fansCount: number; currentCoinCount: number }> {
@@ -28,6 +28,6 @@ export async function getUserCountInfo(): Promise<{ focusCount: number; fansCoun
     focusCount: number;
     fansCount: number;
     currentCoinCount: number
-  }>({url: `${base}/getUserCountInfo`})
+  }>({url: `${base}/getUserCountInfo`, method: 'post',})
 }
 

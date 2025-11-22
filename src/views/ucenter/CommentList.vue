@@ -44,7 +44,7 @@
               class="image-show"
             >
               <Cover
-                :source="row.imgPath + proxy.imageThumbnailSuffix"
+                :source="proxy.Utils.getFileName(row.imgPath) + proxy.imageThumbnailSuffix"
                 :preview="true"
                 fit="cover"
               />

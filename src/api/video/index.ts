@@ -23,7 +23,7 @@ export async function getVideoRecommend(keyword: string, videoId: string | numbe
     return await request<VideoItem[]>({
         url: `${base}/getVideoRecommend`,
         method: 'post',
-        params: {keyword, videoId}
+        data: {keyword, videoId}
     })
 }
 

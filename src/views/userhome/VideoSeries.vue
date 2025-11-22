@@ -6,26 +6,25 @@
     <VueDraggable
       v-model="videoSeriesList"
       handle=".move-handler"
-      class="video-list"
       draggable=".list-item"
+      class="video-list"
       @update="changeSort"
     >
+      <div
+        v-if="myself"
+        class="video-item-add"
+        @click="showVieoSeries"
+      >
+        <div class="iconfont icon-add" />
+        <div class="add-info">
+          新建视频列表
+        </div>
+      </div>
       <template
-        v-for="(item) in videoSeriesList"
+        v-for="item in videoSeriesList"
         :key="item.seriesId"
       >
         <div
-          v-if="item.seriesId == 'add'"
-          class="video-item-add"
-          @click="showVieoSeries"
-        >
-          <div class="iconfont icon-add" />
-          <div class="add-info">
-            新建视频列表
-          </div>
-        </div>
-        <div
-          v-else
           class="list-item"
           @click="jump(item)"
         >
@@ -67,6 +66,10 @@ const router = useRouter();
 
 import { useLoginStore } from "@/stores/loginStore";
 const loginStore = useLoginStore();
+import {
+  loadVideoSeries as apiLoadVideoSeries,
+  changeVideoSeriesSort as apiChangeVideoSeriesSort,
+} from "@/api/uhome/series";
 
 //是否是自己
 const myself = computed(() => {
@@ -75,23 +78,26 @@ const myself = computed(() => {
 
 const videoSeriesList = ref<any[]>([]);
 const loadVideoSeries = async () => {
-  const res = await (await import('@/api/uhome/series')).loadVideoSeries({ userId: route.params.userId as any })
-  if (!res) return
-  videoSeriesList.value = res as any
-  if (myself.value) {
-    videoSeriesList.value.unshift({ seriesId: 'add' })
-  }
+  const res = await apiLoadVideoSeries({ userId: route.params.userId as any });
+  if (!res) return;
+  videoSeriesList.value = res as any;
 };
 loadVideoSeries();
+
 const videoSeriesEditRef = ref<any>();
 const showVieoSeries = () => {
   videoSeriesEditRef.value.show();
 };
 
 const changeSort = async () => {
-  let seriesIds = videoSeriesList.value.map((item: any) => item.seriesId)
-  seriesIds.splice(0, 1)
-  try { await (await import('@/api/uhome/series')).changeVideoSeriesSort(seriesIds.join(',')) } catch (e) { return }
+  const seriesIds = videoSeriesList.value.map(
+    (item: any) => item.seriesId as string | number
+  );
+  try {
+    await apiChangeVideoSeriesSort(seriesIds.join(","));
+  } catch (e) {
+    return;
+  }
   proxy.Message.success("排序成功");
 };
 
@@ -140,6 +146,7 @@ const jump = (item: any) => {
           z-index: 100;
           border-radius: 5px 5px 0px 0px;
           border: 1px solid #ddd;
+          display: none;
           align-items: center;
           justify-content: center;
         }
