@@ -15,15 +15,15 @@
         </router-link>
         <span class="title-info">{{ convertTitle() }}</span>
       </div>
-      <template v-if="data.messageType == 4">
+      <template v-if="data.messageType === 4">
         <div class="comment">
-          {{ data.extendDto.messageContent }}
+          {{ data.extendDto?.messageContent }}
         </div>
         <div
-          v-if="data.extendDto.messageContentReply"
+          v-if="data.extendDto?.messageContentReply"
           class="reply"
         >
-          {{ data.extendDto.messageContentReply }}
+          {{ data.extendDto?.messageContentReply }}
         </div>
       </template>
       <div class="send-time">
@@ -48,12 +48,20 @@
 <script setup lang="ts">
 import { getCurrentInstance } from "vue";
 const { proxy } = getCurrentInstance() as any;
-const props = defineProps({
+
+const props = defineProps<{
   data: {
-    type: Object,
-    default: () => ({}),
-  },
-});
+    sendUserAvatar?: string;
+    sendUserId?: string | number;
+    sendUserName?: string;
+    messageType: number;
+    extendDto?: { messageContent?: string; messageContentReply?: string };
+    createTime?: string | number;
+    messageId: string | number;
+    videoId?: string | number;
+    videoCover?: string;
+  };
+}>();
 
 const MESSAGE_TYPE = {
   1: "系统消息",
@@ -63,13 +71,15 @@ const MESSAGE_TYPE = {
 } as const;
 
 const convertTitle = (): string => {
-  if (props.data.messageType == 4) {
-    if ((props as any).data?.extendDto?.messageContentReply) {
-      return `在视频中回复了你的评论`;
+  if (props.data.messageType === 4) {
+    if (props.data.extendDto?.messageContentReply) {
+      return "在视频中回复了你的评论";
     }
-    return `在视频中发表了评论`;
+    return "在视频下发表了评论";
   } else {
-    return `${MESSAGE_TYPE[props.data.messageType]}了视频`;
+    const typeKey = props.data.messageType as keyof typeof MESSAGE_TYPE;
+    const typeText = MESSAGE_TYPE[typeKey] ?? "";
+    return `${typeText}了你的视频`;
   }
 };
 

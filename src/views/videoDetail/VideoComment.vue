@@ -59,8 +59,8 @@ const showComment = computed(() => {
   );
 });
 
-const showReplyHandler = (commentId) => {
-  dataSource.value.list.forEach((item) => {
+const showReplyHandler = (commentId: number | string) => {
+  dataSource.value.list.forEach((item: any) => {
     if (item.commentId != commentId) {
       item.showReply = false;
     } else {
@@ -131,11 +131,8 @@ const setCommentActive = (userActionMap: Record<string, any>, item: any) => {
 };
 
 //删除评论
-const delCommentCallback = ({pCommentId, commentId}) => {
-};
-
 onMounted(() => {
-  mitter.on("postCommentSuccess", (comment) => {
+  mitter.on("postCommentSuccess", (comment: any) => {
     if (comment.pCommentId === 0) {
       dataSource.value.list.unshift(comment);
       if (!dataSource.value.totalCount) {
@@ -146,7 +143,7 @@ onMounted(() => {
       return;
     } else {
       //二级回复
-      const curComment = dataSource.value.list.find((item) => {
+      const curComment = dataSource.value.list.find((item: any) => {
         return item.commentId == comment.pCommentId;
       });
       if (!curComment) {
@@ -160,17 +157,17 @@ onMounted(() => {
   });
 
   //删除评论
-  mitter.on("delCommentCallback", ({pCommentId, commentId}) => {
+  mitter.on("delCommentCallback", ({ pCommentId, commentId }: { pCommentId: number; commentId: number }) => {
     if (pCommentId == 0) {
-      dataSource.value.list = dataSource.value.list.filter((item) => {
+      dataSource.value.list = dataSource.value.list.filter((item: any) => {
         return item.commentId != commentId;
       });
       dataSource.value.totalCount--;
     } else {
-      const pComment = dataSource.value.list.find((item) => {
+      const pComment = dataSource.value.list.find((item: any) => {
         return item.commentId == pCommentId;
       });
-      pComment.children = pComment.children.filter((item) => {
+      pComment.children = pComment.children.filter((item: any) => {
         return item.commentId != commentId;
       });
     }

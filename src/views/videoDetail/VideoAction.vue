@@ -14,7 +14,7 @@
         'iconfont icon-toubi',
         videoInfo.coinCountActive ? 'active' : '',
       ]"
-      @click="userActionCoin('VIDEO_COIN')"
+      @click="userActionCoin()"
     >
       {{ videoInfo.coinCount }}
     </div>

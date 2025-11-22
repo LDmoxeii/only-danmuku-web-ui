@@ -48,10 +48,10 @@
                 </span>
                 <span
                   v-else
-                  :class="['iconfont', 'icon-' + STATUS[item.status].icon]"
-                  :style="{ color: STATUS[item.status].color }"
+                  :class="['iconfont', 'icon-' + getStatusMeta(item.status).icon]"
+                  :style="{ color: getStatusMeta(item.status).color }"
                 >
-                  {{ STATUS[item.status].desc }}</span>
+                  {{ getStatusMeta(item.status).desc }}</span>
               </div>
             </div>
             <div class="op">
@@ -112,23 +112,20 @@
 </template>
 
 <script setup lang="ts">
-import { useSysSettingStore } from '@/stores/sysSettingStore'
+import {useSysSettingStore} from '@/stores/sysSettingStore'
+import VideoUploadStart from './VideoUploadStart.vue'
+import {vDraggable} from 'vue-draggable-plus'
+import {getCurrentInstance, nextTick, onUnmounted, ref} from 'vue'
+import {mitter} from '@/eventbus/eventBus'
+import {
+  delUploadVideo as apiDelUploadVideo,
+  preUploadVideo as apiPreUploadVideo,
+  uploadVideo as apiUploadVideo
+} from '@/api/file'
+
 const sysSettingStore = useSysSettingStore()
 
-import VideoUploadStart from './VideoUploadStart.vue'
-import { vDraggable } from 'vue-draggable-plus'
-import { getCurrentInstance, nextTick, onUnmounted, ref } from 'vue'
-import { useRoute } from 'vue-router'
-
 const { proxy } = getCurrentInstance() as any
-const route = useRoute()
-
-import { mitter } from '@/eventbus/eventBus'
-import { preUploadVideo as apiPreUploadVideo, uploadVideo as apiUploadVideo, delUploadVideo as apiDelUploadVideo } from '@/api/file'
-
-const props = withDefaults(defineProps<{ videoList: any[] }>(), {
-  videoList: () => [] as any[],
-})
 
 const STATUS = {
   emptyfile: {
@@ -176,11 +173,15 @@ const MAX_UPLOADING: number = proxy.maxUploading
 
 const fileList = ref<any[]>([])
 
+// 统一从这里取状态元数据，避免在模板中直接用 any 做索引
+const getStatusMeta = (status: any) => {
+  return STATUS[status as keyof typeof STATUS] ?? STATUS.wating
+}
+
 const getFileByUid = (uid: any) => {
-  const currentFile = fileList.value.find((item) => {
+  return fileList.value.find((item) => {
     return item.uid == uid
   })
-  return currentFile
 }
 
 const startUpload = ref<boolean>(false)
@@ -294,7 +295,7 @@ const uploadFile = async (uid: any, chunkIndex?: number) => {
       return item.status == STATUS.wating.value
     })
     if (nextItem) {
-      uploadFile(nextItem.uid)
+      await uploadFile(nextItem.uid)
     }
   }
 }
@@ -364,7 +365,7 @@ const getUploadFileList = () => {
       item.status === STATUS.wating.value
     ) {
       noUploadCount++
-      continue
+
     }
   }
 
@@ -376,14 +377,13 @@ const getUploadFileList = () => {
     proxy.Message.warning('文件还未上传完成无法提交')
     return null
   }
-  const uploadFileList = fileList.value.map((item: any) => {
+  return fileList.value.map((item: any) => {
     return {
       uploadId: item.uploadId,
       fileId: item.fileId,
       fileName: item.fileName,
     }
   })
-  return uploadFileList
 }
 
 const initUploader = (_startUpload: boolean, videoList: any[]) => {
@@ -418,7 +418,7 @@ onUnmounted(() => {
 .file-list {
   background: #f6f7f8;
   border-radius: 5px;
-  margin: 0px 200px 0px 20px;
+  margin: 0 200px 0 20px;
   .file-item {
     padding: 10px;
     display: flex;
@@ -433,7 +433,7 @@ onUnmounted(() => {
       .icon-video {
         font-size: 40px;
         color: #a6def1;
-        padding: 0px;
+        padding: 0;
       }
 
       .video-p-info {
@@ -441,8 +441,8 @@ onUnmounted(() => {
         line-height: 40px;
         text-align: center;
         color: #fff;
-        top: 0px;
-        left: 0px;
+        top: 0;
+        left: 0;
         z-index: 1;
         position: absolute;
       }

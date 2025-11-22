@@ -82,7 +82,7 @@ watch(
       if (!categoryInit.value) {
         return
       }
-      categoryStore.setCureentPCategory(route.params.pCategoryCode)
+      categoryStore.setCureentPCategory(route.params.pCategoryCode as string)
       initData()
     }
   },
@@ -96,7 +96,7 @@ watch(
       return
     }
     categoryInit.value = true
-    categoryStore.setCureentPCategory(route.params.pCategoryCode)
+    categoryStore.setCureentPCategory(route.params.pCategoryCode as string)
     initData()
   },
   { immediate: true, deep: true }

@@ -150,7 +150,7 @@ const selectFile = (file: any) => {
   formData.value.imgPath = file.file;
 };
 
-const delImage = (index?: number) => {
+const delImage = () => {
   formData.value.imgPath = null;
 };
 

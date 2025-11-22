@@ -11,7 +11,7 @@ export async function preUploadVideo(params: { fileName: string; chunks: number 
   })
 }
 
-export async function uploadVideo(params: { chunkFile: File; chunkIndex: number; uploadId: number | string }, opts?: { onProgress?: (e: ProgressEvent) => void; onError?: (msg: any) => void; showError?: boolean }): Promise<any> {
+export async function uploadVideo(params: { chunkFile: Blob; chunkIndex: number; uploadId: number | string }, opts?: { onProgress?: (e: ProgressEvent) => void; onError?: (msg: any) => void; showError?: boolean }): Promise<any> {
   const form = new FormData()
   form.append('chunkFile', params.chunkFile)
   form.append('chunkIndex', String(params.chunkIndex))

@@ -1,22 +1,24 @@
 <template>
   <div
     class="tag"
-    :style="{'border':`1px solid ${TYPE[props.type].color}`,'color':`${TYPE[props.type].color}`}"
+    :style="{ border: `1px solid ${currentType.color}`, color: currentType.color }"
   >
-    {{ TYPE[props.type].text }}
+    {{ currentType.text }}
   </div>
 </template>
 
 <script setup lang="ts">
+import { computed, withDefaults } from 'vue'
 
-const TYPE: Record<number, { text: string; color: string }> = {
-  0: {
-    text: '置顶',
-    color: '#FF6699',
-  },
+type TagType = { text: string; color: string }
+
+const TYPE: Record<number, TagType> = {
+  0: { text: '标签', color: '#FF6699' },
 }
 
 const props = withDefaults(defineProps<{ type?: number }>(), { type: 0 })
+
+const currentType = computed<TagType>(() => TYPE[props.type ?? 0]!)
 </script>
 
 <style lang="scss" scoped>

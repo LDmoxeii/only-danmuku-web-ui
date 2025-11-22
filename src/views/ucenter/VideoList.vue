@@ -74,8 +74,8 @@
 import VideoItem from "./VideoItem.vue";
 import { ref, onMounted, onUnmounted } from 'vue'
 
-const videoNameFuzzy = ref<string | undefined>();
-const status = ref<number | null | undefined>();
+const videoNameFuzzy = ref<string>('');
+const status = ref<number | null>(null);
 const statusLoad = (_status: number) => {
   status.value = _status;
   loadVideoList();

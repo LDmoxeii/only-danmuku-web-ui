@@ -11,14 +11,10 @@
           :to="`/user/${data.userId}`"
           class="nick-name"
         >
-          {{
-            data.nickName
-          }}
+          {{ data.nickName }}
         </router-link>
         <template v-if="data.replyUserId">
-          <div class="reply-title">
-            回复
-          </div>
+          <div class="reply-title">回复</div>
           <router-link
             :to="`/user/${data.replyUserId}`"
             class="reply-nick-name"
@@ -28,16 +24,10 @@
         </template>
       </div>
       <div class="comment-message">
-        <Tag
-          v-if="data.topType == 1"
-          :type="0"
-        />
+        <Tag v-if="data.topType == 1" :type="0" />
         <span v-html="proxy.Utils.resetHtmlContent(data.content)" />
       </div>
-      <div
-        v-if="data.imgPath"
-        class="image-show"
-      >
+      <div v-if="data.imgPath" class="image-show">
         <Cover
           :source="data.imgPath + proxy.imageThumbnailSuffix"
           :preview="true"
@@ -50,13 +40,10 @@
             {{ data.postTime }}
           </div>
           <div
-            :class="[
-              'iconfont icon-good',
-              data.likeCountActive ? 'active' : '',
-            ]"
+            :class="['iconfont icon-good', data.likeCountActive ? 'active' : '']"
             @click="doLike(data)"
           >
-            {{ data.likeCount == 0 ? "" : data.likeCount }}
+            {{ data.likeCount == 0 ? '' : data.likeCount }}
           </div>
           <div
             :class="[
@@ -65,11 +52,11 @@
             ]"
             @click="doHate(data)"
           >
-            {{ data.hateCount == 0 ? "" : data.hateCount }}
+            {{ data.hateCount == 0 ? '' : data.hateCount }}
           </div>
           <div
             class="reply-btn"
-            @click="showReplyHandler(data, replyLevel)"
+            @click="showReplyHandler(data, replyLevel!)"
           >
             回复
           </div>
@@ -77,7 +64,7 @@
         <el-dropdown
           v-if="
             data.userId == loginStore.userInfo.userId ||
-              videoInfo.userId == loginStore.userInfo.userId
+            videoInfo.userId == loginStore.userInfo.userId
           "
         >
           <span class="op-right iconfont icon-more" />
@@ -86,16 +73,16 @@
               <el-dropdown-item
                 v-if="
                   videoInfo.userId == loginStore.userInfo.userId &&
-                    data.pCommentId == 0
+                  data.pCommentId == 0
                 "
                 @click="topComment"
               >
-                {{ data.topType == 1 ? "取消置顶" : "置顶" }}
+                {{ data.topType == 1 ? '取消置顶' : '置顶' }}
               </el-dropdown-item>
               <el-dropdown-item
                 v-if="
                   videoInfo.userId == loginStore.userInfo.userId ||
-                    data.userId == loginStore.userInfo.userId
+                  data.userId == loginStore.userInfo.userId
                 "
                 @click="delComment"
               >
@@ -108,6 +95,7 @@
       <div class="reply-list">
         <VideoCommentItem
           v-for="item in data.children"
+          :key="item.commentId"
           :data="item"
           :reply-level="2"
         />
@@ -121,108 +109,109 @@
 </template>
 
 <script setup lang="ts">
-import Tag from "@/components/Tag.vue";
+import Tag from '@/components/Tag.vue'
 import { doAction as apiDoAction } from '@/api/userAction'
 import { userDelComment as apiUserDelComment, userTopComment as apiUserTopComment, userCancelTopComment as apiUserCancelTopComment } from '@/api/comment'
-import { ACTION_TYPE } from "@/utils/Constants";
+import { ACTION_TYPE } from '@/utils/Constants'
 
-import VideoCommentSend from "./VideoCommentSend.vue";
-import VideoCommentItem from "./VideoCommentItem.vue";
-import Avatar from "@/components/Avatar.vue";
-import { getCurrentInstance, nextTick, inject } from "vue";
-const { proxy } = getCurrentInstance() as any;
-import { useRoute } from "vue-router";
-const route = useRoute();
+import VideoCommentSend from './VideoCommentSend.vue'
+import VideoCommentItem from './VideoCommentItem.vue'
+import Avatar from '@/components/Avatar.vue'
+import { getCurrentInstance, nextTick, inject } from 'vue'
+const { proxy } = getCurrentInstance() as any
+import { useRoute } from 'vue-router'
+const route = useRoute()
 
-import { useLoginStore } from "@/stores/loginStore";
-const loginStore = useLoginStore();
+import { useLoginStore } from '@/stores/loginStore'
+const loginStore = useLoginStore()
 
-import { mitter } from "@/eventbus/eventBus";
+import { mitter } from '@/eventbus/eventBus'
 
-const props = defineProps({
-  data: {
-    type: Object,
-    default: {},
-  },
-  replyLevel: {
-    //1:一级回复 2:二级回复
-    type: Number,
-    default: 1,
-  },
-});
-const videoInfo = inject<any>("videoInfo");
-const showReply = inject<any>("showReply");
+const props = defineProps<{
+  data: any
+  replyLevel?: number
+}>()
+
+const videoInfo = inject<any>('videoInfo')
+const showReply = inject<(commentId: number | string) => void>('showReply')!
+
 const showReplyHandler = (item: any, replyLevel: number) => {
-  showReply(replyLevel == 1 ? item.commentId : item.pCommentId);
+  showReply(replyLevel == 1 ? item.commentId : item.pCommentId)
   nextTick(() => {
     const commentData = {
       replyCommentId: item.commentId,
       nickName: item.nickName,
-    };
-    mitter.emit("initCommentData", commentData);
-  });
-};
+    }
+    mitter.emit('initCommentData', commentData)
+  })
+}
 
 const doLike = (data: any) => {
-  apiDoAction({ videoId: route.params.videoId as any, actionType: ACTION_TYPE.COMMENT_LIKE.value, commentId: data.commentId }).then(() => {
-      if (data.hateCountActive) {
-        data.hateCountActive = false;
-        data.hateCount--;
-      }
-      if (data.likeCountActive) {
-        data.likeCountActive = false;
-        data.likeCount--;
-      } else {
-        data.likeCount++;
-        data.likeCountActive = true;
-      }
-    })
-};
+  apiDoAction({
+    videoId: route.params.videoId as any,
+    actionType: ACTION_TYPE.COMMENT_LIKE.value,
+    commentId: data.commentId,
+  }).then(() => {
+    if (data.hateCountActive) {
+      data.hateCountActive = false
+      data.hateCount--
+    }
+    if (data.likeCountActive) {
+      data.likeCountActive = false
+      data.likeCount--
+    } else {
+      data.likeCount++
+      data.likeCountActive = true
+    }
+  })
+}
 
 const doHate = (data: any) => {
-  apiDoAction({ videoId: route.params.videoId as any, actionType: ACTION_TYPE.COMMENT_HATE.value, commentId: data.commentId }).then(() => {
-      if (data.likeCountActive) {
-        data.likeCountActive = false;
-        data.likeCount--;
-      }
-      if (data.hateCountActive) {
-        data.hateCountActive = false;
-        data.hateCount--;
-      } else {
-        data.hateCount++;
-        data.hateCountActive = true;
-      }
-    })
-};
+  apiDoAction({
+    videoId: route.params.videoId as any,
+    actionType: ACTION_TYPE.COMMENT_HATE.value,
+    commentId: data.commentId,
+  }).then(() => {
+    if (data.likeCountActive) {
+      data.likeCountActive = false
+      data.likeCount--
+    }
+    if (data.hateCountActive) {
+      data.hateCountActive = false
+      data.hateCount--
+    } else {
+      data.hateCount++
+      data.hateCountActive = true
+    }
+  })
+}
 
 const delComment = () => {
   proxy.Confirm({
-    message: "确定要删除评论",
+    message: 'ȷ��Ҫɾ������',
     okfun: async () => {
-      let result = await apiUserDelComment(props.data.commentId)
-      if (!result) {
-        return;
-      }
-      mitter.emit("delCommentCallback", {
+      await apiUserDelComment(props.data.commentId)
+      mitter.emit('delCommentCallback', {
         pCommentId: props.data.pCommentId,
         commentId: props.data.commentId,
-      });
+      })
     },
-  });
-};
+  })
+}
 
 const topComment = () => {
   proxy.Confirm({
-    message: `确定要${props.data.topType == 1 ? "取消置顶" : "置顶"}吗？`,
+    message: `ȷ��Ҫ${props.data.topType == 1 ? 'ȡ���ö�' : '�ö�'}��`,
     okfun: async () => {
-      let result = props.data.topType == 1 ? await apiUserCancelTopComment(props.data.commentId) : await apiUserTopComment(props.data.commentId)
-      if (!result) {
-        return;
+      if (props.data.topType == 1) {
+        await apiUserCancelTopComment(props.data.commentId)
+      } else {
+        await apiUserTopComment(props.data.commentId)
       }
-      mitter.emit("topCommentCallback");
+      mitter.emit('topCommentCallback')
     },
-  });
-};
+  })
+}
 </script>
 
 <style lang="scss" scoped>
