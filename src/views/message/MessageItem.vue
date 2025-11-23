@@ -15,15 +15,15 @@
         </router-link>
         <span class="title-info">{{ convertTitle() }}</span>
       </div>
-      <template v-if="data.messageType === 4">
+      <template v-if="data.messageType === 4 || data.messageType === 5">
         <div class="comment">
-          {{ data.extendDto?.messageContent }}
+          {{ normalizedExtendDto?.messageContent }}
         </div>
         <div
-          v-if="data.extendDto?.messageContentReply"
+          v-if="normalizedExtendDto?.messageContentReply"
           class="reply"
         >
-          {{ data.extendDto?.messageContentReply }}
+          {{ normalizedExtendDto?.messageContentReply }}
         </div>
       </template>
       <div class="send-time">
@@ -46,7 +46,7 @@
 </template>
 
 <script setup lang="ts">
-import { getCurrentInstance } from "vue";
+import { computed, getCurrentInstance } from "vue";
 const { proxy } = getCurrentInstance() as any;
 
 const props = defineProps<{
@@ -55,13 +55,26 @@ const props = defineProps<{
     sendUserId?: string | number;
     sendUserName?: string;
     messageType: number;
-    extendDto?: { messageContent?: string; messageContentReply?: string };
+    extendDto?: string | { messageContent?: string; messageContentReply?: string };
     createTime?: string | number;
     messageId: string | number;
     videoId?: string | number;
     videoCover?: string;
   };
 }>();
+
+const normalizedExtendDto = computed(() => {
+  const raw = props.data.extendDto;
+  if (!raw) return {} as Record<string, string>;
+  if (typeof raw === "string") {
+    try {
+      return JSON.parse(raw) as Record<string, string>;
+    } catch {
+      return {} as Record<string, string>;
+    }
+  }
+  return raw;
+});
 
 const MESSAGE_TYPE = {
   1: "系统消息",
@@ -71,8 +84,9 @@ const MESSAGE_TYPE = {
 } as const;
 
 const convertTitle = (): string => {
-  if (props.data.messageType === 4) {
-    if (props.data.extendDto?.messageContentReply) {
+  if (props.data.messageType === 4 || props.data.messageType === 5) {
+    const extendDto = normalizedExtendDto.value;
+    if (extendDto?.messageContentReply) {
       return "在视频中回复了你的评论";
     }
     return "在视频下发表了评论";
