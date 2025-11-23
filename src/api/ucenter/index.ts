@@ -9,7 +9,7 @@ export async function postVideo(params: any): Promise<any> {
   return await request<any>({url: `${base}/postVideo`, params, showLoading: true, method: 'post',})
 }
 export async function loadVideoList(params: { pageNum: number; pageSize?: number; videoNameFuzzy?: string; status?: number | null }): Promise<PageData<any>> {
-  return await request<PageData<any>>({url: `${base}/loadVideoList`, params, method: 'post',})
+  return await request<PageData<any>>({url: `${base}/loadVideoList`, data: params, method: 'post',})
 }
 export async function getVideoByVideoId(videoPostId: string | number): Promise<any> {
   return await request<any>({url: `${base}/getVideoByVideoId`, params: {videoPostId}, method: 'post',})

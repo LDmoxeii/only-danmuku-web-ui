@@ -4,20 +4,20 @@
       <div
         :class="[
           'video-name iconfont',
-          data.extendDto.auditStatus == 4 ? 'icon-success' : 'icon-error',
+          normalizedExtendDto?.auditStatus == 4 ? 'icon-success' : 'icon-error',
         ]"
       >
         视频 【{{ data.videoName }}】审核
-        {{ data.extendDto.auditStatus == 4 ? "成功" : "失败" }}
+        {{ normalizedExtendDto?.auditStatus == 4 ? "成功" : "失败" }}
       </div>
       <div
-        v-if="data.extendDto.auditStatus != 4 "
+        v-if="normalizedExtendDto?.auditStatus != 4 "
         class="resean"
       >
-        失败原因：{{ data.extendDto.messageContent }}
+        失败原因：{{ normalizedExtendDto?.messageContent }}
       </div>
       <div
-        v-if="data.extendDto.auditStatus == 4"
+        v-if="normalizedExtendDto?.auditStatus == 4"
         class="success"
       >
         <router-link
@@ -48,10 +48,23 @@
 </template>
 
 <script setup lang="ts">
-import { getCurrentInstance } from 'vue'
+import {computed, getCurrentInstance} from 'vue'
 const { proxy } = getCurrentInstance() as any
 
-defineProps({
+const normalizedExtendDto = computed(() => {
+  const raw = props.data.extendDto;
+  if (!raw) return {} as Record<string, string>;
+  if (typeof raw === "string") {
+    try {
+      return JSON.parse(raw) as Record<string, string>;
+    } catch {
+      return {} as Record<string, string>;
+    }
+  }
+  return raw;
+});
+
+const props = defineProps({
   data: {
     type: Object,
     default: () => ({}),

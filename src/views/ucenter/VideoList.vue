@@ -33,8 +33,8 @@
       </div>
       <div class="video-status">
         <span
-          :class="['item', status == -1 ? 'active' : '']"
-          @click="statusLoad(-1)"
+          :class="['item', status == 0 ? 'active' : '']"
+          @click="statusLoad(0)"
         >进行中<span class="count-info">{{
           countInfo.inProgress
         }}</span></span>
