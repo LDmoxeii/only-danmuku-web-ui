@@ -15,7 +15,7 @@
         </router-link>
         <span class="title-info">{{ convertTitle() }}</span>
       </div>
-      <template v-if="data.messageType === 4 || data.messageType === 5">
+      <template v-if="data.messageType === 4">
         <div class="comment">
           {{ normalizedExtendDto?.messageContent }}
         </div>
@@ -84,7 +84,7 @@ const MESSAGE_TYPE = {
 } as const;
 
 const convertTitle = (): string => {
-  if (props.data.messageType === 4 || props.data.messageType === 5) {
+  if (props.data.messageType === 4) {
     const extendDto = normalizedExtendDto.value;
     if (extendDto?.messageContentReply) {
       return "在视频中回复了你的评论";

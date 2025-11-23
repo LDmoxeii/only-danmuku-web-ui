@@ -128,7 +128,6 @@ const loadDataList = async () => {
   }
   let result = await apiLoadMessage(params)
   if (!result) return
-  console.log(result)
   dataSource.value = result
 }
 
