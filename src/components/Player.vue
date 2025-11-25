@@ -64,6 +64,10 @@ import { fetchAbrVariants, abrMasterUrl, abrPlaylistUrl } from '@/api/abr'
 let player: any = null
 
 const initPlayer = (defaultUrl: string, qualityList: { html: string; url: string; default?: boolean }[]) => {
+  // 重新挂载前清空弹幕挂载点，避免切换分P时重复渲染多个输入区域
+  const danmuMount = document.querySelector('#danmu') as HTMLDivElement | null
+  if (danmuMount) danmuMount.innerHTML = ''
+
   //隐藏右键菜单
   Artplayer.CONTEXTMENU = false
   //自动回放功能的最大记录数，默认为 10
@@ -187,7 +191,7 @@ const changeWideScreen = () => {
   emit('changeWideScreen', wideScreen.value)
 }
 
-const currentFileId = ref<number | null>(null)
+const currentFileId = ref<string | number | null>(null)
 let currentQualityList: { html: string; url: string; default?: boolean }[] = []
 const postDanmu = (danmu: any) => {
   if (Object.keys(loginStore.userInfo).length == 0) {
@@ -227,8 +231,8 @@ onMounted(() => {
     setPlayerHeight && setPlayerHeight(height)
   })
 
-  mitter.on('changeP', async (_fileId: number) => {
-    currentFileId.value = Number(_fileId)
+  mitter.on('changeP', async (_fileId: string | number) => {
+    currentFileId.value = String(_fileId)
 
     const variantResp = await fetchAbrVariants(currentFileId.value!)
     currentQualityList = [
@@ -320,7 +324,7 @@ const showDanmu = computed(() => {
     :deep(.art-controls-right) {
       position: relative;
       display: block;
-      width: 280px;
+      width: 330px;
       .art-control {
         position: absolute;
       }
@@ -328,29 +332,32 @@ const showDanmu = computed(() => {
       .art-control-screenshot {
         left: 0;
       }
+      .art-control-quality {
+        left: 48px;
+      }
       //设置按钮
       .art-control-setting {
-        left: 46px;
+        left: 96px;
       }
       //画中画
       .art-control-pip {
-        left: 92px;
+        left: 144px;
       }
       //宽屏
       .art-control-wide-screen,
       .art-control-narrow-screen {
-        left: 138px;
+        left: 192px;
         .iconfont {
           font-size: 20px;
         }
       }
       //网页全屏按钮
       .art-control-fullscreenWeb {
-        left: 184px;
+        left: 240px;
       }
       //全屏按钮
       .art-control-fullscreen {
-        left: 230px;
+        left: 288px;
       }
     }
   }
