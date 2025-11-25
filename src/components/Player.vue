@@ -60,10 +60,10 @@ defineProps({
 })
 
 const playerRef = ref<string | HTMLDivElement | null>(null)
-import { getVideoResource as apiGetVideoResource } from '@/api/file'
+import { fetchAbrVariants, abrMasterUrl, abrPlaylistUrl } from '@/api/abr'
 let player: any = null
 
-const initPlayer = () => {
+const initPlayer = (defaultUrl: string, qualityList: { html: string; url: string; default?: boolean }[]) => {
   //隐藏右键菜单
   Artplayer.CONTEXTMENU = false
   //自动回放功能的最大记录数，默认为 10
@@ -72,7 +72,7 @@ const initPlayer = () => {
   Artplayer.AUTO_PLAYBACK_MIN = 10
   player = new Artplayer({
     container: playerRef.value as string | HTMLDivElement,
-    url: ``,
+    url: defaultUrl,
     type: 'm3u8',
     customType: {
       m3u8: function (video: HTMLVideoElement, url: string, art: any) {
@@ -90,6 +90,7 @@ const initPlayer = () => {
         }
       },
     },
+    quality: qualityList,
     theme: '#23ade5', //播放器主题颜色，目前用于 进度条 和 高亮元素 上
     volume: 0.7, //播放器的默认音量
     autoplay: true, //是否自动播放 假如希望默认进入页面就能自动播放视频，muted 必需为 true
@@ -186,7 +187,8 @@ const changeWideScreen = () => {
   emit('changeWideScreen', wideScreen.value)
 }
 
-const currentFileId = ref<string | null>(null)
+const currentFileId = ref<number | null>(null)
+let currentQualityList: { html: string; url: string; default?: boolean }[] = []
 const postDanmu = (danmu: any) => {
   if (Object.keys(loginStore.userInfo).length == 0) {
     loginStore.setLogin(true)
@@ -216,7 +218,8 @@ const setPlayerHeight = inject<((h: number) => void) | null>('playerHeight', nul
 
 onMounted(() => {
   nextTick(() => {
-    initPlayer()
+    // 占位初始化，实际切换分P时重建播放器
+    initPlayer('', [])
     //滚动条的宽度是8，页面未全部加载完获取不到滚动条的宽度，所以这里提前减去滚动条的宽度
     const width = (playerRef.value as HTMLDivElement)?.clientWidth ?? 0
     const height = Math.round((width - 8) * 0.5625)
@@ -224,11 +227,25 @@ onMounted(() => {
     setPlayerHeight && setPlayerHeight(height)
   })
 
-  mitter.on('changeP', (_fileId: string) => {
-    currentFileId.value = _fileId
+  mitter.on('changeP', async (_fileId: number) => {
+    currentFileId.value = Number(_fileId)
+
+    const variantResp = await fetchAbrVariants(currentFileId.value!)
+    currentQualityList = [
+      { html: '自动', url: abrMasterUrl(currentFileId.value!), default: true },
+      ...(variantResp.qualities || []).map((q: string) => ({
+        html: q,
+        url: abrPlaylistUrl(currentFileId.value!, q)
+      }))
+    ]
+    const defaultUrl = currentQualityList[0]?.url || ''
+    if (player) {
+      player.destroy(false)
+    }
+    initPlayer(defaultUrl, currentQualityList)
+
     //获取在线人数
-    reportVideoPlayOnline()
-    player.switch = apiGetVideoResource(_fileId) as any
+    await reportVideoPlayOnline()
     //切换弹幕
     player.plugins.artplayerPluginDanmuku.load()
   })
@@ -257,7 +274,7 @@ const reportVideoPlayOnline = async () => {
   if (!currentFileId.value) {
     return
   }
-  const result = await apiReportVideoPlayOnline(currentFileId.value as string, loginStore.deviceId as string)
+  const result = await apiReportVideoPlayOnline(String(currentFileId.value), loginStore.deviceId as string)
   if (!result) return
   onLineCount.value = result
 }
