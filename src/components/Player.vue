@@ -50,7 +50,7 @@ import artplayerPluginDanmuku from 'artplayer-plugin-danmuku'
 import { useLoginStore } from '@/stores/loginStore'
 import { reportVideoPlayOnline as apiReportVideoPlayOnline } from '@/api/video'
 import { loadDanmu as apiLoadDanmu, postDanmu as apiPostDanmu } from '@/api/danmu'
-import { issueEncToken, encMasterUrl, encPlaylistUrl } from '@/api/enc'
+import { issueEncToken, encPlaylistUrl } from '@/api/enc'
 const loginStore = useLoginStore()
 
 defineProps({
@@ -61,7 +61,7 @@ defineProps({
 })
 
 const playerRef = ref<string | HTMLDivElement | null>(null)
-import { fetchAbrVariants } from '@/api/abr'
+import { fetchAbrVariants, abrPlaylistUrl } from '@/api/abr'
 let player: any = null
 let currentToken: string | null = null
 
@@ -236,20 +236,23 @@ onMounted(() => {
   mitter.on('changeP', async (_fileId: string | number) => {
     currentFileId.value = String(_fileId)
 
-    const tokenResp = await issueEncToken(currentFileId.value!)
-    currentToken = tokenResp.token
-
-    const allowed = parseAllowed(tokenResp.allowedQualities)
     const variantResp = await fetchAbrVariants(currentFileId.value!)
-    const qualities = filterQualities(variantResp.qualities || [], allowed)
+    const qualities: string[] = variantResp.qualities || []
 
-    currentQualityList = [
-      { html: '自动', url: encMasterUrl(currentFileId.value!, currentToken), default: true },
-      ...qualities.map((q: string) => ({
-        html: q,
-        url: encPlaylistUrl(currentFileId.value!, q, currentToken!)
-      }))
-    ]
+    // 登录/允许时尝试申请加密 token
+    let allowedEnc: string[] | null = null
+    currentToken = null
+    try {
+      const tokenResp = await issueEncToken(currentFileId.value!)
+      currentToken = tokenResp.token
+      allowedEnc = parseAllowed(tokenResp.allowedQualities)
+    } catch (e) {
+      // 未登录或接口失败则只用明文档位
+      currentToken = null
+      allowedEnc = null
+    }
+
+    currentQualityList = buildQualityList(qualities, allowedEnc)
     const defaultUrl = currentQualityList[0]?.url || ''
     if (player) {
       player.destroy(false)
@@ -311,6 +314,31 @@ const parseAllowed = (allowed?: string | null): string[] | null => {
 const filterQualities = (qualities: string[], allowed: string[] | null): string[] => {
   if (!allowed || allowed.length === 0) return qualities
   return qualities.filter((q) => allowed.includes(q))
+}
+
+const buildQualityList = (qualities: string[], allowedEnc: string[] | null) => {
+  // 加密档位（高阶）优先：当有 token 且在允许清单时，用 enc URL，否则用 abr URL
+  const encryptable = new Set(['720p', '1080p'])
+  const weighted = qualities.slice().sort((a, b) => qualityWeight(b) - qualityWeight(a))
+
+  const list = weighted.map((q) => {
+    const canEnc = currentToken && encryptable.has(q) && (!allowedEnc || allowedEnc.length === 0 || allowedEnc.includes(q))
+    const url = canEnc
+      ? encPlaylistUrl(currentFileId.value!, q, currentToken!)
+      : abrPlaylistUrl(currentFileId.value!, q)
+    return { html: q, url }
+  })
+
+  // 默认选最高可用档位
+  if (list.length > 0) {
+    list[0].default = true
+  }
+  return list
+}
+
+const qualityWeight = (q: string): number => {
+  const map: Record<string, number> = { '1080p': 1080, '720p': 720, '480p': 480, '360p': 360 }
+  return map[q] ?? 0
 }
 
 //判断是否显示弹幕
