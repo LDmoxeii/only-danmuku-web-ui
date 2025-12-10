@@ -50,6 +50,7 @@ import artplayerPluginDanmuku from 'artplayer-plugin-danmuku'
 import { useLoginStore } from '@/stores/loginStore'
 import { reportVideoPlayOnline as apiReportVideoPlayOnline } from '@/api/video'
 import { loadDanmu as apiLoadDanmu, postDanmu as apiPostDanmu } from '@/api/danmu'
+import { issueEncToken, encMasterUrl, encPlaylistUrl } from '@/api/enc'
 const loginStore = useLoginStore()
 
 defineProps({
@@ -60,8 +61,9 @@ defineProps({
 })
 
 const playerRef = ref<string | HTMLDivElement | null>(null)
-import { fetchAbrVariants, abrMasterUrl, abrPlaylistUrl } from '@/api/abr'
+import { fetchAbrVariants } from '@/api/abr'
 let player: any = null
+let currentToken: string | null = null
 
 const initPlayer = (defaultUrl: string, qualityList: { html: string; url: string; default?: boolean }[]) => {
   // 重新挂载前清空弹幕挂载点，避免切换分P时重复渲染多个输入区域
@@ -234,12 +236,18 @@ onMounted(() => {
   mitter.on('changeP', async (_fileId: string | number) => {
     currentFileId.value = String(_fileId)
 
+    const tokenResp = await issueEncToken(currentFileId.value!)
+    currentToken = tokenResp.token
+
+    const allowed = parseAllowed(tokenResp.allowedQualities)
     const variantResp = await fetchAbrVariants(currentFileId.value!)
+    const qualities = filterQualities(variantResp.qualities || [], allowed)
+
     currentQualityList = [
-      { html: '自动', url: abrMasterUrl(currentFileId.value!), default: true },
-      ...(variantResp.qualities || []).map((q: string) => ({
+      { html: '自动', url: encMasterUrl(currentFileId.value!, currentToken), default: true },
+      ...qualities.map((q: string) => ({
         html: q,
-        url: abrPlaylistUrl(currentFileId.value!, q)
+        url: encPlaylistUrl(currentFileId.value!, q, currentToken!)
       }))
     ]
     const defaultUrl = currentQualityList[0]?.url || ''
@@ -288,6 +296,21 @@ const cleanTimer = () => {
     clearInterval(timmer.value)
     timmer.value = null
   }
+}
+
+const parseAllowed = (allowed?: string | null): string[] | null => {
+  if (!allowed) return null
+  try {
+    const parsed = JSON.parse(allowed)
+    return Array.isArray(parsed) ? parsed : null
+  } catch (_) {
+    return null
+  }
+}
+
+const filterQualities = (qualities: string[], allowed: string[] | null): string[] => {
+  if (!allowed || allowed.length === 0) return qualities
+  return qualities.filter((q) => allowed.includes(q))
 }
 
 //判断是否显示弹幕
