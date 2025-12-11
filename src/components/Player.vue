@@ -51,6 +51,7 @@ import { useLoginStore } from '@/stores/loginStore'
 import { reportVideoPlayOnline as apiReportVideoPlayOnline } from '@/api/video'
 import { loadDanmu as apiLoadDanmu, postDanmu as apiPostDanmu } from '@/api/danmu'
 import { issueEncToken, encPlaylistUrl } from '@/api/enc'
+import { fetchAbrVariants, abrPlaylistUrl } from '@/api/abr'
 const loginStore = useLoginStore()
 
 defineProps({
@@ -61,9 +62,23 @@ defineProps({
 })
 
 const playerRef = ref<string | HTMLDivElement | null>(null)
-import { fetchAbrVariants, abrPlaylistUrl } from '@/api/abr'
 let player: any = null
 let currentToken: string | null = null
+const encryptable = new Set(['720p', '1080p'])
+
+const appendTokenParam = (url: string) => {
+  if (!currentToken) return url
+  try {
+    const parsed = new URL(url, window.location.href)
+    if (parsed.pathname.startsWith('/video/enc/')) {
+      parsed.pathname = `/api${parsed.pathname}`
+    }
+    parsed.searchParams.set('token', currentToken)
+    return parsed.toString()
+  } catch (_) {
+    return url
+  }
+}
 
 const initPlayer = (defaultUrl: string, qualityList: { html: string; url: string; default?: boolean }[]) => {
   // 重新挂载前清空弹幕挂载点，避免切换分P时重复渲染多个输入区域
@@ -84,7 +99,16 @@ const initPlayer = (defaultUrl: string, qualityList: { html: string; url: string
       m3u8: function (video: HTMLVideoElement, url: string, art: any) {
         if (Hls.isSupported()) {
           if (art.hls) art.hls.destroy()
-          const hls = new Hls()
+          const tokenizedLoader = (() => {
+            const BaseLoader = Hls.DefaultConfig.loader
+            return class TokenLoader extends (BaseLoader as any) {
+              load(context: any, config: any, callbacks: any) {
+                context.url = appendTokenParam(context.url)
+                return super.load(context, config, callbacks)
+              }
+            }
+          })()
+          const hls = new Hls({ loader: tokenizedLoader as any })
           hls.loadSource(url)
           hls.attachMedia(video)
           art.hls = hls
@@ -239,21 +263,16 @@ onMounted(() => {
     const variantResp = await fetchAbrVariants(currentFileId.value!)
     const qualities: string[] = variantResp.qualities || []
 
-    // 登录/允许时尝试申请加密 token
-    let allowedEnc: string[] | null = null
     currentToken = null
     try {
       const tokenResp = await issueEncToken(currentFileId.value!)
       currentToken = tokenResp.token
-      allowedEnc = parseAllowed(tokenResp.allowedQualities)
     } catch (e) {
-      // 未登录或接口失败则只用明文档位
       currentToken = null
-      allowedEnc = null
     }
 
-    currentQualityList = buildQualityList(qualities, allowedEnc)
-    const defaultUrl = currentQualityList[0]?.url || ''
+    currentQualityList = buildQualityList(qualities)
+    const defaultUrl = pickDefaultUrl(currentQualityList)
     if (player) {
       player.destroy(false)
     }
@@ -301,39 +320,24 @@ const cleanTimer = () => {
   }
 }
 
-const parseAllowed = (allowed?: string | null): string[] | null => {
-  if (!allowed) return null
-  try {
-    const parsed = JSON.parse(allowed)
-    return Array.isArray(parsed) ? parsed : null
-  } catch (_) {
-    return null
-  }
-}
-
-const filterQualities = (qualities: string[], allowed: string[] | null): string[] => {
-  if (!allowed || allowed.length === 0) return qualities
-  return qualities.filter((q) => allowed.includes(q))
-}
-
-const buildQualityList = (qualities: string[], allowedEnc: string[] | null) => {
-  // 加密档位（高阶）优先：当有 token 且在允许清单时，用 enc URL，否则用 abr URL
-  const encryptable = new Set(['720p', '1080p'])
+const buildQualityList = (qualities: string[]) => {
   const weighted = qualities.slice().sort((a, b) => qualityWeight(b) - qualityWeight(a))
-
   const list = weighted.map((q) => {
-    const canEnc = currentToken && encryptable.has(q) && (!allowedEnc || allowedEnc.length === 0 || allowedEnc.includes(q))
-    const url = canEnc
-      ? encPlaylistUrl(currentFileId.value!, q, currentToken!)
-      : abrPlaylistUrl(currentFileId.value!, q)
+    const useEnc = encryptable.has(q)
+    const url = useEnc ? encPlaylistUrl(currentFileId.value!, q, currentToken || '') : abrPlaylistUrl(currentFileId.value!, q)
     return { html: q, url }
   })
-
-  // 默认选最高可用档位
-  if (list.length > 0) {
-    list[0].default = true
-  }
+  const defaultIdx = list.findIndex((q) => !encryptable.has(q.html))
+  const idx = defaultIdx >= 0 ? defaultIdx : 0
+  if (list[idx]) list[idx].default = true
   return list
+}
+
+const pickDefaultUrl = (qualities: { url: string; html: string }[]) => {
+  // 默认优先未加密档位，保证游客可播放；否则用最高档
+  const fallback = qualities[0]?.url || ''
+  const safe = qualities.find((q) => !encryptable.has(q.html))?.url
+  return safe || fallback
 }
 
 const qualityWeight = (q: string): number => {
