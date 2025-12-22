@@ -38,6 +38,7 @@ import {
   onBeforeUnmount,
   inject,
   computed,
+  watch,
 } from 'vue'
 import Hls from 'hls.js'
 import { useRoute } from 'vue-router'
@@ -63,6 +64,7 @@ const playerRef = ref<string | HTMLDivElement | null>(null)
 import { fetchAbrVariants, abrMasterUrl, abrPlaylistUrl } from '@/api/abr'
 import { issueEncToken, encMasterUrl, encPlaylistUrl, listEncQualities } from '@/api/enc'
 let player: any = null
+let playerReady = false
 
 const initPlayer = (defaultUrl: string) => {
   // 重新挂载前清空弹幕挂载点，避免切换分P时重复渲染多个输入区域
@@ -75,6 +77,7 @@ const initPlayer = (defaultUrl: string) => {
   Artplayer.AUTO_PLAYBACK_MAX = 20
   //自动回放功能的最小记录时长，单位为秒，默认为 5
   Artplayer.AUTO_PLAYBACK_MIN = 10
+  playerReady = false
   player = new Artplayer({
     container: playerRef.value as string | HTMLDivElement,
     url: defaultUrl,
@@ -171,6 +174,7 @@ const initPlayer = (defaultUrl: string) => {
     ],
   })
   player.on('ready', () => {
+    playerReady = true
     attachQualityGuard(player)
   })
   player.on('hover', (state: boolean) => {
@@ -207,6 +211,8 @@ type EncQualityItem = { quality: string; authPolicy: number; playable: boolean }
 let currentQualityPlayableByUrl = new Map<string, boolean>()
 let lastSelectedQualityUrl = ''
 let currentAutoUrl = ''
+const AUTO_QUALITY_VALUE = 'auto'
+let lastSelectedQualityValue = AUTO_QUALITY_VALUE
 const DEBUG_QUALITY = true
 const logQuality = (...args: any[]) => {
   if (DEBUG_QUALITY) console.log('[Player][Quality]', ...args)
@@ -230,6 +236,15 @@ const refreshPlayableByUrl = () => {
   )
 }
 const buildQualityListForArt = () => currentQualitySourceList.map((item) => ({ ...item }))
+const resolveDefaultQualityItem = (preferredValue: string) => {
+  if (!currentQualitySourceList.length) return null
+  const preferred = currentQualitySourceList.find((item) => item.value === preferredValue)
+  if (preferred && preferred.playable !== false) return preferred
+  const autoItem = currentQualitySourceList.find((item) => item.value === AUTO_QUALITY_VALUE)
+  if (autoItem && autoItem.playable !== false) return autoItem
+  const playableItem = currentQualitySourceList.find((item) => item.playable !== false)
+  return playableItem || currentQualitySourceList[0]
+}
 const restoreQualitySelection = (art: any, url: string) => {
   const targetUrl = url || currentAutoUrl
   markDefaultQualityByUrl(targetUrl)
@@ -259,9 +274,84 @@ const attachQualityGuard = (art: any) => {
       }
       await art.switchQuality(url)
       lastSelectedQualityUrl = url
+      lastSelectedQualityValue = selector?.value || AUTO_QUALITY_VALUE
       return selector?.html || ''
     },
   })
+}
+type QualityPayload = {
+  useEnc: boolean
+  autoUrl: string
+  qualities: { html: string; url: string; value?: string; default?: boolean; playable?: boolean }[]
+}
+const fetchQualityPayload = async (fileId: string | number): Promise<QualityPayload> => {
+  let encToken = ''
+  let encQualities: EncQualityItem[] = []
+  try {
+    const encResp = await issueEncToken(fileId)
+    encToken = encResp?.token || ''
+  } catch {}
+  try {
+    const encListResp = await listEncQualities(fileId)
+    encQualities = encListResp?.qualities || []
+  } catch {}
+
+  if (!encQualities.length) {
+    const variantResp = await fetchAbrVariants(fileId)
+    encQualities = (variantResp.qualities || []).map((q: string) => ({
+      quality: q,
+      authPolicy: 1,
+      playable: true
+    }))
+  }
+
+  const useEnc = Boolean(encToken)
+  const autoUrl = useEnc ? encMasterUrl(fileId, encToken) : abrMasterUrl(fileId)
+  const qualities = [
+    { html: AUTO_QUALITY_LABEL, url: autoUrl, value: AUTO_QUALITY_VALUE, default: true, playable: true },
+    ...encQualities.map((item) => ({
+      html: item.quality,
+      value: item.quality,
+      url: useEnc
+        ? encPlaylistUrl(fileId, item.quality, encToken)
+        : abrPlaylistUrl(fileId, item.quality),
+      playable: item.playable
+    }))
+  ]
+  return { useEnc, autoUrl, qualities }
+}
+const applyQualityPayload = (
+  payload: QualityPayload,
+  options: { resetSelection: boolean; forceSwitchWhenUnplayable: boolean; updatePlayer: boolean; reason: string }
+) => {
+  currentAutoUrl = payload.autoUrl
+  currentQualitySourceList = payload.qualities
+  refreshPlayableByUrl()
+
+  const preferredValue = options.resetSelection ? AUTO_QUALITY_VALUE : lastSelectedQualityValue
+  const preferredItem = currentQualitySourceList.find((item) => item.value === preferredValue) || null
+  const preferredPlayable = preferredItem ? preferredItem.playable !== false : false
+  const defaultItem = preferredPlayable ? preferredItem : resolveDefaultQualityItem(AUTO_QUALITY_VALUE)
+  if (defaultItem) {
+    markDefaultQualityByUrl(defaultItem.url)
+    lastSelectedQualityUrl = defaultItem.url
+    lastSelectedQualityValue = defaultItem.value || AUTO_QUALITY_VALUE
+  }
+  logQuality(options.reason, {
+    fileId: currentFileId.value,
+    useEnc: payload.useEnc,
+    autoUrl: payload.autoUrl,
+    preferredValue,
+    preferredPlayable,
+    defaultValue: defaultItem?.value,
+    qualities: currentQualitySourceList
+  })
+  if (options.updatePlayer && player && playerReady) {
+    attachQualityGuard(player)
+    if (options.forceSwitchWhenUnplayable && !preferredPlayable && defaultItem) {
+      player.switchQuality(defaultItem.url)
+    }
+  }
 }
 const updateAutoQualityLabel = (label: string) => {
   if (!currentQualityList.length) return
@@ -316,51 +406,15 @@ onMounted(() => {
   mitter.on('changeP', async (_fileId: string | number) => {
     currentFileId.value = _fileId
 
-    let encToken = ''
-    let encQualities: EncQualityItem[] = []
-    try {
-      const encResp = await issueEncToken(currentFileId.value!)
-      encToken = encResp?.token || ''
-    } catch {}
-    try {
-      const encListResp = await listEncQualities(currentFileId.value!)
-      encQualities = encListResp?.qualities || []
-    } catch {}
-
-    if (!encQualities.length) {
-      const variantResp = await fetchAbrVariants(currentFileId.value!)
-      encQualities = (variantResp.qualities || []).map((q: string) => ({
-        quality: q,
-        authPolicy: 1,
-        playable: true
-      }))
-    }
-
-    const useEnc = Boolean(encToken)
-    const autoUrl = useEnc
-      ? encMasterUrl(currentFileId.value!, encToken)
-      : abrMasterUrl(currentFileId.value!)
-    currentAutoUrl = autoUrl
-    currentQualitySourceList = [
-      { html: AUTO_QUALITY_LABEL, url: autoUrl, value: 'auto', default: true, playable: true },
-      ...encQualities.map((item) => ({
-        html: item.quality,
-        value: item.quality,
-        url: useEnc
-          ? encPlaylistUrl(currentFileId.value!, item.quality, encToken)
-          : abrPlaylistUrl(currentFileId.value!, item.quality),
-        playable: item.playable
-      }))
-    ]
-    refreshPlayableByUrl()
-    logQuality('changeP', {
-      fileId: currentFileId.value,
-      useEnc,
-      autoUrl,
-      qualities: currentQualitySourceList
+    lastSelectedQualityValue = AUTO_QUALITY_VALUE
+    const payload = await fetchQualityPayload(currentFileId.value!)
+    applyQualityPayload(payload, {
+      resetSelection: true,
+      forceSwitchWhenUnplayable: false,
+      updatePlayer: false,
+      reason: 'changeP'
     })
-    lastSelectedQualityUrl = autoUrl
-    const defaultUrl = currentQualitySourceList[0]?.url || ''
+    const defaultUrl = lastSelectedQualityUrl || payload.autoUrl || ''
     if (player) {
       player.destroy(false)
     }
@@ -373,6 +427,19 @@ onMounted(() => {
   })
   //轮训获取
   startTimer()
+})
+
+const loginUserId = computed(() => (loginStore.userInfo as any)?.userId || '')
+watch(loginUserId, async (newId, oldId) => {
+  if (newId === oldId) return
+  if (!currentFileId.value) return
+  const payload = await fetchQualityPayload(currentFileId.value)
+  applyQualityPayload(payload, {
+    resetSelection: false,
+    forceSwitchWhenUnplayable: true,
+    updatePlayer: true,
+    reason: 'auth-change'
+  })
 })
 
 onBeforeUnmount(() => {
