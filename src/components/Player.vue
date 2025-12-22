@@ -61,9 +61,10 @@ defineProps({
 
 const playerRef = ref<string | HTMLDivElement | null>(null)
 import { fetchAbrVariants, abrMasterUrl, abrPlaylistUrl } from '@/api/abr'
+import { issueEncToken, encMasterUrl, encPlaylistUrl, listEncQualities } from '@/api/enc'
 let player: any = null
 
-const initPlayer = (defaultUrl: string, qualityList: { html: string; url: string; default?: boolean }[]) => {
+const initPlayer = (defaultUrl: string) => {
   // 重新挂载前清空弹幕挂载点，避免切换分P时重复渲染多个输入区域
   const danmuMount = document.querySelector('#danmu') as HTMLDivElement | null
   if (danmuMount) danmuMount.innerHTML = ''
@@ -99,7 +100,7 @@ const initPlayer = (defaultUrl: string, qualityList: { html: string; url: string
         }
       },
     },
-    quality: qualityList,
+    quality: [],
     theme: '#23ade5', //播放器主题颜色，目前用于 进度条 和 高亮元素 上
     volume: 0.7, //播放器的默认音量
     autoplay: true, //是否自动播放 假如希望默认进入页面就能自动播放视频，muted 必需为 true
@@ -169,6 +170,9 @@ const initPlayer = (defaultUrl: string, qualityList: { html: string; url: string
       }),
     ],
   })
+  player.on('ready', () => {
+    attachQualityGuard(player)
+  })
   player.on('hover', (state: boolean) => {
     let display = 'none'
     if (state) {
@@ -197,13 +201,67 @@ const changeWideScreen = () => {
 }
 
 const currentFileId = ref<string | number | null>(null)
-let currentQualityList: { html: string; url: string; default?: boolean }[] = []
+let currentQualitySourceList: { html: string; url: string; value?: string; default?: boolean; playable?: boolean }[] = []
+let currentQualityList: { html: string; url: string; value?: string; default?: boolean; playable?: boolean }[] = []
+type EncQualityItem = { quality: string; authPolicy: number; playable: boolean }
+let currentQualityPlayableByUrl = new Map<string, boolean>()
+let lastSelectedQualityUrl = ''
+let currentAutoUrl = ''
+const DEBUG_QUALITY = true
+const logQuality = (...args: any[]) => {
+  if (DEBUG_QUALITY) console.log('[Player][Quality]', ...args)
+}
 const AUTO_QUALITY_LABEL = '自动'
 const formatAutoQualityLabel = (level?: { height?: number; name?: string } | null) => {
   if (!level) return AUTO_QUALITY_LABEL
   if (level.height) return `${AUTO_QUALITY_LABEL} (${level.height}p)`
   if (level.name) return `${AUTO_QUALITY_LABEL} (${level.name})`
   return AUTO_QUALITY_LABEL
+}
+const markDefaultQualityByUrl = (url: string) => {
+  if (!url) return
+  currentQualitySourceList.forEach((item) => {
+    item.default = item.url === url
+  })
+}
+const refreshPlayableByUrl = () => {
+  currentQualityPlayableByUrl = new Map(
+    currentQualitySourceList.map((item) => [item.url, item.playable !== false])
+  )
+}
+const buildQualityListForArt = () => currentQualitySourceList.map((item) => ({ ...item }))
+const restoreQualitySelection = (art: any, url: string) => {
+  const targetUrl = url || currentAutoUrl
+  markDefaultQualityByUrl(targetUrl)
+  logQuality('restore', { targetUrl })
+  attachQualityGuard(art)
+}
+const attachQualityGuard = (art: any) => {
+  if (!currentQualitySourceList.length) return
+  const selector = buildQualityListForArt()
+  currentQualityList = selector
+  const currentDefault = selector.find((item) => item.default) || selector[0]
+  logQuality('updateControl', { count: selector.length, default: currentDefault?.html })
+  art.controls.update({
+    name: 'quality',
+    position: 'right',
+    index: 10,
+    style: { marginRight: '10px' },
+    html: currentDefault?.html || AUTO_QUALITY_LABEL,
+    selector: selector as any,
+    onSelect: async (selector: any) => {
+      const url = selector?.url || ''
+      logQuality('select', { url, playable: currentQualityPlayableByUrl.get(url) })
+      if (url && currentQualityPlayableByUrl.get(url) === false) {
+        loginStore.setLogin(true)
+        restoreQualitySelection(art, lastSelectedQualityUrl)
+        return currentQualityList.find((item) => item.default)?.html || AUTO_QUALITY_LABEL
+      }
+      await art.switchQuality(url)
+      lastSelectedQualityUrl = url
+      return selector?.html || ''
+    },
+  })
 }
 const updateAutoQualityLabel = (label: string) => {
   if (!currentQualityList.length) return
@@ -247,7 +305,7 @@ const setPlayerHeight = inject<((h: number) => void) | null>('playerHeight', nul
 onMounted(() => {
   nextTick(() => {
     // 占位初始化，实际切换分P时重建播放器
-    initPlayer('', [])
+    initPlayer('')
     //滚动条的宽度是8，页面未全部加载完获取不到滚动条的宽度，所以这里提前减去滚动条的宽度
     const width = (playerRef.value as HTMLDivElement)?.clientWidth ?? 0
     const height = Math.round((width - 8) * 0.5625)
@@ -256,21 +314,57 @@ onMounted(() => {
   })
 
   mitter.on('changeP', async (_fileId: string | number) => {
-    currentFileId.value = String(_fileId)
+    currentFileId.value = _fileId
 
-    const variantResp = await fetchAbrVariants(currentFileId.value!)
-    currentQualityList = [
-      { html: AUTO_QUALITY_LABEL, url: abrMasterUrl(currentFileId.value!), default: true },
-      ...(variantResp.qualities || []).map((q: string) => ({
-        html: q,
-        url: abrPlaylistUrl(currentFileId.value!, q)
+    let encToken = ''
+    let encQualities: EncQualityItem[] = []
+    try {
+      const encResp = await issueEncToken(currentFileId.value!)
+      encToken = encResp?.token || ''
+    } catch {}
+    try {
+      const encListResp = await listEncQualities(currentFileId.value!)
+      encQualities = encListResp?.qualities || []
+    } catch {}
+
+    if (!encQualities.length) {
+      const variantResp = await fetchAbrVariants(currentFileId.value!)
+      encQualities = (variantResp.qualities || []).map((q: string) => ({
+        quality: q,
+        authPolicy: 1,
+        playable: true
+      }))
+    }
+
+    const useEnc = Boolean(encToken)
+    const autoUrl = useEnc
+      ? encMasterUrl(currentFileId.value!, encToken)
+      : abrMasterUrl(currentFileId.value!)
+    currentAutoUrl = autoUrl
+    currentQualitySourceList = [
+      { html: AUTO_QUALITY_LABEL, url: autoUrl, value: 'auto', default: true, playable: true },
+      ...encQualities.map((item) => ({
+        html: item.quality,
+        value: item.quality,
+        url: useEnc
+          ? encPlaylistUrl(currentFileId.value!, item.quality, encToken)
+          : abrPlaylistUrl(currentFileId.value!, item.quality),
+        playable: item.playable
       }))
     ]
-    const defaultUrl = currentQualityList[0]?.url || ''
+    refreshPlayableByUrl()
+    logQuality('changeP', {
+      fileId: currentFileId.value,
+      useEnc,
+      autoUrl,
+      qualities: currentQualitySourceList
+    })
+    lastSelectedQualityUrl = autoUrl
+    const defaultUrl = currentQualitySourceList[0]?.url || ''
     if (player) {
       player.destroy(false)
     }
-    initPlayer(defaultUrl, currentQualityList)
+    initPlayer(defaultUrl)
 
     //获取在线人数
     await reportVideoPlayOnline()
