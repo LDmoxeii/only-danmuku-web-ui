@@ -141,7 +141,7 @@ import {
 } from 'vue'
 
 import { uploadImage } from '@/api/file'
-import { postVideo as apiPostVideo, getVideoByVideoId as apiGetVideoByVideoId } from '@/api/ucenter'
+import { createVideo as apiCreateVideo, updateVideo as apiUpdateVideo, getVideoByVideoId as apiGetVideoByVideoId } from '@/api/ucenter'
 
 const { proxy } = getCurrentInstance() as any
 import { useRoute, useRouter } from 'vue-router'
@@ -205,6 +205,9 @@ const submitForm = () => {
       params.interaction = params.interactionArray.join(',')
       delete params.interactionArray
     }
+    if (Array.isArray(params.tags)) {
+      params.tags = params.tags.join(',')
+    }
     //判断文件
     if (params.videoCover instanceof File) {
       const videoCover = await uploadImage(params.videoCover, false)
@@ -213,11 +216,17 @@ const submitForm = () => {
       }
       params.videoCover = videoCover
     }
-    let result = await apiPostVideo(params)
+    let result: any
+    if (videoPostId.value) {
+      params.videoPostId = Number(videoPostId.value)
+      result = await apiUpdateVideo(params)
+    } else {
+      result = await apiCreateVideo(params)
+    }
     if (!result) {
       return
     }
-    proxy.Message.success('发布成功')
+    proxy.Message.success(videoPostId.value ? '更新成功' : '发布成功')
     router.push('/ucenter/video')
   })
 }

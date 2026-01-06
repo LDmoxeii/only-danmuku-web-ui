@@ -8,6 +8,13 @@ const base = '/ucenter'
 export async function postVideo(params: any): Promise<any> {
   return await request<any>({url: `${base}/postVideo`, params, showLoading: true, method: 'post',})
 }
+
+export async function createVideo(params: any): Promise<any> {
+  return await request<any>({url: `${base}/createVideo`, data: params, showLoading: true, method: 'post',})
+}
+export async function updateVideo(params: any): Promise<any> {
+  return await request<any>({url: `${base}/updateVideo`, data: params, showLoading: true, method: 'post',})
+}
 export async function loadVideoList(params: { pageNum: number; pageSize?: number; videoNameFuzzy?: string; status?: number | null }): Promise<PageData<any>> {
   return await request<PageData<any>>({url: `${base}/loadVideoList`, data: params, method: 'post',})
 }
