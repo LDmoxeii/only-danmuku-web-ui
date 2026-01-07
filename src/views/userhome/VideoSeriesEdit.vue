@@ -188,11 +188,14 @@ const submit = () => {
       return
     }
     params.videoIds = params.videoIds.join(',')
+    if (params.seriesId !== undefined && params.seriesId !== null && params.seriesId !== '') {
+      params.seriesId = params.seriesId
+    }
     try {
       if (opType.value == 2) {
-        await (await import('@/api/uhome/series')).saveSeriesVideo(params)
+        await (await import('@/api/video_series')).saveSeriesVideo(params)
       } else {
-        await (await import('@/api/uhome/series')).saveVideoSeries(params)
+        await (await import('@/api/video_series')).saveVideoSeries(params)
       }
     } catch (e) { return }
     proxy.Message.success('保存成功')
@@ -205,8 +208,9 @@ const submit = () => {
 const videoList = ref<any[]>([])
 const loadVideoList = async () => {
   try {
-    const res = await (await import('@/api/uhome/series')).loadAllVideo({ seriesId: route.params.seriesId as any })
-    videoList.value = res as any
+    const seriesId = route.params.seriesId ? route.params.seriesId : undefined
+    const res = await (await import('@/api/video_series')).loadAllVideo({ seriesId })
+    videoList.value = res.list || []
   } catch (e) { return }
 }
 </script>
@@ -257,3 +261,4 @@ const loadVideoList = async () => {
   line-height: normal;
 }
 </style>
+

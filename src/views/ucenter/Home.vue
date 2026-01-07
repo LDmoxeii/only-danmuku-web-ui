@@ -103,7 +103,7 @@ const dataPartList = ref<any[]>([
   },
 ]);
 
-import { getActualTimeStatisticsInfo as apiGetActualTimeStatisticsInfo, getWeekStatisticsInfo as apiGetWeekStatisticsInfo } from '@/api/ucenter'
+import { getActualTimeStatisticsInfo as apiGetActualTimeStatisticsInfo, getWeekStatisticsInfo as apiGetWeekStatisticsInfo } from '@/api/u_center_statistics'
 const getActualTimeStatisticsInfo = async () => {
   let result = await apiGetActualTimeStatisticsInfo()
   if (!result) return
@@ -136,7 +136,7 @@ const loadWeekDataHandler = (item: any) => {
 
 const currentDataPart = ref(dataPartList.value[0]);
 const loadWeekData = async () => {
-  let result = await apiGetWeekStatisticsInfo(currentDataPart.value.preDataType)
+  let result = await apiGetWeekStatisticsInfo({ dataType: currentDataPart.value.preDataType })
   if (!result) {
     return;
   }

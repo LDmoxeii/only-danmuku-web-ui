@@ -50,7 +50,7 @@ import artplayerPluginDanmuku from 'artplayer-plugin-danmuku'
 
 import { useLoginStore } from '@/stores/loginStore'
 import { reportVideoPlayOnline as apiReportVideoPlayOnline } from '@/api/video'
-import { loadDanmu as apiLoadDanmu, postDanmu as apiPostDanmu } from '@/api/danmu'
+import { loadDanmu as apiLoadDanmu, postDanmu as apiPostDanmu } from '@/api/video_danmuku'
 const loginStore = useLoginStore()
 
 defineProps({
@@ -61,8 +61,8 @@ defineProps({
 })
 
 const playerRef = ref<string | HTMLDivElement | null>(null)
-import { fetchAbrVariants, abrMasterUrl, abrPlaylistUrl } from '@/api/abr'
-import { issueEncToken, encMasterUrl, encPlaylistUrl, listEncQualities } from '@/api/enc'
+import { fetchAbrVariants, abrMasterUrl, abrPlaylistUrl } from '@/api/video_abr'
+import { issueEncToken, encMasterUrl, encPlaylistUrl, listEncQualities } from '@/api/video_encrypt'
 let player: any = null
 let playerReady = false
 
@@ -287,17 +287,18 @@ type QualityPayload = {
 const fetchQualityPayload = async (fileId: string | number): Promise<QualityPayload> => {
   let encToken = ''
   let encQualities: EncQualityItem[] = []
+  const numericFileId = fileId
   try {
-    const encResp = await issueEncToken(fileId)
+    const encResp = await issueEncToken({ fileId: numericFileId })
     encToken = encResp?.token || ''
   } catch {}
   try {
-    const encListResp = await listEncQualities(fileId)
+    const encListResp = await listEncQualities({ fileId: numericFileId })
     encQualities = encListResp?.qualities || []
   } catch {}
 
   if (!encQualities.length) {
-    const variantResp = await fetchAbrVariants(fileId)
+    const variantResp = await fetchAbrVariants({ fileId: numericFileId })
     encQualities = (variantResp.qualities || []).map((q: string) => ({
       quality: q,
       authPolicy: 1,
@@ -306,15 +307,15 @@ const fetchQualityPayload = async (fileId: string | number): Promise<QualityPayl
   }
 
   const useEnc = Boolean(encToken)
-  const autoUrl = useEnc ? encMasterUrl(fileId, encToken) : abrMasterUrl(fileId)
+  const autoUrl = useEnc ? encMasterUrl(numericFileId, encToken) : abrMasterUrl(numericFileId)
   const qualities = [
     { html: AUTO_QUALITY_LABEL, url: autoUrl, value: AUTO_QUALITY_VALUE, default: true, playable: true },
     ...encQualities.map((item) => ({
       html: item.quality,
       value: item.quality,
       url: useEnc
-        ? encPlaylistUrl(fileId, item.quality, encToken)
-        : abrPlaylistUrl(fileId, item.quality),
+        ? encPlaylistUrl(numericFileId, item.quality, encToken)
+        : abrPlaylistUrl(numericFileId, item.quality),
       playable: item.playable
     }))
   ]
@@ -382,7 +383,7 @@ const loadDanmuList = async (): Promise<any[]> => {
   if (!currentFileId.value) {
     return []
   }
-  const result = await apiLoadDanmu({ fileId: currentFileId.value, videoId: route.params.videoId as any })
+  const result = await apiLoadDanmu({ fileId: currentFileId.value, videoId: route.params.videoId as string | number })
   if (!result) return []
   mitter.emit('loadDanmu', result)
   danmuCount.value = result.length
@@ -463,7 +464,7 @@ const reportVideoPlayOnline = async () => {
   if (!currentFileId.value) {
     return
   }
-  const result = await apiReportVideoPlayOnline(String(currentFileId.value), loginStore.deviceId as string)
+  const result = await apiReportVideoPlayOnline({ fileId: currentFileId.value, deviceId: loginStore.deviceId as string })
   if (!result) return
   onLineCount.value = result
 }
@@ -596,3 +597,4 @@ const showDanmu = computed(() => {
   }
 }
 </style>
+

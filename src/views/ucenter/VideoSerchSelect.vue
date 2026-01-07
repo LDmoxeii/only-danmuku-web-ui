@@ -20,10 +20,10 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 import { useRoute } from 'vue-router'
-import { loadAllVideo as apiLoadAllVideo } from '@/api/ucenter'
+import { loadAllVideo as apiLoadAllVideo } from '@/api/u_center_interact'
 const route = useRoute()
 
-type VideoItem = { videoId: number | string; videoName: string }
+type VideoItem = { videoId: string | null; videoName: string | null }
 
 const searchForm = ref<{ videoId: number | string | undefined }>({
   videoId: route.query.videoId as any,

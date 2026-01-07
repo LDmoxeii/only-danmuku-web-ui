@@ -1,30 +1,22 @@
 import request from '@/utils/Request'
+import type { GetVideEncVariantsRequest, GetVideEncVariantsResponse, IssueTokenRequest, IssueTokenResponse } from './types'
 
-export type EncQualityItem = {
-  quality: string
-  authPolicy: number
-  playable: boolean
-}
-
-// Frontend: issue encrypted playback token (fileId per part)
-export const issueEncToken = (fileId: string | number) =>
-  request<{ token: string; expireAt: number; allowedQualities?: string }>({
-    url: '/video/enc/token',
+export const issueEncToken = (data: IssueTokenRequest) =>
+  request<IssueTokenResponse>({
+    url: '/video/enc/issueToken',
     method: 'post',
-    data: { fileId },
+    data,
     showError: false
   })
 
-// Frontend: list encrypted qualities with playable status
-export const listEncQualities = (fileId: string | number) =>
-  request<{ qualities: EncQualityItem[] }>({
-    url: '/video/enc/qualities',
+export const listEncQualities = (data: GetVideEncVariantsRequest) =>
+  request<GetVideEncVariantsResponse>({
+    url: '/video/enc/variants',
     method: 'post',
-    data: { fileId },
+    data,
     showError: false
   })
 
-// Frontend: encrypted resource URL (server replaces __TOKEN__)
 export const encMasterUrl = (fileId: string | number, token: string) =>
   `/api/video/enc/videoResource/${fileId}/master.m3u8?token=${encodeURIComponent(token)}`
 

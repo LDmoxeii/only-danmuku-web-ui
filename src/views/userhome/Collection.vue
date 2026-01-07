@@ -75,9 +75,10 @@ const dataSource = ref<any>({
 const loadVideoList = async () => {
   let params: any = {
     pageNum: dataSource.value.pageNum,
+    pageSize: dataSource.value.pageSize,
   }
   params.userId = route.params.userId
-  try { const res = await (await import('@/api/uhome')).loadUserCollection(params); dataSource.value = res as any } catch (e) { return }
+  try { const res = await (await import('@/api/u_home')).loadUserCollection(params); dataSource.value = res as any } catch (e) { return }
 }
 loadVideoList()
 
@@ -85,7 +86,7 @@ const cancelCollection = (data: any) => {
   proxy.Confirm({
     message: '确定要取消收藏吗？',
     okfun: async () => {
-      try { await (await import('@/api/userAction')).doAction({ videoId: data.videoId, actionType: 3 }) } catch (e) { return }
+      try { await (await import('@/api/user_action')).doAction({ videoId: data.videoId, actionType: 3 }) } catch (e) { return }
       loadVideoList()
     },
   })
@@ -140,3 +141,4 @@ const jump = (item: any) => {
   }
 }
 </style>
+

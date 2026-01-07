@@ -1,9 +1,10 @@
 export type CategoryNode = {
   categoryId: string | number
-  categoryCode?: string
+  categoryCode: string
   categoryName: string
-  icon?: string
-  background?: string
-  children?: CategoryNode[]
+  parentCategoryId: string | number
+  icon: string | null
+  background: string | null
+  sort: number
+  children: CategoryNode[]
 }
-

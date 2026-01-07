@@ -121,7 +121,7 @@
 import emojiList from "@/utils/Emoji";
 import { mitter } from "@/eventbus/eventBus";
 import { uploadImage } from "@/api/file";
-import { postComment as apiPostComment } from '@/api/comment'
+import { postComment as apiPostComment } from '@/api/video_comment'
 import { getCurrentInstance, inject, onBeforeUnmount, onMounted, ref } from "vue";
 import { useRoute } from "vue-router";
 import { useLoginStore } from "@/stores/loginStore";
@@ -179,14 +179,14 @@ const submitComment = async (event: MouseEvent) => {
     proxy.Message.warning("请输入评论");
     return;
   }
-  params.videoId = route.params.videoId as any;
+  params.videoId = route.params.videoId;
   //上传图片
   if (params.imgPath) {
     const imgPath = await uploadImage(params.imgPath, true);
     params.imgPath = imgPath;
   }
   try { await apiPostComment(params as any) } catch (e) { return }
-  
+
   formDataRef.value.resetFields();
   formData.value = {};
   proxy.Message.success("发布成功");
@@ -312,5 +312,6 @@ onBeforeUnmount(() => {
   }
 }
 </style>
+
 
 

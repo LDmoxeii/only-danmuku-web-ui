@@ -41,7 +41,7 @@ import VideoItem from "./VideoItem.vue";
 import { ref } from "vue";
 import { useRoute } from "vue-router";
 const route = useRoute();
-import { loadVideoList as apiLoadVideoList } from '@/api/uhome'
+import { loadVideoList as apiLoadVideoList } from '@/api/u_home'
 
 const dataSource = ref<any>({
   list: [],
@@ -51,7 +51,12 @@ const dataSource = ref<any>({
   totalCount: 0,
 });
 const loadVideoList = async () => {
-  const res = await apiLoadVideoList({ pageNum: 1, userId: route.params.userId as any, type: 0 })
+  const res = await apiLoadVideoList({
+    pageNum: 1,
+    pageSize: dataSource.value.pageSize,
+    userId: route.params.userId,
+    type: 0,
+  })
   if (!res) return
   dataSource.value = res as any
 };
@@ -60,3 +65,4 @@ loadVideoList();
 
 <style lang="scss" scoped>
 </style>
+

@@ -233,9 +233,9 @@ const myself = computed(() => {
 
 const userInfo = ref<any>({});
 provide("userInfo", userInfo);
-import { getUserInfo as apiGetUserInfo } from '@/api/uhome'
+import { getUserInfo as apiGetUserInfo } from '@/api/u_home'
 const loadUserInfo = async () => {
-  const data = await apiGetUserInfo(currentUserId)
+  const data = await apiGetUserInfo({ userId: currentUserId })
   if (!data) return
   const noticeInfo = data.noticeInfo
     ? data.noticeInfo.replace(/\r\n/g, '<br>').replace(/\n/g, '<br>')
@@ -266,7 +266,8 @@ const focusUser = async (
     loginStore.setLogin(true);
     return;
   }
-  try { await (await import('@/api/uhome')).focus(focusUserId) } catch (e) { return }
+  const focusId = focusUserId
+  try { await (await import('@/api/u_home')).focus({ focusUserId: focusId }) } catch (e) { return }
   if (changeCountType == 0) {
     userInfo.value.haveFocus = true;
     userInfo.value.fansCount++;
@@ -282,7 +283,8 @@ const cancelFocusUser = async (
   changeCountType: number = 0,
   fn?: () => void
 ) => {
-  try { await (await import('@/api/uhome')).cancelFocus(focusUserId) } catch (e) { return }
+  const focusId = focusUserId
+  try { await (await import('@/api/u_home')).cancelFocus({ focusUserId: focusId }) } catch (e) { return }
   if (changeCountType == 0) {
     userInfo.value.haveFocus = false;
     userInfo.value.fansCount--;
@@ -529,3 +531,4 @@ const changeTheme = (theme: any) => {
   }
 }
 </style>
+

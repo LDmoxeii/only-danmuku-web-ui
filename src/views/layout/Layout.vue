@@ -158,7 +158,7 @@ const getSearchKeywordTop = async () => {
 getSearchKeywordTop()
 
 //获取消息数
-import { getNoReadCountGroup as apiGetNoReadCountGroup } from '@/api/message'
+import { getNoReadCountGroup as apiGetNoReadCountGroup } from '@/api/user_message'
 const getNoReadCount = async () => {
   if (Object.keys(loginStore.userInfo).length == 0) return
   const list = await apiGetNoReadCountGroup()
@@ -235,3 +235,4 @@ body {
   }
 }
 </style>
+

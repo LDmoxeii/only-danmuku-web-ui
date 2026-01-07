@@ -34,7 +34,7 @@ import VideoItem from './VideoItem.vue'
 import { ref, watch } from 'vue'
 import { useRoute } from 'vue-router'
 const route = useRoute()
-import { loadVideoList as apiLoadVideoList } from '@/api/uhome'
+import { loadVideoList as apiLoadVideoList } from '@/api/u_home'
 
 const activeTab = ref<number>(0)
 
@@ -49,6 +49,7 @@ const dataSource = ref<any>({
 const loadVideoList = async () => {
   let params: any = {
     pageNum: dataSource.value.pageNum,
+    pageSize: dataSource.value.pageSize,
     videoName: videoName.value,
     orderType: activeTab.value,
   }
@@ -89,3 +90,4 @@ watch(
   }
 }
 </style>
+

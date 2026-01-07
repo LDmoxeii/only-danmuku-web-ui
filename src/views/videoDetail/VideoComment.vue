@@ -45,7 +45,7 @@ import { computed, inject, onMounted, onUnmounted, provide, ref } from 'vue'
 import { useRoute } from 'vue-router'
 import { mitter } from '@/eventbus/eventBus'
 import { ACTION_TYPE } from '@/utils/Constants'
-import { loadComment as apiLoadComment } from '@/api/comment'
+import { loadComment as apiLoadComment } from '@/api/video_comment'
 import VideoCommentItem from './VideoCommentItem.vue'
 import VideoCommentSend from './VideoCommentSend.vue'
 
@@ -134,10 +134,10 @@ const loadCommentList = async () => {
   }
   loadingData.value = true
   const result = await apiLoadComment({
-    videoId: route.params.videoId as any,
+    videoId: route.params.videoId,
     pageNum: dataSource.value.pageNum,
-    orderType: orderType.value,
-  } as any)
+    pageSize: dataSource.value.pageSize,
+  })
   loadingData.value = false
   if (!result) {
     return
@@ -267,4 +267,5 @@ onUnmounted(() => {
   }
 }
 </style>
+
 

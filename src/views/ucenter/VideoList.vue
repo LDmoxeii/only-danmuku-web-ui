@@ -92,10 +92,11 @@ const dataSource = ref<any>({
   pageTotal: 1,
   totalCount: 0,
 });
-import { loadVideoList as apiUcenterLoadVideoList, getVideoCountInfo as apiUcenterGetVideoCountInfo } from '@/api/ucenter'
+import { loadVideoList as apiUcenterLoadVideoList, getVideoCountInfo as apiUcenterGetVideoCountInfo } from '@/api/u_center_video_post'
 const loadVideoList = async () => {
   let params: any = {
     pageNum: dataSource.value.pageNum,
+    pageSize: dataSource.value.pageSize,
     videoNameFuzzy: videoNameFuzzy.value,
     status: status.value,
   };

@@ -61,7 +61,7 @@ const router = useRouter()
 
 import { useNavAction } from '@/stores/navActionStore'
 const navActionStore = useNavAction()
-import { loadHistory as apiLoadHistory, cleanHistory as apiCleanHistory, delHistory as apiDelHistory } from '@/api/history'
+import { loadHistory as apiLoadHistory, cleanHistory as apiCleanHistory, delHistory as apiDelHistory } from '@/api/video_history'
 
 const loadingData = ref<boolean>(false)
 const dataSource = ref<any>({
@@ -109,7 +109,7 @@ const delHisotry = (videoId: string | number) => {
     message: '确定要删除记录吗？',
     okfun: async () => {
       try {
-        await apiDelHistory(videoId)
+        await apiDelHistory({ videoId: videoId })
         proxy.Message.success('删除成功')
         dataSource.value.list = dataSource.value.list.filter((item: any) => item.videoId != videoId)
       } catch (e) {}
@@ -166,3 +166,4 @@ const goDetail = (videoId: string | number) => {
   }
 }
 </style>
+

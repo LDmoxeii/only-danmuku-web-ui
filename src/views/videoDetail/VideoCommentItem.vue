@@ -111,8 +111,8 @@
 
 <script setup lang="ts">
 import Tag from '@/components/Tag.vue'
-import { doAction as apiDoAction } from '@/api/userAction'
-import { userDelComment as apiUserDelComment, userTopComment as apiUserTopComment, userCancelTopComment as apiUserCancelTopComment } from '@/api/comment'
+import { doAction as apiDoAction } from '@/api/user_action'
+import { userDelComment as apiUserDelComment, userTopComment as apiUserTopComment, userCancelTopComment as apiUserCancelTopComment } from '@/api/video_comment'
 import { ACTION_TYPE } from '@/utils/Constants'
 
 import VideoCommentSend from './VideoCommentSend.vue'
@@ -151,7 +151,7 @@ const showReplyHandler = (item: any, replyLevel: number) => {
 
 const doLike = (data: any) => {
   apiDoAction({
-    videoId: route.params.videoId as any,
+    videoId: route.params.videoId,
     actionType: ACTION_TYPE.COMMENT_LIKE.value,
     commentId: data.commentId,
   }).then(() => {
@@ -171,7 +171,7 @@ const doLike = (data: any) => {
 
 const doHate = (data: any) => {
   apiDoAction({
-    videoId: route.params.videoId as any,
+    videoId: route.params.videoId,
     actionType: ACTION_TYPE.COMMENT_HATE.value,
     commentId: data.commentId,
   }).then(() => {
@@ -193,7 +193,7 @@ const delComment = () => {
   proxy.Confirm({
     message: '确定要删除评论',
     okfun: async () => {
-      await apiUserDelComment(props.data.commentId)
+      await apiUserDelComment({ commentId: props.data.commentId })
       mitter.emit('delCommentCallback', {
         pCommentId: props.data.pCommentId,
         commentId: props.data.commentId,
@@ -207,9 +207,9 @@ const topComment = () => {
     message: `确定要${props.data.topType == 1 ? '取消置顶' : '置顶'}吗？`,
     okfun: async () => {
       if (props.data.topType == 1) {
-        await apiUserCancelTopComment(props.data.commentId)
+        await apiUserCancelTopComment({ commentId: props.data.commentId })
       } else {
-        await apiUserTopComment(props.data.commentId)
+        await apiUserTopComment({ commentId: props.data.commentId })
       }
       mitter.emit('topCommentCallback')
     },
@@ -305,3 +305,4 @@ const topComment = () => {
   }
 }
 </style>
+

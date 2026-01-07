@@ -59,7 +59,7 @@
 <script setup lang="ts">
 import { ref } from 'vue'
 
-import { loadFansList as apiLoadFansList, focus as apiFocus, cancelFocus as apiCancelFocus } from '@/api/uhome'
+import { loadFansList as apiLoadFansList, focus as apiFocus, cancelFocus as apiCancelFocus } from '@/api/u_home'
 
 const dataSource = ref<any>({
   list: [],
@@ -79,12 +79,12 @@ const loadDataList = async () => {
 }
 
 const focus = async (otherUserId: string) => {
-  try { await apiFocus(otherUserId) } catch (e) { return }
+  try { await apiFocus({ focusUserId: otherUserId }) } catch (e) { return }
   loadDataList()
 }
 
 const cancelFocus = async (otherUserId: string) => {
-  try { await apiCancelFocus(otherUserId) } catch (e) { return }
+  try { await apiCancelFocus({ focusUserId: otherUserId }) } catch (e) { return }
   loadDataList()
 }
 </script>
@@ -129,3 +129,4 @@ const cancelFocus = async (otherUserId: string) => {
   }
 }
 </style>
+

@@ -274,13 +274,14 @@ const uploadFile = async (uid: any, chunkIndex?: number) => {
     //切割文件
     let chunkFile = file.slice(start, end)
     //上传文件
-    let uploadResult = await apiUploadVideo({ chunkFile, chunkIndex: i, uploadId: currentFile.uploadId }, { showError: false, onError: (errorMsg: any) => { currentFile.status = STATUS.fail.value; currentFile.errorMsg = errorMsg }, onProgress: (event: any) => {
-      let loaded = event.loaded
-      if (loaded > fileSize) loaded = fileSize
-      currentFile.uploadSize = i * CHUNK_SIZE + loaded
-      currentFile.uploadPercent = Math.floor((currentFile.uploadSize / fileSize) * 100)
-    } })
-    if (uploadResult == null) {
+    try {
+      await apiUploadVideo({ chunkFile, chunkIndex: i, uploadId: String(currentFile.uploadId) }, { showError: false, onError: (errorMsg: any) => { currentFile.status = STATUS.fail.value; currentFile.errorMsg = errorMsg }, onProgress: (event: any) => {
+        let loaded = event.loaded
+        if (loaded > fileSize) loaded = fileSize
+        currentFile.uploadSize = i * CHUNK_SIZE + loaded
+        currentFile.uploadPercent = Math.floor((currentFile.uploadSize / fileSize) * 100)
+      } })
+    } catch (e) {
       break
     }
     currentFile.chunkIndex = i
@@ -320,7 +321,7 @@ const delFile = async (index: number) => {
     return
   }
   //如果是新上传的文件，删除直接删除服务器上的临时文件
-  await apiDelUploadVideo(currentFile.uploadId)
+  await apiDelUploadVideo({ uploadId: currentFile.uploadId })
 }
 
 //编辑标题

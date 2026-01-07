@@ -1,9 +1,10 @@
 import request from '@/utils/Request'
+import type { DoActionRequest } from './types'
 
 const base = '/userAction'
 
-export async function doAction(params: { videoId: string | number; actionType: number; actionCount?: number; commentId?: string | number }): Promise<null | any> {
-  return await request<any>({url: `${base}/doAction`, method: 'post', params})
+export async function doAction(data: DoActionRequest): Promise<void> {
+  return await request<void>({ url: `${base}/doAction`, method: 'post', data })
 }
 
 export const ACTION_TYPE = {

@@ -117,9 +117,17 @@ const loadDataList = async () => {
     return route.query.order == item.order
   })
 
+  const keywordValue = Array.isArray(route.query.keyword)
+    ? route.query.keyword[0] ?? ''
+    : (route.query.keyword as string | undefined) ?? ''
+  if (!keywordValue) {
+    return
+  }
+
   let params = {
     pageNum: dataSource.value.pageNum,
-    keyword: route.query.keyword,
+    pageSize: dataSource.value.pageSize,
+    keyword: keywordValue,
     orderType: orderTypeBtn?.orderType,
   }
   loadingData.value = true

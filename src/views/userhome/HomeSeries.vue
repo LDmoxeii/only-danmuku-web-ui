@@ -70,11 +70,15 @@ const myself = computed(() => {
 
 //视频系列
 const seriesList = ref<any[]>([]);
-import { loadVideoSeriesWithVideo as apiLoadVideoSeriesWithVideo } from '@/api/uhome/series'
+import { loadVideoSeriesWithVideo as apiLoadVideoSeriesWithVideo } from '@/api/video_series'
 const loadSeriesList = async () => {
-  const res = await apiLoadVideoSeriesWithVideo({ userId: route.params.userId as any })
+  const res = await apiLoadVideoSeriesWithVideo({ userId: route.params.userId })
   if (!res) return
-  seriesList.value = res as any;
+  const list = res.list || []
+  seriesList.value = list.map((item) => ({
+    ...item,
+    videoInfoList: item.videoInfoList || [],
+  }))
 };
 loadSeriesList();
 
@@ -107,3 +111,4 @@ const showVieoSeries = () => {
   }
 }
 </style>
+

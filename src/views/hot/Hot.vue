@@ -39,7 +39,10 @@ const dataSource = ref<any>({
 });
 const loadDataList = async () => {
   loadingData.value = true
-  const result = await apiLoadHotVideoList({ pageNum: dataSource.value.pageNum })
+  const result = await apiLoadHotVideoList({
+    pageNum: dataSource.value.pageNum,
+    pageSize: dataSource.value.pageSize,
+  })
   loadingData.value = false
   if (!result) return
   const dataList = dataSource.value.list

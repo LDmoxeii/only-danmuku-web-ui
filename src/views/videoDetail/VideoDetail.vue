@@ -128,9 +128,9 @@ import { useLoginStore } from "@/stores/loginStore";
 const loginStore = useLoginStore();
 
 const userInfo = ref<any>({});
-import { getUserInfo as apiGetUserInfo } from '@/api/uhome'
+import { getUserInfo as apiGetUserInfo } from '@/api/u_home'
 const getUserInfo = async (userId: string | number) => {
-  const data = await apiGetUserInfo(userId)
+  const data = await apiGetUserInfo({ userId: userId })
   if (!data) return
   userInfo.value = data
 };
@@ -140,7 +140,12 @@ const focusUser = async (changeCount: number) => {
     loginStore.setLogin(true);
     return;
   }
-  try { await ((changeCount == 1) ? (await import('@/api/uhome')).focus(userInfo.value.userId) : (await import('@/api/uhome')).cancelFocus(userInfo.value.userId)) } catch (e) { return }
+  const focusUserId = userInfo.value.userId
+  try {
+    await ((changeCount == 1)
+      ? (await import('@/api/u_home')).focus({ focusUserId })
+      : (await import('@/api/u_home')).cancelFocus({ focusUserId }))
+  } catch (e) { return }
   if (changeCount == 1) {
     userInfo.value.haveFocus = true;
     userInfo.value.fansCount++;
@@ -171,8 +176,8 @@ const videoInfo = ref<VideoInfo>({
 })
 import { getVideoInfo as apiGetVideoInfo } from '@/api/video'
 const getVideoInfo = async () => {
-  const result = await apiGetVideoInfo(route.params.videoId as string)
-  if (!result) return
+  const result = await apiGetVideoInfo({ videoId: route.params.videoId })
+  if (!result || !result.videoInfo) return
   //获取用户信息
   getUserInfo(result.videoInfo.userId);
 
@@ -184,7 +189,7 @@ const getVideoInfo = async () => {
   resultData.tags = tags;
   videoInfo.value = resultData;
   //获取用户行为
-  const userActionList = result.userActionList;
+  const userActionList = result.userActionList || [];
   userActionList.forEach((item) => {
     if (item.actionType == ACTION_TYPE.VIDEO_LIKE.value) {
       videoInfo.value.likeCountActive = true;
@@ -325,3 +330,4 @@ onMounted(() => {
   }
 }
 </style>
+

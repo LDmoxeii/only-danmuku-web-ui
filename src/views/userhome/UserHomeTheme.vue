@@ -33,7 +33,7 @@
 <script setup lang="ts">
 import { ref, getCurrentInstance } from 'vue'
 const { proxy } = getCurrentInstance() as any
-import { saveTheme as apiSaveTheme } from '@/api/uhome'
+import { saveTheme as apiSaveTheme } from '@/api/u_home'
 
 const showDrawer = ref<boolean>(false);
 
@@ -44,7 +44,7 @@ const emit = defineEmits(['changeTheme']);
 const selectTheme = async (item: number) => {
   currentTheme.value = item;
   try {
-    await apiSaveTheme(item)
+    await apiSaveTheme({ theme: item })
   } catch (e) { return }
   showDrawer.value = false;
   emit("changeTheme", item);
@@ -96,3 +96,4 @@ defineExpose({
   }
 }
 </style>
+

@@ -26,7 +26,7 @@
         <a
           href="javascript:void(0)"
           class="a-link"
-          @click="delDanmu(row.danmuId)"
+          @click="delDanmu(row.danmukuId)"
         >删除</a>
       </template>
 
@@ -99,7 +99,7 @@ const tableData = ref<any>({
   pageNum: 1,
   pageSize: 15,
 });
-import {loadDanmu as apiUcenterLoadDanmu, delDanmu as apiUcenterDelDanmu} from '@/api/ucenter'
+import { loadDanmu as apiUcenterLoadDanmu, delDanmu as apiUcenterDelDanmu } from '@/api/u_center_interact'
 
 const loadDataList = async () => {
   let params: any = {
@@ -117,7 +117,7 @@ const delDanmu = (danmuId: string) => {
     message: '确定要删除吗？',
     okfun: async () => {
       try {
-        await apiUcenterDelDanmu(danmuId)
+        await apiUcenterDelDanmu({ danmukuId: danmuId })
       } catch (e) {
         return
       }

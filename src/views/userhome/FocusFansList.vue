@@ -60,7 +60,7 @@
 <script setup lang="ts">
 import { ref, watch, inject } from 'vue'
 import { useRoute } from "vue-router";
-import { loadFocusList as apiLoadFocusList, loadFansList as apiLoadFansList } from '@/api/uhome'
+import { loadFocusList as apiLoadFocusList, loadFansList as apiLoadFansList } from '@/api/u_home'
 const route = useRoute();
 
 const dataSource = ref<any>({
@@ -146,3 +146,4 @@ watch(
   }
 }
 </style>
+

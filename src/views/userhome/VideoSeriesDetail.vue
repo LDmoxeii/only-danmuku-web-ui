@@ -134,7 +134,13 @@ const seriesInfo = ref<any>({})
 const videoList = ref<any[]>([])
 
 const getSeriesDetail = async () => {
-  try { const res = await (await import('@/api/uhome/series')).getVideoSeriesDetail(route.params.seriesId as any); seriesInfo.value = (res as any).videoSeries; videoList.value = (res as any).seriesVideoList } catch (e) { return }
+  try {
+    const res = await (await import('@/api/video_series')).getVideoSeriesDetail({
+      seriesId: route.params.seriesId,
+    })
+    seriesInfo.value = res.videoSeries || {}
+    videoList.value = res.seriesVideoList || []
+  } catch (e) { return }
   if (myself.value) {
     videoList.value.unshift({
       seriesId: 'add',
@@ -144,11 +150,15 @@ const getSeriesDetail = async () => {
 getSeriesDetail()
 
 const changeSort = async () => {
-  let videoIds = videoList.value.map((item: any) => {
-    return item.videoId
-  })
-  videoIds.splice(0, 1)
-  try { await (await import('@/api/uhome/series')).saveSeriesVideo({ seriesId: route.params.seriesId as any, videoIds: videoIds.join(',') }) } catch (e) { return }
+  const videoIds = videoList.value
+    .map((item: any) => item.videoId)
+    .filter((videoId: any) => videoId !== undefined && videoId !== null && videoId !== '')
+  try {
+    await (await import('@/api/video_series')).saveSeriesVideo({
+      seriesId: route.params.seriesId,
+      videoIds: videoIds.join(','),
+    })
+  } catch (e) { return }
   proxy.Message.success('排序成功')
 }
 
@@ -160,18 +170,14 @@ const delVideo = (item: any) => {
   proxy.Confirm({
     message: `确定要删除【${item.videoName}】吗？`,
     okfun: async () => {
-      let result = await proxy.Request({
-        /* replaced */
-        params: {
+      try {
+        await (await import('@/api/video_series')).delSeriesVideo({
           seriesId: route.params.seriesId,
           videoId: item.videoId,
-        },
-      })
-      if (!result) {
-        return
-      }
-      proxy.Message.success('删除成功')
-      getSeriesDetail()
+        })
+        proxy.Message.success('删除成功')
+        getSeriesDetail()
+      } catch (e) { return }
     },
   })
 }
@@ -180,17 +186,13 @@ const delSeries = () => {
   proxy.Confirm({
     message: `确定要删除【${seriesInfo.value.seriesName}】吗？`,
     okfun: async () => {
-      let result = await proxy.Request({
-        /* replaced */
-        params: {
+      try {
+        await (await import('@/api/video_series')).delVideoSeries({
           seriesId: route.params.seriesId,
-        },
-      })
-      if (!result) {
-        return
-      }
-      proxy.Message.success('删除成功')
-      router.push(`/user/${route.params.userId}/series`)
+        })
+        proxy.Message.success('删除成功')
+        router.push(`/user/${route.params.userId}/series`)
+      } catch (e) { return }
     },
   })
 }
@@ -309,3 +311,4 @@ const addVideo = () => {
   }
 }
 </style>
+

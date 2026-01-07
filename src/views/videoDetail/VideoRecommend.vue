@@ -20,10 +20,10 @@ const loadDataList = async () => {
   if (!videoInfo?.value || !videoInfo.value.videoId) {
     return;
   }
-  const list = await apiGetVideoRecommend(
-    videoInfo.value.videoName,
-    videoInfo.value.videoId
-  );
+  const list = await apiGetVideoRecommend({
+    keyword: videoInfo.value.videoName || '',
+    videoId: videoInfo.value.videoId,
+  });
   if (!list) return
   dataList.value = list
 }

@@ -141,7 +141,7 @@ import {
 } from 'vue'
 
 import { uploadImage } from '@/api/file'
-import { createVideo as apiCreateVideo, updateVideo as apiUpdateVideo, getVideoByVideoId as apiGetVideoByVideoId } from '@/api/ucenter'
+import { createVideo as apiCreateVideo, updateVideo as apiUpdateVideo, getVideoByVideoId as apiGetVideoByVideoId } from '@/api/u_center_video_post'
 
 const { proxy } = getCurrentInstance() as any
 import { useRoute, useRouter } from 'vue-router'
@@ -216,15 +216,11 @@ const submitForm = () => {
       }
       params.videoCover = videoCover
     }
-    let result: any
     if (videoPostId.value) {
-      params.videoPostId = Number(videoPostId.value)
-      result = await apiUpdateVideo(params)
+      params.videoPostId = videoPostId.value
+      await apiUpdateVideo(params)
     } else {
-      result = await apiCreateVideo(params)
-    }
-    if (!result) {
-      return
+      await apiCreateVideo(params)
     }
     proxy.Message.success(videoPostId.value ? '更新成功' : '发布成功')
     router.push('/ucenter/video')
@@ -238,7 +234,7 @@ const init = async () => {
     videoUploaderRef.value.initUploader(startUpload.value, [])
   })
   if (videoPostId.value) {
-    let result = await apiGetVideoByVideoId(videoPostId.value)
+    let result = await apiGetVideoByVideoId({ videoId: videoPostId.value })
     if (!result) {
       return
     }

@@ -69,7 +69,7 @@ const loginStore = useLoginStore();
 import {
   loadVideoSeries as apiLoadVideoSeries,
   changeVideoSeriesSort as apiChangeVideoSeriesSort,
-} from "@/api/uhome/series";
+} from "@/api/video_series";
 
 //是否是自己
 const myself = computed(() => {
@@ -78,9 +78,9 @@ const myself = computed(() => {
 
 const videoSeriesList = ref<any[]>([]);
 const loadVideoSeries = async () => {
-  const res = await apiLoadVideoSeries({ userId: route.params.userId as any });
+  const res = await apiLoadVideoSeries({ userId: route.params.userId });
   if (!res) return;
-  videoSeriesList.value = res as any;
+  videoSeriesList.value = res.list || [];
 };
 loadVideoSeries();
 
@@ -94,7 +94,7 @@ const changeSort = async () => {
     (item: any) => item.seriesId as string | number
   );
   try {
-    await apiChangeVideoSeriesSort(seriesIds.join(","));
+    await apiChangeVideoSeriesSort({ seriesIds: seriesIds.join(",") });
   } catch (e) {
     return;
   }
@@ -167,3 +167,4 @@ const jump = (item: any) => {
   }
 }
 </style>
+

@@ -32,17 +32,13 @@ const categoryMap: any = categoryStore.categoryMap
 const categoryIdInfo = ref<any>({})
 
 const convertCode2Id = (pCategoryCode?: string, categoryCode?: string) => {
-  let parentCategoryId: string = ''
-  let categoryId: string = ''
+  let parentCategoryId: number | undefined
+  let categoryId: number | undefined
   if (pCategoryCode) {
-    parentCategoryId = categoryMap[pCategoryCode]
-      ? categoryMap[pCategoryCode].categoryId
-      : ''
+    parentCategoryId = categoryMap[pCategoryCode]?.categoryId
   }
   if (categoryCode) {
-    categoryId = categoryMap[categoryCode]
-      ? categoryMap[categoryCode].categoryId
-      : ''
+    categoryId = categoryMap[categoryCode]?.categoryId
   }
   categoryIdInfo.value = {
     parentCategoryId,
@@ -58,7 +54,7 @@ const dataSource = ref<any>({
   totalCount: 0,
 });
 const loadDataList = async () => {
-  const params: any = { pageNum: dataSource.value.pageNum }
+  const params: any = { pageNum: dataSource.value.pageNum, pageSize: dataSource.value.pageSize }
   Object.assign(params, categoryIdInfo.value)
   loadingData.value = true
   const result = await apiLoadVideo(params)

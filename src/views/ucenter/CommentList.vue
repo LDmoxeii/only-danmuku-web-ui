@@ -113,7 +113,7 @@ const tableData = ref<any>({
   pageNum: 1,
   pageSize: 15,
 });
-import { loadComment as apiUcenterLoadComment, delComment as apiUcenterDelComment } from '@/api/ucenter'
+import { loadComment as apiUcenterLoadComment, delComment as apiUcenterDelComment } from '@/api/u_center_interact'
 const loadDataList = async () => {
   let params: any = {
     pageNum: tableData.value.pageNum,
@@ -129,7 +129,7 @@ const delComment = (commentId: string) => {
   proxy.Confirm({
     message: "确定要删除吗？",
     okfun: async () => {
-      try { await apiUcenterDelComment(commentId) } catch (e) { return }
+      try { await apiUcenterDelComment({ commentId: commentId }) } catch (e) { return }
       proxy.Message.success("ɾ���ɹ�");
       loadDataList();
     },

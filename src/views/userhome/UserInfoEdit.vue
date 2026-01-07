@@ -121,7 +121,7 @@
 
 <script setup lang="ts">
 import { uploadImage } from '@/api/file'
-import { updateUserInfo as apiUpdateUserInfo } from '@/api/uhome'
+import { updateUserInfo as apiUpdateUserInfo } from '@/api/u_home'
 import { ref, getCurrentInstance, nextTick, provide } from 'vue'
 import Dialog from "@/components/Dialog.vue";
 const { proxy } = getCurrentInstance() as any
@@ -189,3 +189,4 @@ const submitForm = () => {
 
 <style lang="scss" scoped>
 </style>
+

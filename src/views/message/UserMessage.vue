@@ -119,7 +119,7 @@ const dataSource = ref<any>({
   pageTotal: 1,
   totalCount: 0,
 });
-import { loadMessage as apiLoadMessage, delMessage as apiDelMessage, getNoReadCountGroup as apiGetNoReadCountGroup, readAll as apiReadAll } from '@/api/message'
+import { loadMessage as apiLoadMessage, delMessage as apiDelMessage, getNoReadCountGroup as apiGetNoReadCountGroup, readAll as apiReadAll } from '@/api/user_message'
 const loadDataList = async () => {
   let params: any = {
     pageNum: dataSource.value.pageNum,
@@ -135,7 +135,7 @@ const delMessage = (messageId: string | number) => {
   proxy.Confirm({
     message: '确定要删除消息吗？',
     okfun: async () => {
-      try { await apiDelMessage(messageId) } catch (e) { return }
+      try { await apiDelMessage({ messageId: messageId }) } catch (e) { return }
       await loadDataList()
     },
   })
@@ -156,7 +156,7 @@ const readAll = async (item: any) => {
   if (item.noReadCount == 0) {
     return
   }
-  try { await apiReadAll(item.messageType) } catch (e) { return }
+  try { await apiReadAll({ messageType: item.messageType }) } catch (e) { return }
   item.noReadCount = 0
 }
 
@@ -256,5 +256,6 @@ onMounted(() => {
   }
 }
 </style>
+
 
 

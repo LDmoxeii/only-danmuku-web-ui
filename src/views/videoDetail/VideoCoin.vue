@@ -51,7 +51,7 @@
 
 <script setup lang="ts">
 import { ACTION_TYPE } from '@/utils/Constants'
-import { doAction as apiDoAction } from '@/api/userAction'
+import { doAction as apiDoAction } from '@/api/user_action'
 
 import { ref, getCurrentInstance, inject } from 'vue'
 import { useRoute } from 'vue-router'
@@ -72,7 +72,7 @@ const setCoinCount = (count: number) => {
 
 const videoInfo = inject<any>('videoInfo')
 const submitCoin = () => {
-  apiDoAction({ videoId: route.params.videoId as any, actionType: ACTION_TYPE.VIDEO_COIN.value, actionCount: coinCount.value }).then(() => {
+  apiDoAction({ videoId: route.params.videoId, actionType: ACTION_TYPE.VIDEO_COIN.value, actionCount: coinCount.value }).then(() => {
       videoInfo.value.coinCountActive = true
       videoInfo.value.coinCount = videoInfo.value.coinCount + coinCount.value;
       dialogConfig.value.show = false
@@ -140,3 +140,4 @@ defineExpose({
   }
 }
 </style>
+

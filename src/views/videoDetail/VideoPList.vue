@@ -54,7 +54,7 @@ defineEmits<{ (e: 'selectVideoFile', fileId: string | number): void }>();
 const videoList = ref<any[]>([]);
 import { loadVideoPList as apiLoadVideoPList } from '@/api/video'
 const loadVideoPList = async () => {
-  const data = await apiLoadVideoPList(route.params.videoId as string)
+  const data = await apiLoadVideoPList({ videoId: route.params.videoId })
   if (!data) return
   videoList.value = data
   selectVideoFile()
