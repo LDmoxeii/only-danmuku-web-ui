@@ -36,7 +36,7 @@ export async function getVideoInfo(data: GetVideoDetailRequest): Promise<GetVide
 
 export async function getVideoRecommend(data: GetRecommendVideoListRequest): Promise<GetRecommendVideoListItem[]> {
   return await request<GetRecommendVideoListItem[]>({
-    url: `${base}/getRecommendVideoList`,
+    url: `${base}/getVideoRecommendList`,
     method: 'post',
     data
   })
