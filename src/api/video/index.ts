@@ -2,7 +2,7 @@ import request from '@/utils/Request'
 import type {
   GetHotVidePageRequest,
   GetHotVidePageResponse,
-  GetRecommendVideoListItem,
+  GetVideoRecommendItem,
   GetRecommendVideoListRequest,
   GetVideoDetailRequest,
   GetVideoDetailResponse,
@@ -34,8 +34,8 @@ export async function getVideoInfo(data: GetVideoDetailRequest): Promise<GetVide
   return await request<GetVideoDetailResponse>({ url: `${base}/detail`, method: 'post', data })
 }
 
-export async function getVideoRecommend(data: GetRecommendVideoListRequest): Promise<GetRecommendVideoListItem[]> {
-  return await request<GetRecommendVideoListItem[]>({
+export async function getVideoRecommend(data: GetRecommendVideoListRequest): Promise<GetVideoRecommendItem[]> {
+  return await request<GetVideoRecommendItem[]>({
     url: `${base}/getVideoRecommendList`,
     method: 'post',
     data

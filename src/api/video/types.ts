@@ -107,7 +107,7 @@ export type GetRecommendVideoListRequest = {
   videoId: string | number
 }
 
-export type GetRecommendVideoListItem = {
+export type GetVideoRecommendItem = {
   videoId: string | number
   videoCover: string | null
   videoName: string | null
