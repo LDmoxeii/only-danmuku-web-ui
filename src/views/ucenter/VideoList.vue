@@ -26,8 +26,8 @@
         >
           全部稿件<span class="count-info">{{
             (countInfo.inProgress ?? 0) +
-            (countInfo.auditPassCount ?? 0) +
-            (countInfo.auditFailCount ?? 0)
+              (countInfo.auditPassCount ?? 0) +
+              (countInfo.auditFailCount ?? 0)
           }}</span>
         </div>
       </div>
