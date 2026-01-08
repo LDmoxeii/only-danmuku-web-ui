@@ -86,7 +86,7 @@ const cancelCollection = (data: any) => {
   proxy.Confirm({
     message: '确定要取消收藏吗？',
     okfun: async () => {
-      try { await (await import('@/api/user_action')).doAction({ videoId: data.videoId, actionType: 3 }) } catch (e) { return }
+      try { await (await import('@/api/user_action')).doAction({ videoId: data.videoId, actionType: 4 }) } catch (e) { return }
       loadVideoList()
     },
   })
