@@ -273,7 +273,7 @@ const loginHandler = () => {
   }
 };
 
-const placeholder = ref<string>("罗培中");
+const placeholder = ref<string>("无厘头");
 const keyword = ref<string | undefined>();
 
 //历史搜索
