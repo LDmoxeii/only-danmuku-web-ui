@@ -8,11 +8,11 @@
     </template>
   </div>
   <div
-    v-if="showPagination && dataSource.pageTotal > 1"
+    v-if="showPagination && (dataSource.pageTotal ?? 0) > 1"
     class="pagination"
   >
     <el-pagination
-      v-if="dataSource.pageTotal > 1"
+      v-if="(dataSource.pageTotal ?? 0) > 1"
       background
       :total="dataSource.totalCount"
       :current-page="dataSource.pageNum"

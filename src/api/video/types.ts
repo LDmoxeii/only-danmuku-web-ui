@@ -21,7 +21,7 @@ export type VideoItem = {
   duration: number
   playCount: number
   likeCount: number
-  danmuCount: number
+  danmukuCount: number
   commentCount: number
   coinCount: number
   collectCount: number

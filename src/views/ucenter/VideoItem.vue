@@ -37,7 +37,7 @@
       <div class="video-count">
         <span class="iconfont icon-play-solid">{{ data.playCount || 0 }}</span>
         <span class="iconfont icon-like-solid">{{ data.likeCount || 0 }}</span>
-        <span class="iconfont icon-danmu-solid">{{
+        <span class="iconfont icon-danmuku-solid">{{
           data.danmuCount || 0
         }}</span>
         <span class="iconfont icon-comment-solid">{{

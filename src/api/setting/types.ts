@@ -5,5 +5,5 @@ export type SysSetting = {
   videoPCount: number
   videoCount: number
   commentCount: number
-  danmuCount: number
+  danmukuCount: number
 }

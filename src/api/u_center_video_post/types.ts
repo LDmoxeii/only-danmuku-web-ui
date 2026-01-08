@@ -45,7 +45,7 @@ export type VideoPostItem = {
   interaction: string | null
   playCount: number | null
   likeCount: number | null
-  danmuCount: number | null
+  danmukuCount: number | null
   commentCount: number | null
   coinCount: number | null
   collectCount: number | null

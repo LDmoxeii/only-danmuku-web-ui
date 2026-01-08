@@ -3,7 +3,7 @@ export type GetDanmukuListRequest = {
   videoId: string | number
 }
 
-export type DanmuItem = {
+export type DanmukuItem = {
   danmukuId: string | null
   fileId: string | null
   videoId: string | null

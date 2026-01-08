@@ -25,9 +25,9 @@
           @click="cleanStatusLoad"
         >
           全部稿件<span class="count-info">{{
-            countInfo.inProgress +
-              countInfo.auditPassCount +
-              countInfo.auditFailCount
+            (countInfo.inProgress ?? 0) +
+            (countInfo.auditPassCount ?? 0) +
+            (countInfo.auditFailCount ?? 0)
           }}</span>
         </div>
       </div>
@@ -85,7 +85,7 @@ const cleanStatusLoad = () => {
   loadVideoList();
 };
 
-const dataSource = ref<any>({
+const dataSource = ref<GetVideoPostPageResponse>({
   list: [],
   pageNum: 1,
   pageSize: 15,
@@ -93,6 +93,10 @@ const dataSource = ref<any>({
   totalCount: 0,
 });
 import { loadVideoList as apiUcenterLoadVideoList, getVideoCountInfo as apiUcenterGetVideoCountInfo } from '@/api/u_center_video_post'
+import type {
+  GetVideoPostCountInfoResponse,
+  GetVideoPostPageResponse
+} from "@/api/u_center_video_post/types.ts";
 const loadVideoList = async () => {
   let params: any = {
     pageNum: dataSource.value.pageNum,
@@ -106,7 +110,7 @@ const loadVideoList = async () => {
 };
 loadVideoList();
 
-const countInfo = ref({ inProgress: 0, auditPassCount: 0, auditFailCount: 0 });
+const countInfo = ref<GetVideoPostCountInfoResponse>({ inProgress: 0, auditPassCount: 0, auditFailCount: 0 });
 const loadCountInfo = async () => {
   let result = await apiUcenterGetVideoCountInfo()
   if (!result) return

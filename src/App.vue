@@ -64,7 +64,7 @@ const autoLogin = async () => {
 const getSysSetting = async () => {
   try {
     const data = await apiGetSetting()
-    sysSettingStore.saveSetting(data as any)
+    sysSettingStore.saveSetting(data)
   } catch (_) {}
 }
 
