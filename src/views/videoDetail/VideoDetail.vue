@@ -10,7 +10,7 @@
             {{ videoInfo.playCount }}
           </div>
           <div class="iconfont icon-danmu">
-            {{ videoInfo.danmuCount }}
+            {{ videoInfo.danmukuCount }}
           </div>
           <div class="iconfont">
             {{ videoInfo.createTime }}
@@ -158,7 +158,7 @@ const focusUser = async (changeCount: number) => {
 type VideoInfo = {
   videoName: string
   playCount: number
-  danmuCount: number
+  danmukuCount: number
   createTime: string | number
   likeCountActive: boolean
   collectCountActive: boolean
@@ -168,7 +168,7 @@ type VideoInfo = {
 const videoInfo = ref<VideoInfo>({
   videoName: '',
   playCount: 0,
-  danmuCount: 0,
+  danmukuCount: 0,
   createTime: '',
   likeCountActive: false,
   collectCountActive: false,
@@ -176,7 +176,7 @@ const videoInfo = ref<VideoInfo>({
 })
 import { getVideoInfo as apiGetVideoInfo } from '@/api/video'
 const getVideoInfo = async () => {
-  const result = await apiGetVideoInfo({ videoId: route.params.videoId })
+  const result = await apiGetVideoInfo({ videoId: route.params.videoId as string })
   if (!result || !result.videoInfo) return
   //获取用户信息
   getUserInfo(result.videoInfo.userId);
@@ -225,7 +225,7 @@ onMounted(() => {
   });
 
   mitter.on("danmSend", () => {
-    videoInfo.value.danmuCount++;
+    videoInfo.value.danmukuCount++;
   });
 });
 </script>

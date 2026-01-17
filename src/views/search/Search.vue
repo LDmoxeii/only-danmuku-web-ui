@@ -75,7 +75,7 @@ const orderBtns = ref([
   },
   {
     name: '最多弹幕',
-    order: 'danmu',
+    order: 'danmuku',
     orderType: 2,
   },
   {

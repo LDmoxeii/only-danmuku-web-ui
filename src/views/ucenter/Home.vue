@@ -72,7 +72,7 @@ const dataPartList = ref<any[]>([
   {
     name: "弹幕",
     icon: "icon-danmu-solid",
-    totalCountKey: "danmuCount",
+    totalCountKey: "danmukuCount",
     preDataType: 6,
     totalCount: 0,
     preCount: 0,

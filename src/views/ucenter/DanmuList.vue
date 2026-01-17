@@ -99,7 +99,7 @@ const tableData = ref<any>({
   pageNum: 1,
   pageSize: 15,
 });
-import { loadDanmu as apiUcenterLoadDanmu, delDanmu as apiUcenterDelDanmu } from '@/api/u_center_interact'
+import { loadDanmuku as apiUcenterLoadDanmu, delDanmuku as apiUcenterDelDanmu } from '@/api/u_center_interact'
 
 const loadDataList = async () => {
   let params: any = {

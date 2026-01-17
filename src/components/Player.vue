@@ -50,7 +50,7 @@ import artplayerPluginDanmuku from 'artplayer-plugin-danmuku'
 
 import { useLoginStore } from '@/stores/loginStore'
 import { reportVideoPlayOnline as apiReportVideoPlayOnline } from '@/api/video'
-import { loadDanmu as apiLoadDanmu, postDanmu as apiPostDanmu } from '@/api/video_danmuku'
+import { loadDanmuku as apiLoadDanmu, postDanmuku as apiPostDanmu } from '@/api/video_danmuku'
 const loginStore = useLoginStore()
 
 defineProps({

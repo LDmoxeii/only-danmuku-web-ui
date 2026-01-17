@@ -78,7 +78,7 @@ export type VideoDetailInfo = {
   interaction: string | null
   playCount: number | null
   likeCount: number | null
-  danmuCount: number | null
+  danmukuCount: number | null
   commentCount: number | null
   coinCount: number | null
   collectCount: number | null
@@ -124,7 +124,7 @@ export type GetVideoRecommendItem = {
   status: number
   playCount: number
   likeCount: number
-  danmuCount: number
+  danmukuCount: number
   commentCount: number
   coinCount: number
   collectCount: number
@@ -156,7 +156,7 @@ export type VideoSearchItem = {
   duration: number
   playCount: number
   likeCount: number
-  danmuCount: number
+  danmukuCount: number
   commentCount: number
   coinCount: number
   collectCount: number
