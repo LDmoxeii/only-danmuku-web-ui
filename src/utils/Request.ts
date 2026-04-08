@@ -81,12 +81,20 @@ instance.interceptors.response.use(
         return Promise.reject({showError, msg, message: msg, code: responseData?.code})
     },
     (error: any) => {
-        if (error?.config?.showLoading && loading) loading.close()
-        const showError = error?.config?.showError !== false
+        const {showLoading, errorCallback, showError = true} = error?.config || {}
+        if (showLoading && loading) loading.close()
         const status = error?.response?.status
         const responseData = error?.response?.data
         const backendMsg = responseData?.message || responseData?.msg
+        if (!error?.response) {
+            const msg = '网络异常'
+            const callbackData = {status, msg, message: msg}
+            if (errorCallback) errorCallback(callbackData)
+            if (showError) Message.error(msg)
+            return Promise.reject({showError, msg, message: msg, status})
+        }
         if (status === 401) {
+            if (errorCallback) errorCallback(responseData || {status, msg: backendMsg || '未登录或登录已过期', message: backendMsg || '未登录或登录已过期'})
             const loginStore: any = useLoginStore()
             loginStore.setLogin(true)
             const msg = backendMsg || '未登录或登录已过期'
@@ -100,6 +108,7 @@ instance.interceptors.response.use(
         } else {
             msg = backendMsg || '系统异常'
         }
+        if (errorCallback) errorCallback(responseData || {status, msg, message: msg})
         if (showError) Message.error(msg)
         return Promise.reject({showError, msg, message: msg, status})
     }
