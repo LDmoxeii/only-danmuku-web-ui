@@ -44,22 +44,21 @@
       draggable=".list-item"
       @update="changeSort"
     >
+      <div
+        v-if="myself"
+        class="video-item-add"
+        @click="addVideo"
+      >
+        <div class="iconfont icon-add" />
+        <div class="add-info">
+          添加视频
+        </div>
+      </div>
       <template
-        v-for="(item) in videoList"
-        :key="item.seriesId"
+        v-for="item in videoList"
+        :key="item.videoId"
       >
         <div
-          v-if="item.seriesId == 'add'"
-          class="video-item-add"
-          @click="addVideo"
-        >
-          <div class="iconfont icon-add" />
-          <div class="add-info">
-            添加视频
-          </div>
-        </div>
-        <div
-          v-else
           class="list-item"
         >
           <div
@@ -141,24 +140,18 @@ const getSeriesDetail = async () => {
     seriesInfo.value = res.videoSeries || {}
     videoList.value = res.seriesVideoList || []
   } catch (e) { return }
-  if (myself.value) {
-    videoList.value.unshift({
-      seriesId: 'add',
-    })
-  }
 }
 getSeriesDetail()
 
 const changeSort = async () => {
-  const videoIds = videoList.value
-    .map((item: any) => item.videoId)
-    .filter((videoId: any) => videoId !== undefined && videoId !== null && videoId !== '')
+  const videoIds = videoList.value.map((item: any) => item.videoId)
   try {
     await (await import('@/api/video_series')).saveSeriesVideo({
       seriesId: route.params.seriesId,
       videoIds: videoIds.join(','),
     })
   } catch (e) { return }
+  await getSeriesDetail()
   proxy.Message.success('排序成功')
 }
 
