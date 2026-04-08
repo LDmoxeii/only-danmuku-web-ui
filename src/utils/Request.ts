@@ -75,20 +75,33 @@ instance.interceptors.response.use(
         const respType = response?.request?.responseType || response?.config?.responseType
         if (respType === 'arraybuffer' || respType === 'blob') return responseData
         if (responseData?.code === 20000) return responseData.data
-        if (responseData?.code === 901) {
-            const loginStore: any = useLoginStore()
-            loginStore.setLogin(true)
-            return Promise.reject({showError: false})
-        }
         if (errorCallback) errorCallback(responseData)
-        if (showError) Message.error(responseData?.message || '请求失败')
-        return Promise.reject({showError, msg: responseData?.message})
+        const msg = responseData?.message || responseData?.msg || '请求失败'
+        if (showError) Message.error(msg)
+        return Promise.reject({showError, msg, message: msg, code: responseData?.code})
     },
     (error: any) => {
         if (error?.config?.showLoading && loading) loading.close()
         const showError = error?.config?.showError !== false
-        if (showError) Message.error('网络异常')
-        return Promise.reject({showError: showError, msg: '网络异常'})
+        const status = error?.response?.status
+        const responseData = error?.response?.data
+        const backendMsg = responseData?.message || responseData?.msg
+        if (status === 401) {
+            const loginStore: any = useLoginStore()
+            loginStore.setLogin(true)
+            const msg = backendMsg || '未登录或登录已过期'
+            return Promise.reject({showError: false, msg, message: msg, status})
+        }
+        let msg = ''
+        if (status === 403) {
+            msg = backendMsg || '没有权限执行当前操作'
+        } else if (status === 429) {
+            msg = backendMsg || '请求过于频繁'
+        } else {
+            msg = backendMsg || '系统异常'
+        }
+        if (showError) Message.error(msg)
+        return Promise.reject({showError, msg, message: msg, status})
     }
 )
 
